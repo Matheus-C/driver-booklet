@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chrome Web Notifications Example</title>
+<script>
+  // Request permission for notifications
+  function requestNotificationPermission() {
+    if (Notification.permission !== 'granted') {
+      Notification.requestPermission().then(function(permission) {
+        if (permission === 'granted') {
+          console.log('Notification permission granted.');
+        }
+      });
+    }
+  }
+
+  // Function to display notification
+  function displayNotification() {
+    if (Notification.permission === 'granted') {
+      var notification = new Notification('Hello!', {
+        body: 'This is a notification from your web app.',
+        icon: 'path/to/icon.png' // Optional icon
+      });
+
+      // Close the notification after 4 seconds
+      setTimeout(notification.close.bind(notification), 4000);
+    }
+  }
+</script>
+</head>
+<body>
+  <h1>Chrome Web Notifications Example</h1>
+  <button onclick="requestNotificationPermission()">Request Notification Permission</button>
+  <button onclick="displayNotification()">Display Notification</button>
+</body>
+</html>

@@ -6,3 +6,5 @@ from app.models import *
 app = Flask(__name__)
 
 # import views
+
+from app import routing

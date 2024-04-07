@@ -1,0 +1,37 @@
+<!-- templates/get_location.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Location</title>
+</head>
+<body>
+    <h1>User Location</h1>
+    <div id="location-info"></div>
+    <button onclick="getLocation()">
+        Refresh Location
+    </button>
+    <script>
+        function getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(showPosition);
+                } else {
+                    alert("Geolocation is not supported by this browser.");
+                }
+        }
+
+        function showPosition(position) {
+            var currentTime = new Date();
+            var locationInfo = "Current Time: "+ currentTime.toLocaleTimeString()+ 
+                               "<br>Latitude: " + position.coords.latitude +
+                               "<br>Longitude: " + position.coords.longitude;
+            document.getElementById("location-info").innerHTML = locationInfo;
+            console.log(locationInfo)
+        }
+
+        // Get location as soon as the page loads
+        window.onload = getLocation;
+    </script>
+</body>
+</html>
