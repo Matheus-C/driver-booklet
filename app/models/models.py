@@ -1,5 +1,6 @@
 from sqlalchemy import ForeignKey,Column,String,Integer,Float,CHAR,DateTime,Date
 from sqlalchemy.ext.declarative import declarative_base
+from .database import *
 
 import uuid
 
@@ -7,6 +8,13 @@ def generate_id():
     return str(uuid.uuid4())
 
 Base = declarative_base()
+
+class PushSubscription(Base):
+  __tablename__ = 'push_subscription'  
+  id = Column(Integer, primary_key=True, unique=True)
+  subscription_json = Column(String, nullable=False)
+
+Base.metadata.create_all(engine)
 
 # class FlightCombinations(Base):
 #     __tablename__ = 'flight_combinations'

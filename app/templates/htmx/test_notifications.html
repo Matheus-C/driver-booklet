@@ -15,15 +15,19 @@
       });
     }
   }
-
   // Function to display notification
   function displayNotification() {
     if (Notification.permission === 'granted') {
-      var notification = new Notification('Hello!', {
+      /*var notification = new Notification('Hello!', {
         body: 'This is a notification from your web app.',
         icon: "{{ url_for('static', filename='notification.ico') }}"// Optional icon
-      });
-
+      });*/
+      self.registration.showNotification('aaaaaaa', {
+        body: 'body',
+        icon: "{{ url_for('static', filename='notification.ico') }}",
+        tag: 'tag',
+        data: 'data'
+      })
       // Close the notification after 4 seconds
       setTimeout(notification.close.bind(notification), 4000);
     }

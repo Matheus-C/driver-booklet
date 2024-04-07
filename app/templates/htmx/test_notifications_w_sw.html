@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chrome Web Notifications Example</title>
+  <!-- ///Public Key
+  ///BJcI_Ot1r6hsBqdQMvxfccwNUy4SOfewe7ZAh3aGpOeu123AWWakzFDYu0q4c3MpJLZ-oo00oUkmyHYJRGE7UWY
+  ///Private Key
+  ///RPUhtgNz5Z2jGpcbbgFk_p10pydmC1U0PUf0y_b7flc -->
+  <script 
+		type="text/javascript" 
+		src="/static/register_service_worker.js">
+	</script>
+	<script type="text/javascript">
+		registerServiceWorker(
+			"/static/service_worker.js",
+			"BJcI_Ot1r6hsBqdQMvxfccwNUy4SOfewe7ZAh3aGpOeu123AWWakzFDYu0q4c3MpJLZ-oo00oUkmyHYJRGE7UWY",
+			"/api/push-subscriptions"
+		);
+	</script>
+</script>
+</head>
+<body>
+  <h1>Chrome Web Notifications Example</h1>
+  <button onclick="requestNotificationPermission()">Request Notification Permission</button>
+  <button onclick="displayNotification()">Display Notification</button>
+</body>
+</html>
