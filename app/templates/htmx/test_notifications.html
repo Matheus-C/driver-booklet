@@ -21,7 +21,7 @@
     if (Notification.permission === 'granted') {
       var notification = new Notification('Hello!', {
         body: 'This is a notification from your web app.',
-        icon: 'path/to/icon.png' // Optional icon
+        icon: "{{ url_for('static', filename='notification.ico') }}"// Optional icon
       });
 
       // Close the notification after 4 seconds
