@@ -1,4 +1,4 @@
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify,send_file
 from app.models.models import *
 from app.models.database import *
 from app import app
@@ -39,3 +39,8 @@ def create_push_subscription():
         session.add(subscription)
         session.commit()
     return jsonify({"status": "success"})
+
+
+@app.route('/manifest.json')
+def serve_manifest():
+    return send_file('/static/manifest.json', mimetype='application/manifest+json')

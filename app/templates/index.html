@@ -6,6 +6,17 @@
     <title>Document</title>
     <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet">
 </head>
+<script 
+    type="text/javascript" 
+    src="/static/register_service_worker.js">
+</script>
+<script type="text/javascript">
+    registerServiceWorker(
+        "/static/service_worker.js",
+        "BJcI_Ot1r6hsBqdQMvxfccwNUy4SOfewe7ZAh3aGpOeu123AWWakzFDYu0q4c3MpJLZ-oo00oUkmyHYJRGE7UWY",
+        "/api/push-subscriptions"
+);
+</script>
 <body>
     <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-menu">
