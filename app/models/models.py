@@ -14,6 +14,13 @@ class PushSubscription(Base):
   id = Column(Integer, primary_key=True, unique=True)
   subscription_json = Column(String, nullable=False)
 
+
+class Event(Base):
+  __tablename__ = 'event'  
+  id = Column(Integer, primary_key=True, unique=True)
+  type = Column(String, nullable=False)
+  start_time = Column(Date, nullable=False)
+
 Base.metadata.create_all(engine)
 
 # class FlightCombinations(Base):

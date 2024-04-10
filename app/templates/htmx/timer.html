@@ -8,51 +8,50 @@
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
   <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
 
-  <style>
-    .stopwatch {
-      text-align: center;
-      margin-top: 50px;
-    }
-  </style>
 </head>
 <body>
   <div x-data="stopwatch()">
     <div class="container">
-      <!-- <div class="columns is-centered">
-        <div class="column is-half"> -->
           <div class="stopwatch" >
             <h1 class="title">Stopwatch + Location + AlpineJS</h1>
             <div class="field has-addons" >
               <p class="control">
-                <button class="button is-primary" @click="startTimer" x-show="!timerRunning && locationEnabled">Start</button>
+                <button class="button is-dark" @click="becomeAvailable" x-show="!isAvailable && locationEnabled">Ficar disponivel</button>
+              </p>
+         
+              <p class="control">
+                <button class="button is-primary" @click="startTimer" x-show="isAvailable && locationEnabled && !isWorking">Começar Trabalho</button>
               </p>
               <p class="control">
-                <button class="button is-danger" @click="stopTimer" x-show="timerRunning">Stop</button>
+                <button class="button is-link" @click="stopTimer" x-show="timerRunning">Repousar</button>
               </p>
               <p class="control">
-                <button class="button is-light" @click="resetTimer">Reset</button>
+                <button class="button is-light" @click="endTimer">Fim do Expediente</button>
               </p>
             </div>
             <p class="subtitle is-3" x-text="formattedTime" ></p>
           </div>
-        <!-- </div>
-      </div> -->
     </div>
   </div>
 
   <script>
     function stopwatch() {
       return {
+        isAvailable: false,
         timer: null,
         timerRunning: false,
         locationEnabled: false,
         initialLocationReceived: false, // Added flag for initial location
+        isWorking: false,
         hours: 0,
         minutes: 0,
         seconds: 0,
+
         startTimer() {
-          this.timerRunning = true;
-          this.timer = setInterval(() => {
+          if (!this.timerRunning)
+          {
+            this.timerRunning = true;
+            this.timer = setInterval(() => {
             this.seconds++;
             if (this.seconds === 60) {
               this.seconds = 0;
@@ -63,11 +62,20 @@
               this.hours++;
             }
           }, 1000);
+          }
+          else{
+            console.log('Inicio da condução')
+            this.isWorking = true;
+          }
+          
         },
         
         stopTimer() {
+          console.log('Fim da condução');
           clearInterval(this.timer);
           this.timerRunning = false;
+          this.isWorking = false;
+          this.isAvailable = false;
         },
         
         resetTimer() {
@@ -85,10 +93,36 @@
             String(this.seconds).padStart(2, '0')
           );
         },
+
+        becomeAvailable(){
+          if (this.isAvailable){
+            this.isAvailable = false;
+          }
+          else{
+            this.isAvailable = true;
+            console.log('Inicio do dia ou atividade');
+            this.startTimer();
+            
+          }
+        },
+
+        endTimer(){
+          let confirm_action = confirm('Quer mesmo acabar o dia ?');
+          if (confirm_action){
+            this.initialLocationReceived = false;
+            this.timerRunning = false;
+            this.isAvailable = false;
+            this.timerRunning =  false;
+            console.log ('fim de expediente ->'+ this.formattedTime);
+            this.resetTimer();
+          }
+          
+
+        },
         
         enableLocation() {
           navigator.geolocation.watchPosition(() => {
-            if (!this.timerRunning && this.initialLocationReceived) { // Only start timer after initial location
+            if (!this.timerRunning && this.initialLocationReceived && isAvailable) { // Only start timer after initial location
               this.startTimer();
             } else {
               this.initialLocationReceived = true; // Mark initial location received
