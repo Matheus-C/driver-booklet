@@ -102,7 +102,6 @@
             this.isAvailable = true;
             console.log('Inicio do dia ou atividade');
             this.startTimer();
-            
           }
         },
 
@@ -122,7 +121,7 @@
         
         enableLocation() {
           navigator.geolocation.watchPosition(() => {
-            if (!this.timerRunning && this.initialLocationReceived && isAvailable) { // Only start timer after initial location
+            if (this.initialLocationReceived && this.isAvailable) { // Only start timer after initial location
               this.startTimer();
             } else {
               this.initialLocationReceived = true; // Mark initial location received

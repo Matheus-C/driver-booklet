@@ -1,6 +1,6 @@
 {
     "name": "Driver-Booklet",
-    "short_name": "PWA",
+    "short_name": "DBook",
     "start_url": "/",
     "scope": "/",
     "display": "standalone",
