@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stopwatch with GPS</title>
+  <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+  <style>
+    .stopwatch {
+      text-align: center;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+  <div x-data="stopwatch()">
+    <div class="container">
+      <!-- <div class="columns is-centered">
+        <div class="column is-half"> -->
+          <div class="stopwatch" >
+            <h1 class="title">Stopwatch + Location + AlpineJS</h1>
+            <div class="field has-addons" >
+              <p class="control">
+                <button class="button is-primary" @click="startTimer" x-show="!timerRunning && locationEnabled">Start</button>
+              </p>
+              <p class="control">
+                <button class="button is-danger" @click="stopTimer" x-show="timerRunning">Stop</button>
+              </p>
+              <p class="control">
+                <button class="button is-light" @click="resetTimer">Reset</button>
+              </p>
+            </div>
+            <p class="subtitle is-3" x-text="formattedTime" ></p>
+          </div>
+        <!-- </div>
+      </div> -->
+    </div>
+  </div>
+
+  <script>
+    function stopwatch() {
+      return {
+        timer: null,
+        timerRunning: false,
+        locationEnabled: false,
+        initialLocationReceived: false, // Added flag for initial location
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        startTimer() {
+          this.timerRunning = true;
+          this.timer = setInterval(() => {
+            this.seconds++;
+            if (this.seconds === 60) {
+              this.seconds = 0;
+              this.minutes++;
+            }
+            if (this.minutes === 60) {
+              this.minutes = 0;
+              this.hours++;
+            }
+          }, 1000);
+        },
+        
+        stopTimer() {
+          clearInterval(this.timer);
+          this.timerRunning = false;
+        },
+        
+        resetTimer() {
+          clearInterval(this.timer);
+          this.hours = 0;
+          this.minutes = 0;
+          this.seconds = 0;
+          this.timerRunning = false;
+        },
+        
+        get formattedTime() {
+          return (
+            String(this.hours).padStart(2, '0') + ':' +
+            String(this.minutes).padStart(2, '0') + ':' +
+            String(this.seconds).padStart(2, '0')
+          );
+        },
+        
+        enableLocation() {
+          navigator.geolocation.watchPosition(() => {
+            if (!this.timerRunning && this.initialLocationReceived) { // Only start timer after initial location
+              this.startTimer();
+            } else {
+              this.initialLocationReceived = true; // Mark initial location received
+            }
+          });
+          this.locationEnabled = true;
+        }
+      }
+    }
+  </script>
+
+  <script>
+    window.onload = function () {
+      let app = document.querySelector('[x-data]');
+      app.__x.$data.enableLocation();
+    }
+  </script>
+</body>
+</html>

@@ -20,6 +20,10 @@ def notifications():
 def notificationsSW():
     return render_template('htmx/test_notifications_w_sw.html')
 
+@app.route('/timer')
+def timer():
+    return render_template('htmx/timer.html')
+
 @app.route("/api/push-subscriptions", methods=["POST"])
 def create_push_subscription():
     session = Session()
