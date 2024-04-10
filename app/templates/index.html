@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
 </head>
 <script 
     type="text/javascript" 
@@ -12,29 +12,30 @@
 </script>
 <script type="text/javascript">
     registerServiceWorker(
-        "/static/service_worker.js",
+        "/static/sw.js",
         "BJcI_Ot1r6hsBqdQMvxfccwNUy4SOfewe7ZAh3aGpOeu123AWWakzFDYu0q4c3MpJLZ-oo00oUkmyHYJRGE7UWY",
         "/api/push-subscriptions"
 );
 </script>
 <body>
-    <nav class="navbar" role="navigation" aria-label="main navigation">
-        <div class="navbar-menu">
-            <div class="navbar-start">
-                <a class="navbar-item" href="{{ url_for('gps') }}">
-                    GPS
-                </a>
-                <a class="navbar-item" href="{{ url_for('notifications') }}">
-                    Notifications
-                </a>
-                <a class="navbar-item" href="{{ url_for('notificationsSW') }}">
-                    NotificationsSW
-                </a>
-                <a class="navbar-item" href="{{ url_for('timer') }}">
-                    Timer
-                </a>
-            </div>
+    <section class="hero">
+        <div class="hero-body">
+          <p class="title">Index</p>
+          <p class="subtitle">Links</p>
         </div>
-    </nav>
+      </section>
+      <a class="navbar-item" href="{{ url_for('gps') }}">
+        GPS
+    </a>
+    <a class="navbar-item" href="{{ url_for('notifications') }}">
+        Notifications
+    </a>
+    <a class="navbar-item" href="{{ url_for('notificationsSW') }}">
+        NotificationsSW
+    </a>
+    <a class="navbar-item" href="{{ url_for('timer') }}">
+        Timer
+    </a>
+      
 </body>
 </html>
