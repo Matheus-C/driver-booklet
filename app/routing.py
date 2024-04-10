@@ -43,7 +43,7 @@ def create_push_subscription():
 
 @app.route('/manifest.json')
 def serve_manifest():
-    return send_file('/static/manifest.json', mimetype='application/manifest+json')
+    return send_file('manifest.json', mimetype='application/manifest+json')
 
 @app.route('/sw.js')
 def service_worker():
