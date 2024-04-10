@@ -41,11 +41,12 @@
         timer: null,
         timerRunning: false,
         locationEnabled: false,
-        initialLocationReceived: false, // Added flag for initial location
+        //initialLocationReceived: false, // Added flag for initial location
         isWorking: false,
         hours: 0,
         minutes: 0,
         seconds: 0,
+        initialCoords: {lat: 0, lon: 0}, // Initial coordinates
 
         startTimer() {
           if (!this.timerRunning)
@@ -108,7 +109,7 @@
         endTimer(){
           let confirm_action = confirm('Quer mesmo acabar o dia ?');
           if (confirm_action){
-            this.initialLocationReceived = false;
+            //this.initialLocationReceived = false;
             this.timerRunning = false;
             this.isAvailable = false;
             this.timerRunning =  false;
@@ -120,16 +121,29 @@
         },
         
         enableLocation() {
-          navigator.geolocation.watchPosition(() => {
-            if (this.initialLocationReceived && this.isAvailable) { // Only start timer after initial location
+          navigator.geolocation.watchPosition((position) => {
+            const newCoords = { lat: position.coords.latitude, lon: position.coords.longitude };
+
+            if (this.isAvailable && this.distance(this.initialCoords, newCoords) >= 0.01) { // Only start timer after initial location
               this.startTimer();
             } else {
-              this.initialLocationReceived = true; // Mark initial location received
+              //this.initialLocationReceived = true; // Mark initial location received
+              this.initialCoords = newCoords; // Update initial coordinates
             }
           });
           this.locationEnabled = true;
-        }
+        },
+
+      distance(coord1, coord2) {
+
+        const latDif = (Math.abs(coord1.lat) - Math.abs(coord2.lat))/100
+        const lonDif = (Math.abs(coord1.lon) - Math.abs(coord2.lon))/100
+        console.log(Math.abs(latDif+lonDif));
+        return Math.abs(latDif+lonDif)
       }
+
+    }
+
     }
   </script>
 
