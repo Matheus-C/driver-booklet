@@ -242,19 +242,18 @@
         
         enableLocation() {
           navigator.geolocation.watchPosition((position) => {
+            
             const newCoords = { lat: position.coords.latitude, lon: position.coords.longitude };
-            var date = new Date();
-            console.log(date.toLocaleDateString(),position)
+            
             console.log('dist ari: '+ this.distance_ari(this.initialCoords, newCoords))
+            
             if (this.isAvailable && this.distance_ari(this.initialCoords, newCoords) >= 0.00003) { // Only start timer after initial location
-              console.log('Coordenada dentro da ativação: ' + this.distance(this.initialCoords, newCoords))
               console.log('dist ari ativ: '+ this.distance_ari(this.initialCoords, newCoords))
-              
               this.startTimer();
             } else {
-              //this.initialLocationReceived = true; // Mark initial location received
-              this.initialCoords = newCoords; // Update initial coordinates
+              this.initialCoords = newCoords;
             }
+
           });
           this.locationEnabled = true;
         },
@@ -268,17 +267,9 @@
         return d
       },
 
-      distance(coord1, coord2) {
-        const latDif = Math.abs(coord1.lat - coord2.lat)/100
-        const lonDif = Math.abs(coord1.lon - coord2.lon)/100
-        const result = Math.abs(latDif+lonDif)
-        console.log(latDif,lonDif,result);
-        return result
-      }
-
     }
 
-    }
+  }
   </script>
 
   <script>
