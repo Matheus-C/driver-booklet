@@ -244,10 +244,12 @@
           navigator.geolocation.watchPosition((position) => {
             const newCoords = { lat: position.coords.latitude, lon: position.coords.longitude };
             var date = new Date();
-            this.distance(this.initialCoords, newCoords)
             console.log(date.toLocaleDateString(),position)
-
-            if (this.isAvailable && this.distance(this.initialCoords, newCoords) >= 0.01) { // Only start timer after initial location
+            console.log('dist ari: '+ this.distance_ari(this.initialCoords, newCoords))
+            if (this.isAvailable && this.distance_ari(this.initialCoords, newCoords) >= 0.0005) { // Only start timer after initial location
+              console.log('Coordenada dentro da ativação: ' + this.distance(this.initialCoords, newCoords))
+              console.log('dist ari ativ: '+ this.distance_ari(this.initialCoords, newCoords))
+              
               this.startTimer();
             } else {
               //this.initialLocationReceived = true; // Mark initial location received
@@ -257,11 +259,21 @@
           this.locationEnabled = true;
         },
 
+      distance_ari(coord1, coord2) {
+        
+        let pow_lat = Math.pow((coord1.lat - coord2.lat),2)
+        let pow_lon = Math.pow((coord1.lon - coord2.lon),2)
+        let d = Math.sqrt(pow_lat+pow_lon)
+        
+        return d
+      },
+
       distance(coord1, coord2) {
-        const latDif = (Math.abs(coord1.lat) - Math.abs(coord2.lat))/100
-        const lonDif = (Math.abs(coord1.lon) - Math.abs(coord2.lon))/100
-        console.log(Math.abs(latDif+lonDif));
-        return Math.abs(latDif+lonDif)
+        const latDif = Math.abs(coord1.lat - coord2.lat)/100
+        const lonDif = Math.abs(coord1.lon - coord2.lon)/100
+        const result = Math.abs(latDif+lonDif)
+        console.log(latDif,lonDif,result);
+        return result
       }
 
     }
