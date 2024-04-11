@@ -246,7 +246,7 @@
             var date = new Date();
             console.log(date.toLocaleDateString(),position)
             console.log('dist ari: '+ this.distance_ari(this.initialCoords, newCoords))
-            if (this.isAvailable && this.distance_ari(this.initialCoords, newCoords) >= 0.0005) { // Only start timer after initial location
+            if (this.isAvailable && this.distance_ari(this.initialCoords, newCoords) >= 0.00003) { // Only start timer after initial location
               console.log('Coordenada dentro da ativação: ' + this.distance(this.initialCoords, newCoords))
               console.log('dist ari ativ: '+ this.distance_ari(this.initialCoords, newCoords))
               
