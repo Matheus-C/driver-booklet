@@ -45,18 +45,59 @@
       return {
         isAvailable: false,
         isResting: false,
+        isWorking: false,
         timer: null,
         timerRunning: false,
         locationEnabled: false,
-        //initialLocationReceived: false, // Added flag for initial location
-        isWorking: false,
         hours: 0,
         minutes: 0,
         seconds: 0,
         initialCoords: {lat: 0, lon: 0}, // Initial coordinates
 
-        start(type){
+        timeEventHandler(type,eventType) {
+          switch (type) {
+              case "work":
+                if (!this.isWorking && eventType === 'start' ) {
+                  this.timeEventHandler("available","end");
+                  this.isWorking = true;
+                  workingTimeStart = Date.now();
+                }
+                else if (this.isWorking && eventType === 'end') {
+                  this.isWorking = false;
+                  workedTime += Date.now() - workingTimeStart;
+                  console.log(workedTime)
+                }
+              break;
+              
+              case "rest":
+                  if (!this.isResting && eventType === 'start') {
+                      this.isResting = true;
+                      restTimeStart = Date.now();
+                  }
+                  else if (this.isResting && eventType === 'end'){
+                    this.isResting = false;
+                    restTime += Date.now() - restTimeStart;
+                  }
+                  break;
+              
+              case "available":
+                  if (!this.isAvailable && eventType === 'start') {
+                      this.isAvailable = true;
+                      availableTimeStart = Date.now();
+                  }
+                  else if(this.isAvailable && eventType === 'end'){
+                    this.isAvailable = false;
+                    availableTime += Date.now() - availableTimeStart;
+                  }
+                  break;
+              default:
+                  console.log("Unknown type");
+          }
+      },
+
+        /*start(type){
           if(type==="work"){
+            workingTimeStart = this.initiate(this.isWorking,true)
             if(!this.isWorking){
               this.end("available");
               this.isWorking = true;
@@ -68,14 +109,15 @@
               restTimeStart = Date.now();
             }
           }else if(type === "available"){
+            availableTimeStart = this.initiate(this.isAvailable,true)
             if(!this.isAvailable){
               this.isAvailable = true;
               availableTimeStart = Date.now();
             }
           }
-        },
+        },*/
 
-        end(type){
+        /*end(type){
           if(type==="work"){
             if(this.isWorking){
               this.isWorking = false;
@@ -92,7 +134,7 @@
               availableTime += Date.now() - availableTimeStart;
             }
           }
-        },
+        },*/
 
         startTimer() {
           if (!this.timerRunning)
@@ -102,7 +144,7 @@
             this.seconds++;
             if (this.seconds === 10) {
               if(this.isWorking && (workedTime + Date.now()-workingTimeStart) >= 5000){
-                let notification = new Notification('Ta trabalhando muito safado', {
+                let notification = new Notification('Notificação Teste 10s', {
                 body: 'body',
                 icon: "{{ url_for('static', filename='notification.ico') }}",
                 tag: 'tag',
@@ -119,7 +161,7 @@
               this.minutes = 0;
               this.hours++;
               if(this.isWorking && (workedTime + (Date.now()-workingTimeStart)) >= 3600000*7){
-                new Notification('Ta trabalhando muito safado', {
+                new Notification('Notificação Teste > 7Hrs', {
                 body: 'body',
                 icon: "{{ url_for('static', filename='notification.ico') }}",
                 tag: 'tag',
@@ -131,7 +173,8 @@
           }
           else{
             console.log('Inicio da condução');
-            this.start("work");
+            this.timeEventHandler("work",'start');
+            //this.start("work");
 
           }
           
@@ -141,8 +184,11 @@
           console.log('Fim da condução');
           clearInterval(this.timer);
           this.timerRunning = false;
-          this.end("work");
-          this.end("available");
+          //this.end("work");
+          //this.end("available");
+          this.timeEventHandler("work","end");
+          this.timeEventHandler("available","end");
+
         },
         
         resetTimer() {
@@ -164,9 +210,12 @@
         becomeAvailable(){
           if (!this.isAvailable){
             if(this.isResting){
-              this.end("rest");
+              //this.end("rest");
+              this.timeEventHandler("rest","end");
+
             }
-            this.start("available");
+            this.timeEventHandler("available","start")
+            //this.start("available");
             console.log('Inicio do dia ou atividade');
             this.startTimer();
           }
@@ -176,9 +225,12 @@
           let confirm_action = confirm('Quer mesmo acabar o dia ?');
           if (confirm_action){
             //this.initialLocationReceived = false;
-            this.end("work");
-            this.end("available");
-            this.end("rest");
+            this.timeEventHandler("work","end");
+            this.timeEventHandler("available","end");
+            this.timeEventHandler("rest","end");
+            //this.end("work");
+            //this.end("available");
+            //this.end("rest");
             workedTime = 0;
             this.timerRunning =  false;
             console.log ('fim de expediente ->'+ this.formattedTime);
