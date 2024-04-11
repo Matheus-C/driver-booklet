@@ -35,9 +35,16 @@
   </div>
 
   <script>
+    let workingTimeStart = 0;
+    let workedTime = 0;
+    let availableTimeStart = 0;
+    let availableTime = 0;
+    let restTimeStart = 0;
+    let restTime = 0;
     function stopwatch() {
       return {
         isAvailable: false,
+        isResting: false,
         timer: null,
         timerRunning: false,
         locationEnabled: false,
@@ -47,6 +54,56 @@
         minutes: 0,
         seconds: 0,
         initialCoords: {lat: 0, lon: 0}, // Initial coordinates
+        
+
+        startWorking(){
+          if(!this.isWorking){
+            this.isWorking = true;
+            let timestamp = Date.now();
+            workingTimeStart = timestamp;
+          }
+        },
+
+        endWorkTime(){
+          if(this.isWorking){
+            this.isWorking = false;
+            let timestamp = Date.now();
+            workedTime += timestamp - workingTimeStart;
+            console.log(workedTime);
+          }
+        },
+
+        startAvailableTime(){
+          if(!this.isAvailable){
+            this.isAvailable = true;
+            let timestamp = Date.now();
+            availableTimeStart = timestamp;
+          }
+        },
+
+        endAvailableTime(){
+          if(this.isAvailable){
+            this.isAvailable = false;
+            let timestamp = Date.now();
+            availableTime += timestamp - availableTimeStart;
+          }
+        },
+
+        startRestTime(){
+          if(!this.isResting){
+            this.isResting = true;
+            let timestamp = Date.now();
+            restTimeStart = timestamp;
+          }
+        },
+
+        endRestTime(){
+          if(this.isResting){
+            this.isResting = false;
+            let timestamp = Date.now();
+            restTime += timestamp - restTimeStart;
+          }
+        },
 
         startTimer() {
           if (!this.timerRunning)
@@ -54,6 +111,18 @@
             this.timerRunning = true;
             this.timer = setInterval(() => {
             this.seconds++;
+            if (this.seconds === 10) {
+              console.log(this.isWorking && (workedTime + Date.now()-workingTimeStart) >= 5000);
+              if(this.isWorking && (workedTime + Date.now()-workingTimeStart) >= 5000){
+                let notification = new Notification('Ta trabalhando muito safado', {
+                body: 'body',
+                icon: "{{ url_for('static', filename='notification.ico') }}",
+                tag: 'tag',
+                data: 'data'
+                });
+                setTimeout(notification.close.bind(notification), 4000);
+              }
+            }
             if (this.seconds === 60) {
               this.seconds = 0;
               this.minutes++;
@@ -61,12 +130,21 @@
             if (this.minutes === 60) {
               this.minutes = 0;
               this.hours++;
+              if(this.isWorking && (workedTime + (Date.now()-workingTimeStart)) >= 3600000*7){
+                new Notification('Ta trabalhando muito safado', {
+                body: 'body',
+                icon: "{{ url_for('static', filename='notification.ico') }}",
+                tag: 'tag',
+                data: 'data'
+                });
+              }
             }
           }, 1000);
           }
           else{
-            console.log('Inicio da condução')
-            this.isWorking = true;
+            console.log('Inicio da condução');
+            this.startWorking();
+
           }
           
         },
@@ -75,8 +153,8 @@
           console.log('Fim da condução');
           clearInterval(this.timer);
           this.timerRunning = false;
-          this.isWorking = false;
-          this.isAvailable = false;
+          this.endWorkTime();
+          this.endAvailableTime();
         },
         
         resetTimer() {
@@ -96,11 +174,11 @@
         },
 
         becomeAvailable(){
-          if (this.isAvailable){
-            this.isAvailable = false;
-          }
-          else{
-            this.isAvailable = true;
+          if (!this.isAvailable){
+            if(this.isResting){
+              this.endRestTime();
+            }
+            this.startAvailableTime();
             console.log('Inicio do dia ou atividade');
             this.startTimer();
           }
@@ -110,8 +188,10 @@
           let confirm_action = confirm('Quer mesmo acabar o dia ?');
           if (confirm_action){
             //this.initialLocationReceived = false;
-            this.timerRunning = false;
-            this.isAvailable = false;
+            this.endWorkTime();
+            this.endAvailableTime();
+            this.endRestTime();
+            workedTime = 0;
             this.timerRunning =  false;
             console.log ('fim de expediente ->'+ this.formattedTime);
             this.resetTimer();
@@ -151,6 +231,9 @@
     htmx.onLoad(function (target) {
       let app = document.querySelector('[x-data]');
       app.__x.$data.enableLocation();
+      if (Notification.permission !== 'granted') {
+        Notification.requestPermission()
+      }
   });
     
   </script>

@@ -23,7 +23,7 @@
         body: 'This is a notification from your web app.',
         icon: "{{ url_for('static', filename='notification.ico') }}"// Optional icon
       });*/
-      self.registration.showNotification('aaaaaaa', {
+      notification = new Notification('aaaaaaa', {
         body: 'body',
         icon: "{{ url_for('static', filename='notification.ico') }}",
         tag: 'tag',
