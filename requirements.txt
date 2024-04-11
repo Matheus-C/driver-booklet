@@ -1,3 +1,4 @@
 flask
 sqlalchemy
 python-dotenv
+mysql-connector-python
