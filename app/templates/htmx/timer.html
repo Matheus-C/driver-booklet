@@ -243,6 +243,9 @@
         enableLocation() {
           navigator.geolocation.watchPosition((position) => {
             const newCoords = { lat: position.coords.latitude, lon: position.coords.longitude };
+            var date = new Date();
+            this.distance(this.initialCoords, newCoords)
+            console.log(date.toLocaleDateString(),position)
 
             if (this.isAvailable && this.distance(this.initialCoords, newCoords) >= 0.01) { // Only start timer after initial location
               this.startTimer();
@@ -255,7 +258,6 @@
         },
 
       distance(coord1, coord2) {
-
         const latDif = (Math.abs(coord1.lat) - Math.abs(coord2.lat))/100
         const lonDif = (Math.abs(coord1.lon) - Math.abs(coord2.lon))/100
         console.log(Math.abs(latDif+lonDif));
