@@ -16,7 +16,7 @@
             <h1 class="title">Stopwatch + Location + AlpineJS</h1>
             <div class="field has-addons" >
               <p class="control">
-                <button class="button is-dark" @click="becomeAvailable" x-show="!isAvailable && locationEnabled">Ficar disponivel</button>
+                <button class="button is-dark" @click="becomeAvailable" x-show="!isAvailable && !isWorking && locationEnabled">Ficar disponivel</button>
               </p>
          
               <p class="control">
@@ -54,54 +54,43 @@
         minutes: 0,
         seconds: 0,
         initialCoords: {lat: 0, lon: 0}, // Initial coordinates
-        
 
-        startWorking(){
-          if(!this.isWorking){
-            this.isWorking = true;
-            let timestamp = Date.now();
-            workingTimeStart = timestamp;
+        start(type){
+          if(type==="work"){
+            if(!this.isWorking){
+              this.end("available");
+              this.isWorking = true;
+              workingTimeStart = Date.now();
+            }
+          }else if(type === "rest"){
+            if(!this.isResting){
+              this.isResting = true;
+              restTimeStart = Date.now();
+            }
+          }else if(type === "available"){
+            if(!this.isAvailable){
+              this.isAvailable = true;
+              availableTimeStart = Date.now();
+            }
           }
         },
 
-        endWorkTime(){
-          if(this.isWorking){
-            this.isWorking = false;
-            let timestamp = Date.now();
-            workedTime += timestamp - workingTimeStart;
-            console.log(workedTime);
-          }
-        },
-
-        startAvailableTime(){
-          if(!this.isAvailable){
-            this.isAvailable = true;
-            let timestamp = Date.now();
-            availableTimeStart = timestamp;
-          }
-        },
-
-        endAvailableTime(){
-          if(this.isAvailable){
-            this.isAvailable = false;
-            let timestamp = Date.now();
-            availableTime += timestamp - availableTimeStart;
-          }
-        },
-
-        startRestTime(){
-          if(!this.isResting){
-            this.isResting = true;
-            let timestamp = Date.now();
-            restTimeStart = timestamp;
-          }
-        },
-
-        endRestTime(){
-          if(this.isResting){
-            this.isResting = false;
-            let timestamp = Date.now();
-            restTime += timestamp - restTimeStart;
+        end(type){
+          if(type==="work"){
+            if(this.isWorking){
+              this.isWorking = false;
+              workedTime += Date.now() - workingTimeStart;
+            }
+          }else if(type === "rest"){
+            if(this.isResting){
+              this.isResting = false;
+              restTime += Date.now() - restTimeStart;
+            }
+          }else if(type === "available"){
+            if(this.isAvailable){
+              this.isAvailable = false;
+              availableTime += Date.now() - availableTimeStart;
+            }
           }
         },
 
@@ -112,7 +101,6 @@
             this.timer = setInterval(() => {
             this.seconds++;
             if (this.seconds === 10) {
-              console.log(this.isWorking && (workedTime + Date.now()-workingTimeStart) >= 5000);
               if(this.isWorking && (workedTime + Date.now()-workingTimeStart) >= 5000){
                 let notification = new Notification('Ta trabalhando muito safado', {
                 body: 'body',
@@ -143,7 +131,7 @@
           }
           else{
             console.log('Inicio da condução');
-            this.startWorking();
+            this.start("work");
 
           }
           
@@ -153,8 +141,8 @@
           console.log('Fim da condução');
           clearInterval(this.timer);
           this.timerRunning = false;
-          this.endWorkTime();
-          this.endAvailableTime();
+          this.end("work");
+          this.end("available");
         },
         
         resetTimer() {
@@ -176,9 +164,9 @@
         becomeAvailable(){
           if (!this.isAvailable){
             if(this.isResting){
-              this.endRestTime();
+              this.end("rest");
             }
-            this.startAvailableTime();
+            this.start("available");
             console.log('Inicio do dia ou atividade');
             this.startTimer();
           }
@@ -188,9 +176,9 @@
           let confirm_action = confirm('Quer mesmo acabar o dia ?');
           if (confirm_action){
             //this.initialLocationReceived = false;
-            this.endWorkTime();
-            this.endAvailableTime();
-            this.endRestTime();
+            this.end("work");
+            this.end("available");
+            this.end("rest");
             workedTime = 0;
             this.timerRunning =  false;
             console.log ('fim de expediente ->'+ this.formattedTime);
