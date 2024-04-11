@@ -16,7 +16,7 @@
             <h1 class="title">Stopwatch + Location + AlpineJS</h1>
             <div class="field has-addons" >
               <p class="control">
-                <button class="button is-dark" @click="becomeAvailable" x-show="!isAvailable && locationEnabled">Ficar disponivel</button>
+                <button class="button is-dark" @click="becomeAvailable" x-show="!isAvailable && !isWorking && locationEnabled">Ficar disponivel</button>
               </p>
          
               <p class="control">
@@ -35,18 +35,106 @@
   </div>
 
   <script>
+    let workingTimeStart = 0;
+    let workedTime = 0;
+    let availableTimeStart = 0;
+    let availableTime = 0;
+    let restTimeStart = 0;
+    let restTime = 0;
     function stopwatch() {
       return {
         isAvailable: false,
+        isResting: false,
+        isWorking: false,
         timer: null,
         timerRunning: false,
         locationEnabled: false,
-        //initialLocationReceived: false, // Added flag for initial location
-        isWorking: false,
         hours: 0,
         minutes: 0,
         seconds: 0,
         initialCoords: {lat: 0, lon: 0}, // Initial coordinates
+
+        timeEventHandler(type,eventType) {
+          switch (type) {
+              case "work":
+                if (!this.isWorking && eventType === 'start' ) {
+                  this.timeEventHandler("available","end");
+                  this.isWorking = true;
+                  workingTimeStart = Date.now();
+                }
+                else if (this.isWorking && eventType === 'end') {
+                  this.isWorking = false;
+                  workedTime += Date.now() - workingTimeStart;
+                  console.log(workedTime)
+                }
+              break;
+              
+              case "rest":
+                  if (!this.isResting && eventType === 'start') {
+                      this.isResting = true;
+                      restTimeStart = Date.now();
+                  }
+                  else if (this.isResting && eventType === 'end'){
+                    this.isResting = false;
+                    restTime += Date.now() - restTimeStart;
+                  }
+                  break;
+              
+              case "available":
+                  if (!this.isAvailable && eventType === 'start') {
+                      this.isAvailable = true;
+                      availableTimeStart = Date.now();
+                  }
+                  else if(this.isAvailable && eventType === 'end'){
+                    this.isAvailable = false;
+                    availableTime += Date.now() - availableTimeStart;
+                  }
+                  break;
+              default:
+                  console.log("Unknown type");
+          }
+      },
+
+        /*start(type){
+          if(type==="work"){
+            workingTimeStart = this.initiate(this.isWorking,true)
+            if(!this.isWorking){
+              this.end("available");
+              this.isWorking = true;
+              workingTimeStart = Date.now();
+            }
+          }else if(type === "rest"){
+            if(!this.isResting){
+              this.isResting = true;
+              restTimeStart = Date.now();
+            }
+          }else if(type === "available"){
+            availableTimeStart = this.initiate(this.isAvailable,true)
+            if(!this.isAvailable){
+              this.isAvailable = true;
+              availableTimeStart = Date.now();
+            }
+          }
+        },*/
+
+        /*end(type){
+          if(type==="work"){
+            if(this.isWorking){
+              this.isWorking = false;
+              workedTime += Date.now() - workingTimeStart;
+            }
+          }else if(type === "rest"){
+            if(this.isResting){
+              this.isResting = false;
+              restTime += Date.now() - restTimeStart;
+            }
+          }else if(type === "available"){
+            if(this.isAvailable){
+              this.isAvailable = false;
+              availableTime += Date.now() - availableTimeStart;
+            }
+          }
+        },*/
 
         startTimer() {
           if (!this.timerRunning)
@@ -54,6 +142,17 @@
             this.timerRunning = true;
             this.timer = setInterval(() => {
             this.seconds++;
+            if (this.seconds === 10) {
+              if(this.isWorking && (workedTime + Date.now()-workingTimeStart) >= 5000){
+                let notification = new Notification('Notificação Teste 10s', {
+                body: 'body',
+                icon: "{{ url_for('static', filename='notification.ico') }}",
+                tag: 'tag',
+                data: 'data'
+                });
+                setTimeout(notification.close.bind(notification), 4000);
+              }
+            }
             if (this.seconds === 60) {
               this.seconds = 0;
               this.minutes++;
@@ -61,12 +160,22 @@
             if (this.minutes === 60) {
               this.minutes = 0;
               this.hours++;
+              if(this.isWorking && (workedTime + (Date.now()-workingTimeStart)) >= 3600000*7){
+                new Notification('Notificação Teste > 7Hrs', {
+                body: 'body',
+                icon: "{{ url_for('static', filename='notification.ico') }}",
+                tag: 'tag',
+                data: 'data'
+                });
+              }
             }
           }, 1000);
           }
           else{
-            console.log('Inicio da condução')
-            this.isWorking = true;
+            console.log('Inicio da condução');
+            this.timeEventHandler("work",'start');
+            //this.start("work");
+
           }
           
         },
@@ -75,8 +184,11 @@
           console.log('Fim da condução');
           clearInterval(this.timer);
           this.timerRunning = false;
-          this.isWorking = false;
-          this.isAvailable = false;
+          //this.end("work");
+          //this.end("available");
+          this.timeEventHandler("work","end");
+          this.timeEventHandler("available","end");
+
         },
         
         resetTimer() {
@@ -96,11 +208,14 @@
         },
 
         becomeAvailable(){
-          if (this.isAvailable){
-            this.isAvailable = false;
-          }
-          else{
-            this.isAvailable = true;
+          if (!this.isAvailable){
+            if(this.isResting){
+              //this.end("rest");
+              this.timeEventHandler("rest","end");
+
+            }
+            this.timeEventHandler("available","start")
+            //this.start("available");
             console.log('Inicio do dia ou atividade');
             this.startTimer();
           }
@@ -110,8 +225,13 @@
           let confirm_action = confirm('Quer mesmo acabar o dia ?');
           if (confirm_action){
             //this.initialLocationReceived = false;
-            this.timerRunning = false;
-            this.isAvailable = false;
+            this.timeEventHandler("work","end");
+            this.timeEventHandler("available","end");
+            this.timeEventHandler("rest","end");
+            //this.end("work");
+            //this.end("available");
+            //this.end("rest");
+            workedTime = 0;
             this.timerRunning =  false;
             console.log ('fim de expediente ->'+ this.formattedTime);
             this.resetTimer();
@@ -151,6 +271,9 @@
     htmx.onLoad(function (target) {
       let app = document.querySelector('[x-data]');
       app.__x.$data.enableLocation();
+      if (Notification.permission !== 'granted') {
+        Notification.requestPermission()
+      }
   });
     
   </script>
