@@ -13,9 +13,9 @@ def load_user(id):
 @app.route('/')
 def index():
     if current_user.is_authenticated:
-        return str(current_user.name)
+        return render_template('index.html', user=current_user)
     else:
-        return 'No user logged'
+        return render_template('index.html')
 
 @app.route('/login',methods=['GET','POST'])
 def login(id=None):
@@ -30,8 +30,6 @@ def login(id=None):
             return redirect('/')
         else:
             return redirect('/login')
-
-    
 
 @app.route('/signup',methods=['GET','POST'])
 def signup(id=None):
@@ -52,4 +50,4 @@ def signup(id=None):
 @app.route('/logout')
 def logout():
     logout_user()
-    return 'Success'
+    return redirect('/')

@@ -20,21 +20,27 @@
 <body>
     <section class="hero">
         <div class="hero-body">
-          <p class="title">Index</p>
-          <p class="subtitle">Links</p>
+          <p class="title">Driver Booklet</p>
+          <p class="subtitle">{% if user %}
+                            Current User Logged: {{user.name}}
+                {% endif %}
+            </p>
         </div>
+        
       </section>
-      <a class="navbar-item" href="{{ url_for('gps') }}">
-        GPS
-    </a>
-    <a class="navbar-item" href="{{ url_for('notifications') }}">
-        Notifications
-    </a>
-    <a class="navbar-item" href="{{ url_for('notificationsSW') }}">
-        NotificationsSW
-    </a>
     <a class="navbar-item" href="{{ url_for('timer') }}">
         Timer
+    </a>
+    {% if user is not defined %}
+    <a class="navbar-item" href="{{ url_for('login') }}">
+        Login
+    </a>
+    <a class="navbar-item" href="{{ url_for('signup') }}">
+        Signup
+    </a>
+    {% endif %}
+    <a class="navbar-item" href="{{ url_for('logout') }}">
+        Logout
     </a>
       
 </body>
