@@ -4,9 +4,7 @@ from app.models.database import *
 from app import app
 import json
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+
 
 @app.route('/gps')
 def gps():
