@@ -1,5 +1,6 @@
-from sqlalchemy import ForeignKey,Column,String,Integer,Float,CHAR,DateTime,Date
+from sqlalchemy import ForeignKey,Column,String,Integer,Float,CHAR,DateTime,Date,Boolean
 from sqlalchemy.ext.declarative import declarative_base
+from flask_login import UserMixin
 from .database import *
 
 import uuid
@@ -17,20 +18,39 @@ class PushSubscription(Base):
   userId = Column('userid', ForeignKey('users.id'))
 
 
-class User(Base):
-   __tablename__ = 'users'
-   id = Column('id', Integer, primary_key=True)
-   userTypeId = Column(Integer, ForeignKey('userType.id'))
-   name = Column('name', String(255))
-   userIdentification = Column('usrId', String(255))
-   phone = Column('phone', String(255))
-   address = Column('address', String(255))
-   email = Column('email', String(255))
-   birthDate = Column('birthDate', Date)
-   startWorkDate = Column('startWork', Date)
-   category = Column('category', String(255))
-   #users = relationship('User', back_populates='user_type')
+class User(Base,UserMixin):
+  __tablename__ = 'users'
+  id = Column('id', Integer, primary_key=True)
+  userTypeId = Column(Integer, ForeignKey('userType.id'))
+  name = Column('name', String(255))
+  userIdentification = Column('userIdentification', String(255))
+  phone = Column('phone', String(255))
+  address = Column('address', String(255))
+  email = Column('email', String(255))
+  birthDate = Column('birthDate', Date)
+  startWorkDate = Column('startWork', Date)
+  category = Column('category', String(255))
+  password = Column('password', String(255))
+  is_active = Column(Boolean, default=False)
+  #users = relationship('User', back_populates='user_type')
 
+  def __repr__(self):
+    return f'<User: {self.id},{self.name},{self.email}>'
+   
+  def get_id(self):
+    return self.id
+   
+  @property
+  def is_authenticated(self):
+    return True  # Assuming all users are authenticated
+
+  @property
+  def is_active(self):
+    return True
+
+  @property
+  def is_anonymous(self):
+    return False
 
 class UserType(Base):
   __tablename__ = 'userType'
