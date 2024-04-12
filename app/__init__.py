@@ -8,3 +8,5 @@ app = Flask(__name__)
 # import views
 
 from app import routing
+
+from app import timer
