@@ -24,10 +24,13 @@ def login(id=None):
     elif request.method == 'POST' and request.form:
         email = request.form.get('email')
         password = request.form.get('password')
-        hashed_password = bcrypt.generate_password_hash(password=password)
-        user = session.query(User).filter_by(email=email,password=hashed_password).first()
-        login_user(user)
-        return redirect('/')
+        user = session.query(User).filter_by(email=email).first()
+        if user and bcrypt.check_password_hash(user.password,password):
+            login_user(user)
+            return redirect('/')
+        else:
+            return redirect('/login')
+
     
 
 @app.route('/signup',methods=['GET','POST'])
