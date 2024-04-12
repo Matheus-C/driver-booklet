@@ -1,4 +1,6 @@
-flask
-sqlalchemy
 python-dotenv
+flask
+flask-login
+flask-bcrypt
+sqlalchemy
 mysql-connector-python
