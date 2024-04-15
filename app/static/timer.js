@@ -1,3 +1,4 @@
+//window.app = 
 function stopwatch() {
     return {
       workingTimeStart: 0,
@@ -33,7 +34,7 @@ function stopwatch() {
           headers: {
             "Content-type": "application/json; charset=UTF-8"
           }
-        }).then((response) => response.json()).then((json));
+        });
         }
         
         switch (type) {
@@ -227,8 +228,7 @@ function stopwatch() {
           
           const newCoords = { lat: position.coords.latitude, lon: position.coords.longitude };
           
-          if (this.isAvailable && this.distance_ari(this.initialCoords, newCoords) >= 0.00003) { 
-            // Only start timer after initial location
+          if (this.isAvailable && this.distance_ari(this.initialCoords, newCoords) >= 0.00003) { // Only start timer after initial location
             this.startTimer();
           } else {
             this.initialCoords = newCoords;
