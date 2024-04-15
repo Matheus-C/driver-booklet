@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stopwatch with GPS</title>
+  <title>Registo de tempo</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
   <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
@@ -13,23 +13,44 @@
   <div x-data="stopwatch()">
     <div class="container">
           <div class="stopwatch" >
-            <h1 class="title">Stopwatch + Location + AlpineJS</h1>
-            <div class="field has-addons" >
-              <p class="control">
-                <button class="button is-dark" @click="becomeAvailable" x-show="!isAvailable && !isWorking && locationEnabled">Ficar disponivel</button>
-              </p>
-         
-              <p class="control">
-                <button class="button is-primary" @click="startTimer" x-show="isAvailable && locationEnabled && !isWorking">Começar Trabalho</button>
-              </p>
-              <p class="control">
-                <button class="button is-link" @click="stopTimer" x-show="timerRunning">Repousar</button>
-              </p>
-              <p class="control">
-                <button class="button is-light" @click="endTimer">Fim do Expediente</button>
-              </p>
-            </div>
+            <h1 class="title">Registo de tempo</h1>
+              <br>
+              <br>
+              <br>
+            
+            <div class="box" align="center" hx-target="tbody" hx-get="/timer/update/{{ current_user.id }}" hx-swap="outerHTML">
             <p class="subtitle is-3" x-text="formattedTime" ></p>
+
+              <!-- <div class="field has-addons" > -->
+                <div>
+                <p class="control block">
+                  <button class="button is-dark" @click="becomeAvailable" x-show="!isAvailable && !isWorking && locationEnabled">Ficar disponivel</button>
+                </p>
+                <p class="control block"">
+                  <button class="button is-primary" @click="startTimer" x-show="isAvailable && locationEnabled && !isWorking">Começar Trabalho</button>
+                </p>
+                <p class="control block"">
+                  <button class="button is-link" @click="stopTimer" x-show="timerRunning">Repousar</button>
+                </p>
+                <p class="control block"">
+                  <button class="button is-warning" @click="endTimer">Fim do Expediente</button>
+                </p>
+              </div>
+              <!-- </div> -->
+            </div>
+            <table class="table box block">
+              <thead>
+                <tr>
+                  <th>Data Inicio</th>
+                  <th>Data Fim</th>
+                  <th>Tipo Evento</th>
+                  <th>Tempo (em Horas)</th>
+                </tr>
+              </thead>
+              <tbody>
+               
+              </tbody>
+           
           </div>
     </div>
   </div>
