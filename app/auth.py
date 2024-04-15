@@ -8,6 +8,7 @@ from flask_login import login_user,logout_user,current_user,login_required
 def load_user(id):
     session = Session()
     user = session.query(User).filter_by(id=id).first()
+    session.close()
     return user
 
 @app.route('/')
@@ -43,6 +44,8 @@ def signup():
         session = Session()
         user = session.add(user)
         session.commit()
+        session.close()
+
         return redirect('/')
 
 @app.route('/logout')

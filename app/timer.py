@@ -24,6 +24,7 @@ def event_data():
                   idUser = current_user.id, vehicleId = json_data["vehicleId"])
     session.add(event)
     session.commit()
+    session.close()
     return jsonify({"status": "success"})
 
 @app.route('/timer/update/<id>')
@@ -43,7 +44,7 @@ def timer_update(id):
      lag_query AS
   (SELECT e.eventTime date_start,
           et.name CategoryName,
-    	  case when et.old_name like '%_END' then 0
+    	  case when et.old_name like '%_end' then 0
           ELSE LEAD(eventTime, 1, 0) OVER (PARTITION BY et.name ORDER BY eventTime ASC) 
    		 END as date_end
    FROM `event` e
@@ -58,7 +59,8 @@ def timer_update(id):
     if current_user:
         query = text(query)
         session = Session()
-        data = session.execute(query).fetchmany(10)
+        data = session.execute(query).fetchmany(5)
+        session.close()
 
         return render_template('htmx/timer_updates.html',data=data)
     else:
