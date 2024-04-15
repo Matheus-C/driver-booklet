@@ -1,25 +1,54 @@
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
 </head>
+
 <body>
     <div class="box container">
-    <form action="/signup" method="post">
-    <div class="field">
-        <label class="label">Signup</label>
-        <div class="control">
-          <input class="input" type="text" name='email' placeholder="Type your email">
-        </div>
-        <div class="control">
-        <input class="input" type="password" name='password' placeholder="Type your password">
-        </div>
-        
-        <button class="button">Signup</button>
-    </div>
-    </form>
+        <form action="/signup" method="post">
+            <div class="field">
+                <label class="label">Signup</label>
+                <div class="control">
+                    <input class="input" type="text" name='name' placeholder="Type your name">
+                </div>
+                <div class="control">
+                    <input class="input" type="number" name='userIdentification' placeholder="Type your NIF">
+                </div>
+                <div class="control">
+                    <input class="input" type="email" name='email' placeholder="Type your email">
+                </div>
+                <div class="control">
+                    <input class="input" type="password" name='password' placeholder="Type your password">
+                </div>
+              
+                <div class="control">
+                    <input class="input" type="tel" name='phone' placeholder="Type your phone">
+                </div>
+                <div class="control">
+                    <input class="input" type="text" name='address' placeholder="Type your address">
+                </div>
+
+                <div class="control">
+                    <input class="input" type="date" name='birthDate' placeholder="Type your BirthDate">
+                </div>
+                <div class="control">
+                    <input class="input" type="date" name='startWorkDate' placeholder="Type your StartWorkDate">
+                </div>
+
+                <div class="control">
+                    <input class="input" type="number" name='category' placeholder="Type your category">
+                </div>
+
+
+
+                <button class="button">Signup</button>
+            </div>
+        </form>
     </div>
 </body>
+
 </html>

@@ -24,7 +24,7 @@ function stopwatch() {
         event_obj = {
           idType: null,
           eventTimestamp: time_now,
-          idUser: 1,
+          idUser: null,
           vehicleId: 1
         };
         function send_json(obj){
@@ -34,7 +34,7 @@ function stopwatch() {
           headers: {
             "Content-type": "application/json; charset=UTF-8"
           }
-        }).then((response) => response.json()).then((json) => console.log(json));
+        });
         }
         
         switch (type) {
@@ -48,7 +48,6 @@ function stopwatch() {
                 else if (this.isWorking && eventType === 'end') {// id: 2
                   this.isWorking = false;
                   this.workedTime += time_now - this.workingTimeStart;
-                  console.log(this.workedTime);
                   event_obj.idType = 2;
                 }
               
@@ -168,20 +167,15 @@ function stopwatch() {
         }, 1000);
         }
         else{
-          console.log('Inicio da condução');
           this.timeEventHandler("work",'start');
-          //this.start("work");
 
         }
         
       },
       
       stopTimer() {
-        console.log('Fim da condução');
         clearInterval(this.timer);
         this.timerRunning = false;
-        //this.end("work");
-        //this.end("available");
         this.timeEventHandler("rest","start");
         this.timeEventHandler("work","end");
         this.timeEventHandler("available","end");
@@ -207,13 +201,10 @@ function stopwatch() {
       becomeAvailable(){
         if (!this.isAvailable){
           if(this.isResting){
-            //this.end("rest");
             this.timeEventHandler("rest","end");
 
           }
           this.timeEventHandler("available","start")
-          //this.start("available");
-          console.log('Inicio do dia ou atividade');
           this.startTimer();
         }
       },
@@ -221,16 +212,11 @@ function stopwatch() {
       endTimer(){
         let confirm_action = confirm('Quer mesmo acabar o dia ?');
         if (confirm_action){
-          //this.initialLocationReceived = false;
           this.timeEventHandler("work","end");
           this.timeEventHandler("available","end");
           this.timeEventHandler("rest","end");
-          //this.end("work");
-          //this.end("available");
-          //this.end("rest");
           this.workedTime = 0;
           this.timerRunning =  false;
-          console.log ('fim de expediente ->'+ this.formattedTime);
           this.resetTimer();
         }
         
@@ -242,10 +228,7 @@ function stopwatch() {
           
           const newCoords = { lat: position.coords.latitude, lon: position.coords.longitude };
           
-          console.log('dist ari: '+ this.distance_ari(this.initialCoords, newCoords))
-          
           if (this.isAvailable && this.distance_ari(this.initialCoords, newCoords) >= 0.00003) { // Only start timer after initial location
-            console.log('dist ari ativ: '+ this.distance_ari(this.initialCoords, newCoords))
             this.startTimer();
           } else {
             this.initialCoords = newCoords;

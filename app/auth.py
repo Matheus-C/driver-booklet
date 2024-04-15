@@ -8,6 +8,7 @@ from flask_login import login_user,logout_user,current_user,login_required
 def load_user(id):
     session = Session()
     user = session.query(User).filter_by(id=id).first()
+    session.close()
     return user
 
 @app.route('/')
@@ -32,19 +33,19 @@ def login(id=None):
             return redirect('/login')
 
 @app.route('/signup',methods=['GET','POST'])
-def signup(id=None):
+def signup():
     if request.method == 'GET':
         return render_template('htmx/signup.html')
     
     elif request.method == 'POST' and request.form:
-        email = request.form.get('email')
-        password = request.form.get('password')
-
-        hashed_password = bcrypt.generate_password_hash(password=password)
-        user = User(email=email,password=hashed_password)
+        dict_data = request.form.to_dict()
+        dict_data['password'] = bcrypt.generate_password_hash(password=dict_data['password'])
+        user = User(**dict_data)
         session = Session()
         user = session.add(user)
         session.commit()
+        session.close()
+
         return redirect('/')
 
 @app.route('/logout')
