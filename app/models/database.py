@@ -4,7 +4,6 @@ from sqlalchemy import create_engine, distinct ,func ,or_,extract
 from sqlalchemy.orm import sessionmaker,aliased
 load_dotenv()
 
-
 user_db = os.environ.get('user_db')
 pass_db = os.environ.get('pass_db')
 host_db = os.environ.get('host_db')

@@ -11,9 +11,9 @@ from flask_login import current_user,login_required
 def profile():
     if current_user:
         session = Session()
-        results = session.query(User,Company).join(Company,Company.idUser == User.id,isouter=True).filter(User.id == current_user.id).all()
+        results = session.query(Company).filter(Company.idUser == current_user.id).all()
         session.close()
-        return render_template('profile.html',user_info=results)
+        return render_template('profile.html',current_user = current_user ,companies=results)
     
 ## Implement CRUD 
 ## Edit fields and change password
