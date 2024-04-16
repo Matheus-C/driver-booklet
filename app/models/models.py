@@ -82,6 +82,7 @@ class Notes(Base):
 class Company(Base):
   __tablename__ = 'company'
   id = Column('id', Integer, primary_key=True)
+  idUser = Column(Integer, ForeignKey('users.id'))
   name = Column('name', String(255))
   description = Column('description', String(255))
   address = Column('address', String(255))

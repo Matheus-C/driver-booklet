@@ -40,6 +40,9 @@
     </a>
     {% endif %}
     {% if user %}
+    <a class="navbar-item" href="{{ url_for('profile') }}">
+        Profile
+    </a>
     <a class="navbar-item" href="{{ url_for('logout') }}">
         Logout
     </a>

@@ -11,4 +11,4 @@ login_manager.init_app(app)
 
 bcrypt = Bcrypt(app)
 
-from app import auth, routing, pwa, timer
+from app import auth, profile, pwa, timer
