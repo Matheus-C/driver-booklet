@@ -1,0 +1,1 @@
+INSERT INTO `userType` (`id`, `name`, `description`) VALUES (NULL, 'owner', NULL), (NULL, 'worker', NULL);

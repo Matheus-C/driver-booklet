@@ -1,26 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Driver Booklet</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
-</head>
-<script 
-    type="text/javascript" 
-    src="static/register_service_worker.js">
-</script>
-<script type="text/javascript">
-    registerServiceWorker(
-        "static/sw.js",
-        "BJcI_Ot1r6hsBqdQMvxfccwNUy4SOfewe7ZAh3aGpOeu123AWWakzFDYu0q4c3MpJLZ-oo00oUkmyHYJRGE7UWY",
-        "/api/push-subscriptions"
-);
-</script>
-<body>
+{% extends 'base/base.html' %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
     <section class="hero">
         <div class="hero-body">
-          <p class="title">Driver Booklet</p>
+          <p class="title">{% block title %}Driver Booklet{% endblock %}</p>
           <p class="subtitle">{% if user %}
                             Current User Logged: {{user.name}}
                 {% endif %}
@@ -28,22 +14,25 @@
         </div>
         
       </section>
-    <a class="navbar-item" href="{{ url_for('timer') }}">
-        Timer
-    </a>
+    
     {% if user is not defined %}
-    <a class="navbar-item" href="{{ url_for('login') }}">
+    <a class="navbar-item" hx-trigger="click" hx-get="{{ url_for('login') }}" hx-swap="outerHTML">
         Login
     </a>
-    <a class="navbar-item" href="{{ url_for('signup') }}">
+    <a class="navbar-item" hx-trigger="click" hx-get="{{ url_for('signup') }}" hx-swap="outerHTML">
         Signup
     </a>
     {% endif %}
     {% if user %}
+    <a class="navbar-item" href="{{ url_for('timer') }}">
+        Timer
+    </a>
+    <a class="navbar-item" href="{{ url_for('profile') }}">
+        Profile
+    </a>
     <a class="navbar-item" href="{{ url_for('logout') }}">
         Logout
     </a>
     {% endif %}
       
-</body>
-</html>
+{% endblock %}

@@ -1,0 +1,36 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
+
+</head>
+<h3 class="title is-3">User Info</h3>
+
+<body>
+    {% set user =  user_info[0].User %}
+    <p>Name: {{ user.name }}</p>
+    <p>User identification: {{ user.userIdentifcation }}</p>
+    <p>Phone: {{ user.phone }}</p>
+    <p>Address: {{ user.address }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>Birthdate: {{ user.birthDate }}</p>
+    <p>Started Working on: {{ user.StartWork }}</p>
+</body>
+
+{% if user.userTypeId == 1 %}
+<button class="button" hx-target="#addCompany" hx-swap="innerHTML" hx-get="/company" >Add Company</button>
+<div id="addCompany"></div>
+{% endif %}
+
+<h3 class="title is-3">Companies</h3>
+{% for item in user_info %}
+{% if item.Company %}
+<p><a href="/company/{{item.Company.id}}">{{ item.Company.name }} ({{item.Company.vatcode}})</a></p>
+{% endif %}
+
+{% endfor %}
+
+</html>

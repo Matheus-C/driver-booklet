@@ -1,0 +1,26 @@
+<!doctype html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <script src="https://unpkg.com/htmx.org@1.9.11"
+        integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript" src="static/register_service_worker.js">
+    </script>
+    <script type="text/javascript">
+        registerServiceWorker(
+            "static/sw.js",
+            "BJcI_Ot1r6hsBqdQMvxfccwNUy4SOfewe7ZAh3aGpOeu123AWWakzFDYu0q4c3MpJLZ-oo00oUkmyHYJRGE7UWY",
+            "/api/push-subscriptions"
+        );
+    </script>
+    <title>{% block title %}{% endblock %}</title>
+    {% block header %}
+    {% endblock %}
+</head>
+<body>
+    {% block content %}{% endblock %}
+</body>
+</html>

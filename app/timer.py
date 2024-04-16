@@ -10,7 +10,7 @@ from sqlalchemy.sql import text
 @login_required
 def timer():
     if current_user:
-        return render_template('htmx/timer.html',current_user=current_user)
+        return render_template('timer.html',current_user=current_user)
     else:
         return redirect('/')
 

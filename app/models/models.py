@@ -5,9 +5,6 @@ from .database import *
 
 import uuid
 
-def generate_id():
-    return str(uuid.uuid4())
-
 Base = declarative_base()
 
 class PushSubscription(Base):
@@ -29,7 +26,6 @@ class User(Base,UserMixin):
   email = Column('email', String(255))
   birthDate = Column('birthDate', Date)
   startWorkDate = Column('startWork', Date)
-  category = Column('category', String(255))
   password = Column('password', String(255))
   is_active = Column(Boolean, default=False)
   #users = relationship('User', back_populates='user_type')
@@ -62,6 +58,7 @@ class EventType(Base):
   __tablename__ = 'eventType'
   id = Column('id', Integer, primary_key=True)
   name = Column('name', String(255))
+  category = Column('category', String(255))
   description = Column('description', String(255))
 
 class Event(Base):
@@ -82,11 +79,18 @@ class Notes(Base):
 class Company(Base):
   __tablename__ = 'company'
   id = Column('id', Integer, primary_key=True)
+  idUser = Column(Integer, ForeignKey('users.id'))
   name = Column('name', String(255))
   description = Column('description', String(255))
   address = Column('address', String(255))
   phone = Column('phone', String(255))
   vatcode = Column('vatcode', String(255))
+
+class UserCompany(Base):
+  __tablename__ = 'userCompany'
+  id = Column('id', Integer, primary_key=True)
+  idUser = Column(Integer, ForeignKey('users.id'))
+  idCompany = Column(Integer, ForeignKey('company.id'))
 
 class Vehicle(Base):
   __tablename__ = 'vehicle'
