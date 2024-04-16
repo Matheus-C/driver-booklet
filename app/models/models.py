@@ -5,9 +5,6 @@ from .database import *
 
 import uuid
 
-def generate_id():
-    return str(uuid.uuid4())
-
 Base = declarative_base()
 
 class PushSubscription(Base):
@@ -43,9 +40,9 @@ class User(Base,UserMixin):
   def is_authenticated(self):
     return True  # Assuming all users are authenticated
 
-  # @property
-  # def is_active(self):
-  #   return True
+  @property
+  def is_active(self):
+    return True
 
   @property
   def is_anonymous(self):
@@ -61,6 +58,7 @@ class EventType(Base):
   __tablename__ = 'eventType'
   id = Column('id', Integer, primary_key=True)
   name = Column('name', String(255))
+  category = Column('category', String(255))
   description = Column('description', String(255))
 
 class Event(Base):

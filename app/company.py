@@ -21,7 +21,7 @@ def company():
             session.add(company)
             session.commit()
             session.close()
-            return url_for('/profile')
+            return url_for('profile')
         
 @app.route("/company/<id>", methods=["GET","POST"])
 @login_required
@@ -44,7 +44,7 @@ def company_info(id):
             session.add(company)
             session.commit()
             session.close()
-            return url_for('/profile')
+            return url_for('profile')
         
 @app.route('/signup_worker/<id_company>',methods=['GET','POST'])
 def signup_worker(id_company=None):
@@ -55,7 +55,7 @@ def signup_worker(id_company=None):
         dict_data = request.form.to_dict()
         dict_data['password'] = bcrypt.generate_password_hash(password=dict_data['password'])
         dict_data['userTypeId'] = 2 #Worker
-        dict_data['is_active'] = 0 #Has to be enabled manually
+        # dict_data['is_active'] = 0 #Has to be enabled manually
         
         user = User(**dict_data)
         session = Session()

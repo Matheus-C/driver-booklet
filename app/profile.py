@@ -11,7 +11,7 @@ from flask_login import current_user,login_required
 def profile():
     if current_user:
         session = Session()
-        results = session.query(User,Company).join(Company,Company.idUser == User.id).filter(User.id == current_user.id).all()
+        results = session.query(User,Company).join(Company,Company.idUser == User.id,isouter=True).filter(User.id == current_user.id).all()
         session.close()
         return render_template('profile.html',user_info=results)
     

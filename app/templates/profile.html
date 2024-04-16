@@ -10,7 +10,6 @@
 <h3 class="title is-3">User Info</h3>
 
 <body>
-
     {% set user =  user_info[0].User %}
     <p>Name: {{ user.name }}</p>
     <p>User identification: {{ user.userIdentifcation }}</p>
@@ -28,7 +27,9 @@
 
 <h3 class="title is-3">Companies</h3>
 {% for item in user_info %}
+{% if item.Company %}
 <p><a href="/company/{{item.Company.id}}">{{ item.Company.name }} ({{item.Company.vatcode}})</a></p>
+{% endif %}
 
 {% endfor %}
 

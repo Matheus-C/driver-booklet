@@ -41,7 +41,7 @@ def signup():
         dict_data = request.form.to_dict()
         dict_data['password'] = bcrypt.generate_password_hash(password=dict_data['password'])
         dict_data['userTypeId'] = 1 #Owner
-        dict_data['is_active'] = 0 #Has to be enabled manually
+        # dict_data['is_active'] = 0 #Has to be enabled manually
         
         user = User(**dict_data)
         session = Session()
