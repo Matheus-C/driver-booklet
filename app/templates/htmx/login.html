@@ -1,4 +1,7 @@
-<div class="box container">
+<div id='div_to_replace' class="box container">
+    <div align="right">
+    <button class="button" hx-target='#div_to_replace' hx-get="/blank" hx-swap="outerHTML">X</button>
+    </div>
 <form action="/login" method="post">
 <div class="field">
     <label class="label">Login</label>

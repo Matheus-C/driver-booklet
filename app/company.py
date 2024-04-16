@@ -27,9 +27,8 @@ def company():
 @login_required
 def company_info(id):
     if current_user:
-        
+        session = Session()
         if request.method == 'GET':
-            session = Session()
             results = session.query(Company,UserCompany,User)\
             .join(UserCompany,UserCompany.idCompany == Company.id,isouter=True)\
             .join(User,UserCompany.idUser == User.id,isouter=True)\
@@ -40,11 +39,10 @@ def company_info(id):
             dict_data = request.form.to_dict()
             dict_data['idUser'] = current_user.id
             company = Company(**dict_data)
-            session = Session()
             session.add(company)
             session.commit()
             session.close()
-            return url_for('profile')
+            return redirect('/profile')
         
 @app.route('/signup_worker/<id_company>',methods=['GET','POST'])
 def signup_worker(id_company=None):
