@@ -44,9 +44,9 @@ class User(Base,UserMixin):
   def is_authenticated(self):
     return True  # Assuming all users are authenticated
 
-  @property
-  def is_active(self):
-    return True
+  # @property
+  # def is_active(self):
+  #   return True
 
   @property
   def is_anonymous(self):

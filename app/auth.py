@@ -35,11 +35,14 @@ def login(id=None):
 @app.route('/signup',methods=['GET','POST'])
 def signup():
     if request.method == 'GET':
-        return render_template('htmx/signup.html')
+        return render_template('htmx/signup.html',data={'return':'/signup'})
     
     elif request.method == 'POST' and request.form:
         dict_data = request.form.to_dict()
         dict_data['password'] = bcrypt.generate_password_hash(password=dict_data['password'])
+        dict_data['userTypeId'] = 1 #Owner
+        dict_data['is_active'] = 0 #Has to be enabled manually
+        
         user = User(**dict_data)
         session = Session()
         user = session.add(user)

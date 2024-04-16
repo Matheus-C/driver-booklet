@@ -7,6 +7,7 @@
     <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
 
 </head>
+<h3 class="title is-3">Company Info</h3>
 <body>
     {% set company = company_info[0].Company %}
     <p>Name: {{company.name}}</p>
@@ -25,7 +26,7 @@
 {% endfor %}
 
 {% if current_user.userTypeId == 1 %}
-<button class="button" hx-target="#addUser" hx-swap="innerHTML" hx-get="/signup_worker" >Add User</button>
+<button class="button" hx-target="#addUser" hx-swap="innerHTML" hx-get="/signup_worker/{{company.id}}" >Add User</button>
 <div id="addUser"></div>
 {% endif %}
 
