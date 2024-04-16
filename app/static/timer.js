@@ -90,47 +90,6 @@ function stopwatch() {
         }
     },
 
-      /*start(type){
-        if(type==="work"){
-          this.workingTimeStart = this.initiate(this.isWorking,true)
-          if(!this.isWorking){
-            this.end("available");
-            this.isWorking = true;
-            this.workingTimeStart = Date.now();
-          }
-        }else if(type === "rest"){
-          if(!this.isResting){
-            this.isResting = true;
-            this.restTimeStart = Date.now();
-          }
-        }else if(type === "available"){
-          this.availableTimeStart = this.initiate(this.isAvailable,true)
-          if(!this.isAvailable){
-            this.isAvailable = true;
-            this.availableTimeStart = Date.now();
-          }
-        }
-      },*/
-
-      /*end(type){
-        if(type==="work"){
-          if(this.isWorking){
-            this.isWorking = false;
-            this.workedTime += Date.now() - this.workingTimeStart;
-          }
-        }else if(type === "rest"){
-          if(this.isResting){
-            this.isResting = false;
-            this.restTime += Date.now() - this.restTimeStart;
-          }
-        }else if(type === "available"){
-          if(this.isAvailable){
-            this.isAvailable = false;
-            this.availableTime += Date.now() - this.availableTimeStart;
-          }
-        }
-      },*/
-
       startTimer() {
         if (!this.timerRunning)
         {
@@ -138,14 +97,18 @@ function stopwatch() {
           this.timer = setInterval(() => {
           this.seconds++;
           if (this.seconds === 10) {
-            if(this.isWorking && (this.workedTime + Date.now()-this.workingTimeStart) >= 5000){
-              let notification = new Notification('Notificação Teste 10s', {
-              body: 'body',
-              icon: "{{ url_for('static', filename='notification.ico') }}",
-              tag: 'tag',
-              data: 'data'
+            if(this.isWorking){
+              const postData = {
+                title: "Generic Title",
+                body: "Generic Body"
+              };
+              fetch('/admin-api/trigger-push-notifications', {
+                method: "POST",
+                body: JSON.stringify(postData),
+                headers: {
+                  "Content-type": "application/json; charset=UTF-8"
+                }
               });
-              setTimeout(notification.close.bind(notification), 4000);
             }
           }
           if (this.seconds === 60) {
