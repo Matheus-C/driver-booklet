@@ -89,6 +89,12 @@ class Company(Base):
   phone = Column('phone', String(255))
   vatcode = Column('vatcode', String(255))
 
+class UserCompany(Base):
+  __tablename__ = 'userCompany'
+  id = Column('id', Integer, primary_key=True)
+  idUser = Column(Integer, ForeignKey('users.id'))
+  idCompany = Column(Integer, ForeignKey('company.id'))
+
 class Vehicle(Base):
   __tablename__ = 'vehicle'
   id = Column('id', Integer, primary_key=True)

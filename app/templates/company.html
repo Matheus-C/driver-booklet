@@ -1,0 +1,33 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
+
+</head>
+<body>
+    {% set company = company_info[0].Company %}
+    <p>Name: {{company.name}}</p>
+    <p>Description: {{company.description}}</p>
+    <p>Address: {{company.address}}</p>
+    <p>Telephone: {{company.phone}}</p>
+    <p>VatCode(NIF): {{company.vatcode}}</p>
+</body>
+
+
+<h3 class="title is-3">Employees</h3>
+{% for user in company_info %}
+{% if user.User %}
+    <p><a href="">{{user.User.name}} (Ident.(NIF) {{user.User.userIdentification}})</a></p> 
+{% endif %}
+{% endfor %}
+
+{% if current_user.userTypeId == 1 %}
+<button class="button" hx-target="#addUser" hx-swap="innerHTML" hx-get="/signup_worker" >Add User</button>
+<div id="addUser"></div>
+{% endif %}
+
+
+</html>
