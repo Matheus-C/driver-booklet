@@ -29,7 +29,6 @@ class User(Base,UserMixin):
   email = Column('email', String(255))
   birthDate = Column('birthDate', Date)
   startWorkDate = Column('startWork', Date)
-  category = Column('category', String(255))
   password = Column('password', String(255))
   is_active = Column(Boolean, default=False)
   #users = relationship('User', back_populates='user_type')
