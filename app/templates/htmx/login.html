@@ -1,17 +1,23 @@
 <div id='div_to_replace' class="box container">
     <div align="right">
-    <button class="button" hx-target='#div_to_replace' hx-get="/blank" hx-swap="outerHTML">X</button>
+    <button class="delete" hx-target='#div_to_replace' hx-get="/blank" hx-swap="outerHTML"></button>
     </div>
 <form action="/login" method="post">
 <div class="field">
-    <label class="label">Login</label>
     <div class="control">
+        <label class="label">Name</label>
+
         <input class="input" type="email" name='email' placeholder="Type your email">
     </div>
     <div class="control">
+        <label class="label">Password</label>
+
     <input class="input" type="password" name='password' placeholder="Type your password">
     </div>
-    <button class="button">Login</button>
+    <hr>
+    <div align="right">
+        <button class="button is-primary">Login</button>
+    </div>
 </div>
 </form>
 </div>
