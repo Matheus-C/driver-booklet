@@ -8,6 +8,13 @@ user_db = os.environ.get('user_db')
 pass_db = os.environ.get('pass_db')
 host_db = os.environ.get('host_db')
 
-engine = create_engine(f"mysql+mysqlconnector://{user_db}:{pass_db}@{host_db}", pool_recycle=3600)
+engine = create_engine(f"mysql+mysqlconnector://{user_db}:{pass_db}@{host_db}", pool_recycle=280)
 Session = sessionmaker(bind=engine)
 session = Session()
+
+# from app import app
+# app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+mysqlconnector://{user_db}:{pass_db}@{host_db}"
+# from flask_sqlalchemy import SQLAlchemy
+# from flask_migrate import Migrate
+# db = SQLAlchemy(app)
+# migrate = Migrate(app, db)
