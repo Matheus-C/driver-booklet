@@ -68,6 +68,7 @@
             <a class="navbar-item">
               Pricing
             </a>
+            {% if current_user.is_anonymous is false %}
             <a href='/timer' class="navbar-item">
                 Timer
             </a>
@@ -89,14 +90,14 @@
                 </a>
               </div>
             </div>
+            {% endif %}
+
           </div>
       
           <div class="navbar-end">
             <div class="navbar-item">
               <div class="buttons">
-                <a class="button is-info">
-                    <strong>{{current_user.name}}</strong>
-                  </a>
+                
                 {% if current_user.is_anonymous %}
                 <a class="button is-primary" hx-target="#changeme" hx-get="{{ url_for('signup') }}" hx-swap="innerHTML">
                   <strong>Sign up</strong>
@@ -106,7 +107,7 @@
                 </a>
                 {% else %}
                 <a class="button is-primary" href="/profile">
-                    <strong>Profile</strong>
+                    <strong>{{current_user.name}}</strong>
                   </a>
                   <a class="button is-light" href="/logout">
                     Logout
@@ -117,7 +118,7 @@
           </div>
         </div>
       </nav>
-    <title>{% block title %}{% endblock %}</title>
+    <title>{% block title %}{% endblock %} - TimeBank</title>
     {% block header %}
     {% endblock %}
 </head>

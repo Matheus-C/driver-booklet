@@ -33,7 +33,7 @@ def login(id=None):
             session.close()
             return redirect('/')
         else:
-            return redirect('/login')
+            return redirect('/')
 
 @app.route('/signup',methods=['GET','POST'])
 def signup():

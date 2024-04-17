@@ -1,34 +1,71 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Company</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
-    <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
+{% extends 'base/base.html' %}
 
-</head>
-<h3 class="title is-3">Company Info</h3>
-<body>
-    {% set company = company_info[0].Company %}
-    <p>Name: {{company.name}}</p>
-    <p>Description: {{company.description}}</p>
-    <p>Address: {{company.address}}</p>
-    <p>Telephone: {{company.phone}}</p>
-    <p>VatCode(NIF): {{company.vatcode}}</p>
-</body>
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <br>
+    <h3 class="title is-3">Company Info</h3>
+    <div class="box">
+
+        <div class="fixed-grid has-1-cols">
+            <div class="grid">
+                {% set company = company_info[0].Company %}
+                <div class="cell"><span class="tag is-medium">Name: {{ company.name }}</span></div>
+                <div class="cell"><span class="tag is-medium">Description: {{company.description}}}</span></div>
+                <div class="cell"><span class="tag is-medium">Address: {{ company.address }}</span></div>
+                <div class="cell"><span class="tag is-medium">VatCode(NIF): {{company.vatcode}}</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="columns">
+        <div class="column">
+            <h3 class="title is-3">Employees</h3>
+        </div>
+        <div class="column">
+            <div align="right">
+                {% if current_user.userTypeId == 1 %}
+                <button class="button" hx-target="#addUser" hx-swap="innerHTML"
+                    hx-get="/signup_worker/{{company.id}}">Add User</button>
+                
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="box">
+        {% for user in company_info %}
+        {% if user.User %}
+        <p>{{user.User.name}} (Ident.(NIF) {{user.User.userIdentification}})</p>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <div id="addUser"></div>
 
 
-<h3 class="title is-3">Employees</h3>
-{% for user in company_info %}
-{% if user.User %}
-    <p><a href="">{{user.User.name}} (Ident.(NIF) {{user.User.userIdentification}})</a></p> 
-{% endif %}
-{% endfor %}
+    <div class="columns">
+        <div class="column">
+            <h3 class="title is-3">Vehicles</h3>
+        </div>
+        <div class="column">
+            <div align="right">
+                {% if current_user.userTypeId == 1 %}
+                <button class="button" hx-target="#addCar" hx-swap="innerHTML"
+                    hx-get="/vehicle_add/{{company.id}}">Add Vehicle</button>
+                
+                {% endif %}
+            </div>
+        </div>
+    </div>
 
-{% if current_user.userTypeId == 1 %}
-<button class="button" hx-target="#addUser" hx-swap="innerHTML" hx-get="/signup_worker/{{company.id}}" >Add User</button>
-<div id="addUser"></div>
-{% endif %}
-
-
-</html>
+    <div class="box">
+        {% for vehicle in company_info %}
+        {% if vehicle.Vehicle %}
+        <p>{{vehicle.Vehicle.model}} ({{vehicle.Vehicle.licensePlate}})</p>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <div id="addCar"></div>
+{% endblock %}

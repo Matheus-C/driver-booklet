@@ -12,9 +12,11 @@ app.config['VAPID_PRIVATE_KEY'] = "LXemf14HHkxNVXhsZOnn1nCcCUpI68pFSjtNRPKUIc4"
 
 app.config['VAPID_CLAIM_EMAIL'] = "a@a.com"
 
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle' : 280}
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 
 bcrypt = Bcrypt(app)
 
-from app import auth, profile, pwa, timer, company,routing
+from app import auth, profile, pwa, timer, company, routing, vehicle

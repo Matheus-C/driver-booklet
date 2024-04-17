@@ -1,36 +1,45 @@
 <div id='div_to_replace' class="box container">
     <div align="right">
-    <button class="button" hx-target='#div_to_replace' hx-get="/blank" hx-swap="outerHTML">X</button>
+        <button class="button" hx-target='#div_to_replace' hx-get="/blank" hx-swap="outerHTML">X</button>
     </div>
-<form action="{{data.return}}" method="post">
-<div class="field">
-    <label class="label">Signup</label>
-    <div class="control">
-        <input class="input" type="text" name='name' placeholder="Type your name">
-    </div>
-    <div class="control">
-        <input class="input" type="number" name='userIdentification' placeholder="Type your NIF">
-    </div>
-    <div class="control">
-        <input class="input" type="email" name='email' placeholder="Type your email">
-    </div>
-    <div class="control">
-        <input class="input" type="password" name='password' placeholder="Type your password">
-    </div>
-    
-    <div class="control">
-        <input class="input" type="tel" name='phone' placeholder="Type your phone">
-    </div>
-    <div class="control">
-        <input class="input" type="text" name='address' placeholder="Type your address">
-    </div>
+    <form action="{{data.return}}" method="post">
+            <div class="control">
+                <label class="label">Name</label>
+                <input class="input" type="text" name='name' placeholder="Type your name">
+            </div>
+            <div class="control">
+                <label class="label">User Identification (NIF)</label><input class="input" type="number"
+                    name='userIdentification' placeholder="Type your NIF">
+            </div>
+            <div class="control">
+                <label class="label">Email</label><input class="input" type="email" name='email'
+                    placeholder="Type your email">
+            </div>
+            <div class="control">
+                <label class="label">Password</label><input class="input" type="password" name='password'
+                    placeholder="Type your password">
+            </div>
 
-    <div class="control">
-        <input class="input" type="date" name='birthDate' placeholder="Type your BirthDate">
-    </div>
-    <div class="control">
-        <input class="input" type="date" name='startWorkDate' placeholder="Type your StartWorkDate">
-    </div>
-    <button class="button">Signup</button>
+            <div class="control">
+                <label class="label">Phone</label><input class="input" type="tel" name='phone'
+                    placeholder="Type your phone">
+            </div>
+            <div class="control">
+                <label class="label">Address</label><input class="input" type="text" name='address'
+                    placeholder="Type your address">
+            </div>
+
+            <div class="control">
+                <label class="label">Birthdate</label><input class="input" type="date" name='birthDate'
+                    placeholder="Type your BirthDate">
+            </div>
+            <div class="control">
+                <label class="label">Started Worked on</label><input class="input" type="date" name='startWorkDate'
+                    placeholder="Type your StartWorkDate">
+            </div>
+            <hr>
+            <div align="right">
+                <button class="button is-primary">Sign up</button>
+            </div>
+    </form>
 </div>
-</form>
