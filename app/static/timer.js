@@ -161,6 +161,38 @@ function stopwatch() {
         );
       },
 
+      startTheDay(){
+        let mileage = window.prompt("enter the actual mileage of the vehicle in KM", "");
+        if(mileage === null || mileage === ""){
+          window.alert("the timer won't start if you don't enter a valid mileage");
+        }else{
+          this.becomeAvailable();
+          fetch('/event_data', {
+            method: "POST",
+            body: "",
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+          });
+        }
+      },
+
+      endTheDay(){
+        let mileage = window.prompt("enter the actual mileage of the vehicle in KM", "");
+        if(mileage === null || mileage === ""){
+          window.alert("the timer won't start if you don't enter a valid mileage");
+        }else{
+          this.endTimer();
+          fetch('/event_data', {
+            method: "POST",
+            body: "",
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+          });
+        }
+      },
+
       becomeAvailable(){
         if (!this.isAvailable){
           if(this.isResting){
