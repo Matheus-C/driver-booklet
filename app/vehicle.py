@@ -1,4 +1,5 @@
-from flask import render_template, request, url_for, redirect
+from datetime import datetime
+from flask import jsonify, render_template, request, url_for, redirect
 from app.models.models import *
 from app.models.database import *
 from app import app,bcrypt
@@ -19,3 +20,16 @@ def vehicle_add(id_company=None):
         session.commit()
 
         return redirect(f'/company/{id_company}')
+    
+@app.route('/vehicle/mileage',methods=['POST'])
+def mileage_add():
+    session = Session()
+    json_data = request.get_json()
+    dt_object = datetime.fromtimestamp(int(json_data["eventTimestamp"])/1000)
+    vehicleEvent = VehicleEvent(eventTime = dt_object, mileage = json_data["mileage"],
+                                 idVehicle = json_data["idVehicle"], idCompany = json_data["idCompany"], 
+                                 idAttachment = json_data["idAttachment"], idType = 1, idUser = current_user.id)
+    session.add(vehicleEvent)
+    session.commit()
+    session.close()
+    return jsonify({"status": "success"})

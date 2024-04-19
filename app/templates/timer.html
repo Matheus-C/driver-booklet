@@ -16,20 +16,20 @@
               <br>
             
             <div class="box" align="center" hx-target="tbody" hx-get="/timer/update/{{ current_user.id }}" hx-swap="outerHTML transition:true">
-            <p class="subtitle is-3" x-text="formattedTime" ></p>
+            <p class="subtitle is-3" x-text="formattedTime" x-on:change="checkTime($event.target.innerText)"></p>
 
               <!-- <div class="field has-addons" > -->
                 <div>
                 <p class="control block">
                   <button class="button is-dark" @click="becomeAvailable" x-show="!isAvailable && !isWorking && locationEnabled">Ficar disponivel</button>
                 </p>
-                <p class="control block"">
+                <p class="control block">
                   <button class="button is-primary" @click="startTimer" x-show="isAvailable && locationEnabled && !isWorking">Começar Trabalho</button>
                 </p>
-                <p class="control block"">
+                <p class="control block">
                   <button class="button is-link" @click="stopTimer" x-show="timerRunning">Repousar</button>
                 </p>
-                <p class="control block"">
+                <p class="control block">
                   <button class="button is-warning" @click="endTimer">Fim do Expediente</button>
                 </p>
               </div>

@@ -17,6 +17,16 @@ function stopwatch() {
       minutes: 0,
       seconds: 0,
       initialCoords: {lat: 0, lon: 0}, // Initial coordinates
+      
+      send_data(obj, path){//obj = object with the data to send, path = desired route
+        fetch(path, {
+          method: "POST",
+          body: JSON.stringify(obj),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8"
+          }
+        });
+      },
 
       timeEventHandler(type,eventType) {
         let time_now = new Date().getTime();
@@ -25,17 +35,9 @@ function stopwatch() {
           idType: null,
           eventTimestamp: time_now,
           idUser: null,
-          vehicleId: 1
+          idVehicle: 1
         };
-        function send_json(obj){
-          fetch('/event_data', {
-          method: "POST",
-          body: JSON.stringify(obj),
-          headers: {
-            "Content-type": "application/json; charset=UTF-8"
-          }
-        });
-        }
+        this.send_data(event_obj, '/event_data');
         
         switch (type) {
             case "work":// id: 1
@@ -53,7 +55,6 @@ function stopwatch() {
               
             break;
             
-            
             case "rest":// id: 3
               if (!this.isResting && eventType === 'start') {
                   this.isResting = true;
@@ -69,6 +70,20 @@ function stopwatch() {
             
             case "available":// id: 5
               if (!this.isAvailable && eventType === 'start') {
+                if(this.hours + this.minutes + this.seconds === 0){
+                  let mileage = window.prompt("enter the actual mileage of the vehicle in KM", "");
+                  if(mileage === null || mileage === ""){
+                      window.alert("the timer won't start if you don't enter a valid mileage");
+                      break;
+                  }
+                  let mileage_data = {mileage: mileage,
+                                      idVehicle: 1,
+                                      eventTimestamp: Date.now(),
+                                      idCompany: 1,
+                                      idAttachment: null
+                                      }
+                  this.send_data(mileage_data, '/vehicle/mileage');
+                }
                   this.isAvailable = true;
                   time_now = Date.now();
                   this.availableTimeStart = time_now;
@@ -86,7 +101,7 @@ function stopwatch() {
                 console.log("Unknown type");
         }
         if(event_obj.idType !== null){
-          send_json(event_obj);
+          this.send_data(event_obj, "/event_data");
         }
     },
 
@@ -154,43 +169,12 @@ function stopwatch() {
       },
       
       get formattedTime() {
+        let currentTime = String(this.hours).padStart(2, '0') + ':' +
+        String(this.minutes).padStart(2, '0') + ':' +
+        String(this.seconds).padStart(2, '0');
         return (
-          String(this.hours).padStart(2, '0') + ':' +
-          String(this.minutes).padStart(2, '0') + ':' +
-          String(this.seconds).padStart(2, '0')
+          currentTime
         );
-      },
-
-      startTheDay(){
-        let mileage = window.prompt("enter the actual mileage of the vehicle in KM", "");
-        if(mileage === null || mileage === ""){
-          window.alert("the timer won't start if you don't enter a valid mileage");
-        }else{
-          this.becomeAvailable();
-          fetch('/event_data', {
-            method: "POST",
-            body: "",
-            headers: {
-              "Content-type": "application/json; charset=UTF-8"
-            }
-          });
-        }
-      },
-
-      endTheDay(){
-        let mileage = window.prompt("enter the actual mileage of the vehicle in KM", "");
-        if(mileage === null || mileage === ""){
-          window.alert("the timer won't start if you don't enter a valid mileage");
-        }else{
-          this.endTimer();
-          fetch('/event_data', {
-            method: "POST",
-            body: "",
-            headers: {
-              "Content-type": "application/json; charset=UTF-8"
-            }
-          });
-        }
       },
 
       becomeAvailable(){

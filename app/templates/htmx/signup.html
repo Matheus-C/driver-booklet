@@ -33,10 +33,12 @@
                 <label class="label">Birthdate</label><input class="input" type="date" name='birthDate'
                     placeholder="Type your BirthDate">
             </div>
+            {% if current_user.is_anonymous is false %}
             <div class="control">
                 <label class="label">Started Worked on</label><input class="input" type="date" name='startWorkDate'
                     placeholder="Type your StartWorkDate">
             </div>
+            {% endif %}
             <hr>
             <div align="right">
                 <button class="button is-primary">Sign up</button>

@@ -21,7 +21,7 @@ def event_data():
     json_data = request.get_json()
     dt_object = datetime.fromtimestamp(int(json_data["eventTimestamp"])/1000)
     event = Event(eventTimestamp = dt_object.strftime("%Y-%m-%d %H:%M:%S"), idType=json_data["idType"], 
-                  idUser = current_user.id, vehicleId = json_data["vehicleId"])
+                  idUser = current_user.id, idVehicle = json_data["idVehicle"])
     session.add(event)
     session.commit()
     session.close()
