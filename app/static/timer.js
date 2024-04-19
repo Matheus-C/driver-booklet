@@ -28,6 +28,24 @@ function stopwatch() {
         });
       },
 
+      register_mileage(){//register a mileage returning false if the mileage is not valid
+        if(this.hours + this.minutes + this.seconds === 0){
+          let mileage = window.prompt("enter the actual mileage of the vehicle in KM", "");
+          if(mileage === null || mileage === "" || isNaN(mileage)){
+              window.alert("the timer won't start/end if you don't enter a valid mileage");
+              return false;
+          }
+          let mileage_data = {mileage: mileage,
+                              idVehicle: 1,
+                              eventTimestamp: Date.now(),
+                              idCompany: 1,
+                              idAttachment: null
+                              }
+          this.send_data(mileage_data, '/vehicle/mileage');
+        }
+        return true;
+      },
+
       timeEventHandler(type,eventType) {
         let time_now = new Date().getTime();
         let event_obj = {};
@@ -70,24 +88,13 @@ function stopwatch() {
             
             case "available":// id: 5
               if (!this.isAvailable && eventType === 'start') {
-                if(this.hours + this.minutes + this.seconds === 0){
-                  let mileage = window.prompt("enter the actual mileage of the vehicle in KM", "");
-                  if(mileage === null || mileage === ""){
-                      window.alert("the timer won't start if you don't enter a valid mileage");
-                      break;
-                  }
-                  let mileage_data = {mileage: mileage,
-                                      idVehicle: 1,
-                                      eventTimestamp: Date.now(),
-                                      idCompany: 1,
-                                      idAttachment: null
-                                      }
-                  this.send_data(mileage_data, '/vehicle/mileage');
+                if(!this.register_mileage()){
+                  break;
                 }
-                  this.isAvailable = true;
-                  time_now = Date.now();
-                  this.availableTimeStart = time_now;
-                  event_obj.idType = 5;
+                this.isAvailable = true;
+                time_now = Date.now();
+                this.availableTimeStart = time_now;
+                event_obj.idType = 5;
               }
               else if(this.isAvailable && eventType === 'end'){// id: 6
                 this.isAvailable = false;
