@@ -29,20 +29,18 @@ function stopwatch() {
       },
 
       register_mileage(){//register a mileage returning false if the mileage is not valid
-        if(this.hours + this.minutes + this.seconds === 0){
-          let mileage = window.prompt("enter the actual mileage of the vehicle in KM", "");
-          if(mileage === null || mileage === "" || isNaN(mileage)){
-              window.alert("the timer won't start/end if you don't enter a valid mileage");
-              return false;
-          }
-          let mileage_data = {mileage: mileage,
-                              idVehicle: 1,
-                              eventTimestamp: Date.now(),
-                              idCompany: 1,
-                              idAttachment: null
-                              }
-          this.send_data(mileage_data, '/vehicle/mileage');
+        let mileage = window.prompt("enter the actual mileage of the vehicle in KM", "");
+        if(mileage === null || mileage === "" || isNaN(mileage)){
+            window.alert("the timer won't start/end if you don't enter a valid mileage");
+            return false;
         }
+        let mileage_data = {mileage: mileage,
+                            idVehicle: 1,
+                            eventTimestamp: Date.now(),
+                            idCompany: 1,
+                            idAttachment: null
+                            }
+        this.send_data(mileage_data, '/vehicle/mileage');
         return true;
       },
 
@@ -88,8 +86,11 @@ function stopwatch() {
             
             case "available":// id: 5
               if (!this.isAvailable && eventType === 'start') {
-                if(!this.register_mileage()){
-                  break;
+                if(this.hours + this.minutes + this.seconds === 0){
+                  if(!this.register_mileage()){
+                    break;
+                  }
+                  this.startTimer();
                 }
                 this.isAvailable = true;
                 time_now = Date.now();
@@ -191,13 +192,15 @@ function stopwatch() {
 
           }
           this.timeEventHandler("available","start")
-          this.startTimer();
         }
       },
 
       endTimer(){
         let confirm_action = confirm('Quer mesmo acabar o dia ?');
         if (confirm_action){
+          if(!this.register_mileage()){
+            return;
+          }
           this.timeEventHandler("work","end");
           this.timeEventHandler("available","end");
           this.timeEventHandler("rest","end");
