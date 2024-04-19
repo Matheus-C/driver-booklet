@@ -14,8 +14,25 @@
               <br>
               <br>
               <br>
-            
-            <div class="box" align="center" hx-target="tbody" hx-get="/timer/update/{{ current_user.id }}" hx-swap="outerHTML transition:true">
+              <div class="modal is-active" x-show="isModalVisible">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                  <header class="modal-card-head">
+                    <p class="modal-card-title">Register your mileage</p>
+                    <button @click="isModalVisible = !isModalVisible" class="delete" aria-label="close"></button>
+                  </header>
+                  <section class="modal-card-body">
+                      <input class="input" type="number" step="0.01" name="number" x-model = "currentMileage"/>
+                  </section>
+                  <footer class="modal-card-foot">
+                    <div class="buttons" align="right">
+                      <button @click="sendMileage" class="button is-success">Register</button>
+                    </div>
+                  </footer>
+                </div>
+              </div>
+
+            <div class="box" align="center" >
             <p class="subtitle is-3" x-text="formattedTime" x-on:change="checkTime($event.target.innerText)"></p>
 
               <!-- <div class="field has-addons" > -->
@@ -35,19 +52,28 @@
               </div>
               <!-- </div> -->
             </div>
-            <table class="table box block">
-              <thead>
-                <tr>
-                  <th>Data Inicio</th>
-                  <th>Data Fim</th>
-                  <th>Tipo Evento</th>
-                  <th>Tempo (em Horas)</th>
-                </tr>
-              </thead>
-              <tbody>
-               
-              </tbody>
-           
+            <div class="box block">
+              <div align="right">
+              <button class="button is-light is-small" hx-trigger="load, click" hx-target="tbody" hx-get="/timer/update/{{ current_user.id }}" hx-swap="outerHTML transition:true">
+                <span class="icon">
+                  <i class="fas fa-refresh"></i>
+                </span>
+              </button>
+            </div>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Data Inicio</th>
+                    <th>Data Fim</th>
+                    <th>Tipo Evento</th>
+                    <th>Tempo (em Horas)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                </table>
+            </div>
+            
           </div>
     </div>
   </div>

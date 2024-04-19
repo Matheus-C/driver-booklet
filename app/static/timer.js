@@ -17,9 +17,11 @@ function stopwatch() {
       minutes: 0,
       seconds: 0,
       initialCoords: {lat: 0, lon: 0}, // Initial coordinates
+      isModalVisible:true,
+      currentMileage:0,
       
       send_data(obj, path){//obj = object with the data to send, path = desired route
-        fetch(path, {
+       return fetch(path, {
           method: "POST",
           body: JSON.stringify(obj),
           headers: {
@@ -28,20 +30,17 @@ function stopwatch() {
         });
       },
 
-      register_mileage(){//register a mileage returning false if the mileage is not valid
-        let mileage = window.prompt("enter the actual mileage of the vehicle in KM", "");
-        if(mileage === null || mileage === "" || isNaN(mileage)){
-            window.alert("the timer won't start/end if you don't enter a valid mileage");
-            return false;
-        }
-        let mileage_data = {mileage: mileage,
+      sendMileage(){
+        let mileage_data = {mileage: this.currentMileage,
                             idVehicle: 1,
                             eventTimestamp: Date.now(),
                             idCompany: 1,
                             idAttachment: null
                             }
-        this.send_data(mileage_data, '/vehicle/mileage');
-        return true;
+        let request = this.send_data(mileage_data, '/vehicle/mileage');
+        console.log(request)
+        this.isModalVisible=false;
+        this.resetTimer();
       },
 
       timeEventHandler(type,eventType) {
@@ -86,20 +85,15 @@ function stopwatch() {
             
             case "available":// id: 5
               if (!this.isAvailable && eventType === 'start') {
-                if(this.hours + this.minutes + this.seconds === 0){
-                  if(!this.register_mileage()){
-                    break;
-                  }
-                  this.startTimer();
-                }
+                this.startTimer();
                 this.isAvailable = true;
-                time_now = Date.now();
+                time_now = Date.now(); //#todo
                 this.availableTimeStart = time_now;
                 event_obj.idType = 5;
               }
               else if(this.isAvailable && eventType === 'end'){// id: 6
                 this.isAvailable = false;
-                time_now = Date.now();
+                time_now = Date.now();//#todo
                 this.availableTime += time_now - this.availableTimeStart;
                 event_obj.idType = 6;
               }
@@ -154,7 +148,6 @@ function stopwatch() {
         }
         else{
           this.timeEventHandler("work",'start');
-
         }
         
       },
@@ -196,17 +189,13 @@ function stopwatch() {
       },
 
       endTimer(){
-        let confirm_action = confirm('Quer mesmo acabar o dia ?');
-        if (confirm_action){
-          if(!this.register_mileage()){
-            return;
-          }
+        if (confirm('Quer mesmo acabar o dia ?')){
           this.timeEventHandler("work","end");
           this.timeEventHandler("available","end");
           this.timeEventHandler("rest","end");
           this.workedTime = 0;
           this.timerRunning =  false;
-          this.resetTimer();
+          this.isModalVisible = true;
         }
         
 
