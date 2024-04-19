@@ -19,7 +19,7 @@ function stopwatch() {
       initialCoords: {lat: 0, lon: 0}, // Initial coordinates
       isModalVisible:true,
       currentMileage:0,
-      idCompany:2314234353535345564,
+      idCompany:null,
       
       send_data(obj, path){//obj = object with the data to send, path = desired route
        return fetch(path, {
