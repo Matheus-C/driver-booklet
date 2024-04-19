@@ -19,6 +19,7 @@ function stopwatch() {
       initialCoords: {lat: 0, lon: 0}, // Initial coordinates
       isModalVisible:true,
       currentMileage:0,
+      idCompany:2314234353535345564,
       
       send_data(obj, path){//obj = object with the data to send, path = desired route
        return fetch(path, {
@@ -34,7 +35,7 @@ function stopwatch() {
         let mileage_data = {mileage: this.currentMileage,
                             idVehicle: 1,
                             eventTimestamp: Date.now(),
-                            idCompany: 1,
+                            idCompany: this.idCompany,
                             idAttachment: null
                             }
         let request = this.send_data(mileage_data, '/vehicle/mileage');
@@ -48,8 +49,8 @@ function stopwatch() {
         let event_obj = {};
         event_obj = {
           idType: null,
+          idCompany: this.idCompany,
           eventTimestamp: time_now,
-          idUser: null,
           idVehicle: 1
         };
         this.send_data(event_obj, '/event_data');
