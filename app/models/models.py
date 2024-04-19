@@ -62,11 +62,13 @@ class Event(Base):
   eventTimestamp = Column('eventTime', DateTime)
   idType = Column(Integer, ForeignKey('eventType.id'))
   idUser = Column(Integer, ForeignKey('users.id'))
-  IdVehicle = Column(Integer, ForeignKey('vehicle.id'))
-  IdCompany = Column(Integer, ForeignKey('company.id'))
+  idVehicle = Column(Integer, ForeignKey('vehicle.id'))
+  idCompany = Column(Integer, ForeignKey('company.id'))
+  geolocation = Column('geolocation', String(512))
+  idAttachment = Column(Integer, ForeignKey('attachment.id'))
 
-class Notes(Base):
-  __tablename__ = 'notes'
+class Attachment(Base):
+  __tablename__ = 'attachment'
   id = Column('id', Integer, primary_key=True)
   idUser = Column(Integer, ForeignKey('users.id'))
   idType = Column(Integer, ForeignKey('eventType.id'))
@@ -105,5 +107,18 @@ class Vehicle(Base):
   idCompany = Column(Integer, ForeignKey('company.id'))
   model = Column('model', String(255))
   licensePlate = Column('licensePlate', String(255))
+
+class VehicleEvent(Base):
+  __tablename__ = 'vehicleEvent'
+  id = Column('id', Integer, primary_key=True)
+  eventTime = Column('eventTime', DateTime)
+  idType = Column(Integer, ForeignKey('eventType.id'))
+  idUser = Column(Integer, ForeignKey('users.id'))
+  idVehicle = Column(Integer, ForeignKey('vehicle.id'))
+  idCompany = Column(Integer, ForeignKey('company.id'))
+  mileage = Column('mileage', Float)
+  idAttachment = Column('idAttachment', ForeignKey('attachment.id'))
+
+
 
 Base.metadata.create_all(engine)

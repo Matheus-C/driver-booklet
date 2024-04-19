@@ -1,8 +1,10 @@
-<div id='div_to_replace' class="box container">
-    <div align="right">
-        <button class="delete" hx-target='#div_to_replace' hx-get="/blank" hx-swap="outerHTML"></button>
-    </div>
-    <form action="{{data.return}}" method="post">
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+<div x-data="{ isVisible: true }">
+    <div x-show="isVisible" class="box container">
+        <div align="right">
+            <button class="delete" @click="isVisible = !isVisible"></button>
+        </div>
+        <form action="{{data.return}}" method="post">
             <div class="control">
                 <label class="label">Name</label>
                 <input class="input" type="text" name='name' placeholder="Type your name">
@@ -33,13 +35,16 @@
                 <label class="label">Birthdate</label><input class="input" type="date" name='birthDate'
                     placeholder="Type your BirthDate">
             </div>
+            {% if current_user.is_anonymous is false %}
             <div class="control">
                 <label class="label">Started Worked on</label><input class="input" type="date" name='startWorkDate'
                     placeholder="Type your StartWorkDate">
             </div>
+            {% endif %}
             <hr>
             <div align="right">
                 <button class="button is-primary">Sign up</button>
             </div>
-    </form>
+        </form>
+    </div>
 </div>

@@ -17,6 +17,31 @@ function stopwatch() {
       minutes: 0,
       seconds: 0,
       initialCoords: {lat: 0, lon: 0}, // Initial coordinates
+      isModalVisible:true,
+      currentMileage:0,
+      
+      send_data(obj, path){//obj = object with the data to send, path = desired route
+       return fetch(path, {
+          method: "POST",
+          body: JSON.stringify(obj),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8"
+          }
+        });
+      },
+
+      sendMileage(){
+        let mileage_data = {mileage: this.currentMileage,
+                            idVehicle: 1,
+                            eventTimestamp: Date.now(),
+                            idCompany: 1,
+                            idAttachment: null
+                            }
+        let request = this.send_data(mileage_data, '/vehicle/mileage');
+        console.log(request)
+        this.isModalVisible=false;
+        this.resetTimer();
+      },
 
       timeEventHandler(type,eventType) {
         let time_now = new Date().getTime();
@@ -25,17 +50,9 @@ function stopwatch() {
           idType: null,
           eventTimestamp: time_now,
           idUser: null,
-          vehicleId: 1
+          idVehicle: 1
         };
-        function send_json(obj){
-          fetch('/event_data', {
-          method: "POST",
-          body: JSON.stringify(obj),
-          headers: {
-            "Content-type": "application/json; charset=UTF-8"
-          }
-        });
-        }
+        this.send_data(event_obj, '/event_data');
         
         switch (type) {
             case "work":// id: 1
@@ -53,7 +70,6 @@ function stopwatch() {
               
             break;
             
-            
             case "rest":// id: 3
               if (!this.isResting && eventType === 'start') {
                   this.isResting = true;
@@ -69,14 +85,15 @@ function stopwatch() {
             
             case "available":// id: 5
               if (!this.isAvailable && eventType === 'start') {
-                  this.isAvailable = true;
-                  time_now = Date.now();
-                  this.availableTimeStart = time_now;
-                  event_obj.idType = 5;
+                this.startTimer();
+                this.isAvailable = true;
+                time_now = Date.now(); //#todo
+                this.availableTimeStart = time_now;
+                event_obj.idType = 5;
               }
               else if(this.isAvailable && eventType === 'end'){// id: 6
                 this.isAvailable = false;
-                time_now = Date.now();
+                time_now = Date.now();//#todo
                 this.availableTime += time_now - this.availableTimeStart;
                 event_obj.idType = 6;
               }
@@ -86,7 +103,7 @@ function stopwatch() {
                 console.log("Unknown type");
         }
         if(event_obj.idType !== null){
-          send_json(event_obj);
+          this.send_data(event_obj, "/event_data");
         }
     },
 
@@ -131,7 +148,6 @@ function stopwatch() {
         }
         else{
           this.timeEventHandler("work",'start');
-
         }
         
       },
@@ -154,10 +170,11 @@ function stopwatch() {
       },
       
       get formattedTime() {
+        let currentTime = String(this.hours).padStart(2, '0') + ':' +
+        String(this.minutes).padStart(2, '0') + ':' +
+        String(this.seconds).padStart(2, '0');
         return (
-          String(this.hours).padStart(2, '0') + ':' +
-          String(this.minutes).padStart(2, '0') + ':' +
-          String(this.seconds).padStart(2, '0')
+          currentTime
         );
       },
 
@@ -168,19 +185,17 @@ function stopwatch() {
 
           }
           this.timeEventHandler("available","start")
-          this.startTimer();
         }
       },
 
       endTimer(){
-        let confirm_action = confirm('Quer mesmo acabar o dia ?');
-        if (confirm_action){
+        if (confirm('Quer mesmo acabar o dia ?')){
           this.timeEventHandler("work","end");
           this.timeEventHandler("available","end");
           this.timeEventHandler("rest","end");
           this.workedTime = 0;
           this.timerRunning =  false;
-          this.resetTimer();
+          this.isModalVisible = true;
         }
         
 
