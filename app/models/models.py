@@ -89,22 +89,21 @@ class UserCompany(Base):
   id = Column('id', Integer, primary_key=True)
   idUser = Column(Integer, ForeignKey('users.id'))
   idCompany = Column(Integer, ForeignKey('company.id'))
-  startWorkDate = Column('startWork', Date)
+  startWork = Column('startWork', Date)
   validUntil = Column('validUntil', Date)
 
 
 class CompanyVehicle(Base):
   __tablename__ = 'companyVehicle'
   id = Column('id', Integer, primary_key=True)
-  idEvent = Column(Integer, ForeignKey('company.id'))
   idCompany = Column(Integer, ForeignKey('company.id'))
   idVehicle = Column(Integer, ForeignKey('vehicle.id'))
-  description = Column('description', String(512))
+  startDate = Column('startDate', Date)
+  validUntil = Column('validUntil', Date)
 
 class Vehicle(Base):
   __tablename__ = 'vehicle'
   id = Column('id', Integer, primary_key=True)
-  idCompany = Column(Integer, ForeignKey('company.id'))
   model = Column('model', String(255))
   licensePlate = Column('licensePlate', String(255))
 
