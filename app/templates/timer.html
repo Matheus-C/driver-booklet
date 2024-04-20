@@ -23,10 +23,12 @@
                     <button @click="isModalVisible = !isModalVisible" class="delete" aria-label="close"></button>
                   </header>
                   <section class="modal-card-body">
+
+                    <div hx-get="/company/list" hx-trigger="load" hx-target="#idCompany" hx-swap="innerHTML"></div>
+                    
                     <label class="label" for="idCompany">Company: </label>
                       <div class="select">
                         <select id="idCompany" name="idCompany" x-model="idCompany" hx-target="#selectCar" hx-post="/vehicle/list/" hx-swap="innerHTML">
-                        <option hx-get="/company/list" hx-trigger="load" hx-target="this" hx-swap="outerHTML"></option>
                         </select>
                       </div>
                       <label class="label" for="selectCar">Car: </label>
