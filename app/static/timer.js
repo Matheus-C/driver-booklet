@@ -21,6 +21,7 @@ function stopwatch() {
       currentMileage:0,
       idCompany:null,
       idVehicle:null,
+      currentCoords: {lat: 0, lon: 0},
       
       send_data(obj, path){//obj = object with the data to send, path = desired route
        return fetch(path, {
@@ -32,15 +33,24 @@ function stopwatch() {
         });
       },
 
+      sendAttachment(){//it must return the id of the attachment
+        return null;
+      },
+
       sendMileage(){
         let mileage_data = {mileage: this.currentMileage,
                             idVehicle: this.idVehicle,
                             eventTimestamp: Date.now(),
                             idCompany: this.idCompany,
-                            idAttachment: null
+                            idAttachment: this.sendAttachment(),
+                            idType: null
                             }
-        let request = this.send_data(mileage_data, '/vehicle/mileage');
-        console.log(request)
+        if(this.hours+this.minutes+this.seconds === 0){
+          mileage_data.idType = 7;
+        }else{
+          mileage_data.idType = 8;
+        }
+        this.send_data(mileage_data, '/vehicle/mileage');
         this.isModalVisible=false;
         this.resetTimer();
       },
@@ -52,7 +62,8 @@ function stopwatch() {
           idType: null,
           idCompany: this.idCompany,
           eventTimestamp: time_now,
-          idVehicle: this.idVehicle
+          idVehicle: this.idVehicle,
+          geolocation: this.currentCoords.lat + ',' + this.currentCoords.lon
         };
                 
         switch (type) {
@@ -62,13 +73,11 @@ function stopwatch() {
                   this.isWorking = true;
                   this.workingTimeStart = time_now;
                   event_obj.idType = 1;
-                  this.send_data(event_obj, '/event_data');
                 }
                 else if (this.isWorking && eventType === 'end') {// id: 2
                   this.isWorking = false;
                   this.workedTime += time_now - this.workingTimeStart;
                   event_obj.idType = 2;
-                  this.send_data(event_obj, '/event_data');
                 }
               
             break;
@@ -78,13 +87,11 @@ function stopwatch() {
                   this.isResting = true;
                   this.restTimeStart = time_now;
                   event_obj.idType = 3;
-                  this.send_data(event_obj, '/event_data');
               }
               else if (this.isResting && eventType === 'end'){// id: 3
                 this.isResting = false;
                 this.restTime += time_now - this.restTimeStart;
                 event_obj.idType = 4;
-                this.send_data(event_obj, '/event_data');
               }
               break;
             
@@ -95,14 +102,12 @@ function stopwatch() {
                 time_now = Date.now(); //#todo
                 this.availableTimeStart = time_now;
                 event_obj.idType = 5;
-                this.send_data(event_obj, '/event_data');
               }
               else if(this.isAvailable && eventType === 'end'){// id: 6
                 this.isAvailable = false;
                 time_now = Date.now();//#todo
                 this.availableTime += time_now - this.availableTimeStart;
                 event_obj.idType = 6;
-                this.send_data(event_obj, '/event_data');
               }
               break;
 
@@ -212,7 +217,7 @@ function stopwatch() {
         navigator.geolocation.watchPosition((position) => {
           
           const newCoords = { lat: position.coords.latitude, lon: position.coords.longitude };
-          
+          this.currentCoords = newCoords;
           if (this.isAvailable && this.distance_ari(this.initialCoords, newCoords) >= 0.00003) { // Only start timer after initial location
             this.startTimer();
           } else {

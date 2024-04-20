@@ -4,3 +4,5 @@ INSERT INTO eventType (id, name, category, description) VALUES (NULL, "rest_star
 INSERT INTO eventType (id, name, category, description) VALUES (NULL, "rest_end", "rest",  "Resume driving after your rest period, marking its end for accurate time tracking.");
 INSERT INTO eventType (id, name, category, description) VALUES (NULL, "availability_start", "availability",  "Set your availability to start receiving ride requests or job assignments.");
 INSERT INTO eventType (id, name, category, description) VALUES (NULL, "availability_end", "availability", "End your availability to take a break or finish your shift, temporarily pausing incoming requests.");
+INSERT INTO eventType (id, name, category, description) VALUES (NULL, "mileage_start", "mileage", "get the mileage from the start of the work");
+INSERT INTO eventType (id, name, category, description) VALUES (NULL, "mileage_end", "mileage", "get the mileage from the end of the work");
