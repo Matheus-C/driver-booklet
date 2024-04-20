@@ -34,7 +34,7 @@ def reports():
                 INNER JOIN `eventType` et ON et.id = e.idType
                 WHERE idUser = {current_user.id}
                 and e.idCompany = {dict_data['idCompany']}
-                and e.eventTime between (date('{dict_data['dateStart']}')) and (date('{dict_data['dateEnd']}') + 1)
+                and e.eventTime between (date('{dict_data['dateStart']}') - 1) and (date('{dict_data['dateEnd']}') + 1)
                 )
             
             select 
@@ -42,7 +42,7 @@ def reports():
                 ,e.dateStart
                 ,e.category categoryName
                 ,dateEnd      
-                ,TIMESTAMPDIFF(SECOND,dateStart,dateEnd)/3600 AS timeSpent
+                ,SEC_TO_TIME(TIMESTAMPDIFF(SECOND,dateStart,dateEnd)) AS timeSpent
                 ,v.model
                 ,v.licensePlate 
             from event_query e
@@ -54,7 +54,7 @@ def reports():
                 
             query = text(query)
             session = Session()
-            data = session.execute(query).fetchmany(5)
+            data = session.execute(query).all()
             session.close()
 
             return render_template('htmx/report.html',data=data)
