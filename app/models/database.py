@@ -8,7 +8,7 @@ user_db = os.environ.get('user_db')
 pass_db = os.environ.get('pass_db')
 host_db = os.environ.get('host_db')
 
-engine = create_engine(f"mysql+mysqlconnector://{user_db}:{pass_db}@{host_db}", pool_recycle=280)
+engine = create_engine(f"mysql+mysqlconnector://{user_db}:{pass_db}@{host_db}", pool_recycle=100,pool_pre_ping=True)
 Session = sessionmaker(bind=engine)
 session = Session()
 
