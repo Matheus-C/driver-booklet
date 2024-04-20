@@ -12,18 +12,20 @@
         <form>
             <label class="label" for="selectCompany">Company: </label>
             <div hx-target="#selectCompany" class="select" hx-get="/company/list" hx-trigger="load" hx-swap="innerHTML">
-                <select id="selectCompany" x-model="idCompany">
+                <select id="selectCompany" name="idCompany" x-model="idCompany" required>
                 </select>
             </div>
             <label class="label" for="selectCompany">Start Date</label>
-            <input class="input" type="date">
+            <input class="input" name="dateStart" type="date" required>
             <label class="label" for="selectCompany">End Date</label>
-            <input class="input" type="date">
+            <input class="input" name="dateEnd" type="date" required>
             <hr>
+
             <div align="right">
-                <button class="button is-info" hx-target="#reportGenerated" hx-post="/reports" >Get Report</button>
+                <button hx-include="closest form"  class="button is-info" hx-target="#reportGenerated" hx-post="/reports" >Get Report</button>
             </div>
         </form>
+        
     </div>
 
     <div class="box" id="reportGenerated">

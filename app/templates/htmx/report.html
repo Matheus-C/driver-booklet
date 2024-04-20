@@ -1,3 +1,27 @@
-{% for item in data %}
-{{ item }}
-{% endfor %}
+<table class="table">
+    <thead>
+    <tr>
+        <th>Company</th>
+        <th>Date Start</th>
+        <th>Date End</th>
+        <th>Category</th>
+        <th>Time Spent</th>
+        <th>Car Model</th>
+        <th>Car License Plate</th>
+        
+    </tr>
+    </thead>
+    <tbody>
+        {% for item in data %}
+        <tr>
+            <td>{{ item.companyName }}</td>
+            <td>{{ item.categoryName }}</td>
+            <td>{{ item.dateStart }}</td>
+            <td>{{ item.dateEnd }}</td>
+            <td>{{ item.timeSpent }}</td>
+            <td>{{ item.model }}</td>
+            <td>{{ item.licensePlate }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
