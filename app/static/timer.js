@@ -19,6 +19,9 @@ function stopwatch() {
       initialCoords: {lat: 0, lon: 0}, // Initial coordinates
       isModalVisible:true,
       currentMileage:0,
+      idCompany:null,
+      idVehicle:null,
+      currentCoords: {lat: 0, lon: 0},
       
       send_data(obj, path){//obj = object with the data to send, path = desired route
        return fetch(path, {
@@ -30,15 +33,24 @@ function stopwatch() {
         });
       },
 
+      sendAttachment(){//it must return the id of the attachment
+        return null;
+      },
+
       sendMileage(){
         let mileage_data = {mileage: this.currentMileage,
-                            idVehicle: 1,
+                            idVehicle: this.idVehicle,
                             eventTimestamp: Date.now(),
-                            idCompany: 1,
-                            idAttachment: null
+                            idCompany: this.idCompany,
+                            idAttachment: this.sendAttachment(),
+                            idType: null
                             }
-        let request = this.send_data(mileage_data, '/vehicle/mileage');
-        console.log(request)
+        if(this.hours+this.minutes+this.seconds === 0){
+          mileage_data.idType = 7;
+        }else{
+          mileage_data.idType = 8;
+        }
+        this.send_data(mileage_data, '/vehicle/mileage');
         this.isModalVisible=false;
         this.resetTimer();
       },
@@ -48,12 +60,12 @@ function stopwatch() {
         let event_obj = {};
         event_obj = {
           idType: null,
+          idCompany: this.idCompany,
           eventTimestamp: time_now,
-          idUser: null,
-          idVehicle: 1
+          idVehicle: this.idVehicle,
+          geolocation: this.currentCoords.lat + ',' + this.currentCoords.lon
         };
-        this.send_data(event_obj, '/event_data');
-        
+                
         switch (type) {
             case "work":// id: 1
                 if (!this.isWorking && eventType === 'start' ) {
@@ -205,7 +217,7 @@ function stopwatch() {
         navigator.geolocation.watchPosition((position) => {
           
           const newCoords = { lat: position.coords.latitude, lon: position.coords.longitude };
-          
+          this.currentCoords = newCoords;
           if (this.isAvailable && this.distance_ari(this.initialCoords, newCoords) >= 0.00003) { // Only start timer after initial location
             this.startTimer();
           } else {
