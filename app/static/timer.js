@@ -20,6 +20,7 @@ function stopwatch() {
       isModalVisible:true,
       currentMileage:0,
       idCompany:null,
+      idVehicle:null,
       
       send_data(obj, path){//obj = object with the data to send, path = desired route
        return fetch(path, {
@@ -33,7 +34,7 @@ function stopwatch() {
 
       sendMileage(){
         let mileage_data = {mileage: this.currentMileage,
-                            idVehicle: 1,
+                            idVehicle: this.idVehicle,
                             eventTimestamp: Date.now(),
                             idCompany: this.idCompany,
                             idAttachment: null
@@ -51,10 +52,9 @@ function stopwatch() {
           idType: null,
           idCompany: this.idCompany,
           eventTimestamp: time_now,
-          idVehicle: 1
+          idVehicle: this.idVehicle
         };
-        this.send_data(event_obj, '/event_data');
-        
+                
         switch (type) {
             case "work":// id: 1
                 if (!this.isWorking && eventType === 'start' ) {
@@ -62,11 +62,13 @@ function stopwatch() {
                   this.isWorking = true;
                   this.workingTimeStart = time_now;
                   event_obj.idType = 1;
+                  this.send_data(event_obj, '/event_data');
                 }
                 else if (this.isWorking && eventType === 'end') {// id: 2
                   this.isWorking = false;
                   this.workedTime += time_now - this.workingTimeStart;
                   event_obj.idType = 2;
+                  this.send_data(event_obj, '/event_data');
                 }
               
             break;
@@ -76,11 +78,13 @@ function stopwatch() {
                   this.isResting = true;
                   this.restTimeStart = time_now;
                   event_obj.idType = 3;
+                  this.send_data(event_obj, '/event_data');
               }
               else if (this.isResting && eventType === 'end'){// id: 3
                 this.isResting = false;
                 this.restTime += time_now - this.restTimeStart;
                 event_obj.idType = 4;
+                this.send_data(event_obj, '/event_data');
               }
               break;
             
@@ -91,12 +95,14 @@ function stopwatch() {
                 time_now = Date.now(); //#todo
                 this.availableTimeStart = time_now;
                 event_obj.idType = 5;
+                this.send_data(event_obj, '/event_data');
               }
               else if(this.isAvailable && eventType === 'end'){// id: 6
                 this.isAvailable = false;
                 time_now = Date.now();//#todo
                 this.availableTime += time_now - this.availableTimeStart;
                 event_obj.idType = 6;
+                this.send_data(event_obj, '/event_data');
               }
               break;
 
