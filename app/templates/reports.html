@@ -9,8 +9,27 @@
     <br>
     <h3 class="title is-3">Reports</h3>
     <div class="box">
-
-        
+        <form>
+            <label class="label" for="selectCompany">Company: </label>
+            <div hx-target="#selectCompany" class="select" hx-get="/company/list" hx-trigger="load" hx-swap="innerHTML">
+                <select id="selectCompany" x-model="idCompany">
+                </select>
+            </div>
+            <label class="label" for="selectCompany">Start Date</label>
+            <input class="input" type="date">
+            <label class="label" for="selectCompany">End Date</label>
+            <input class="input" type="date">
+            <hr>
+            <div align="right">
+                <button class="button is-info" hx-target="#reportGenerated" hx-post="/reports" >Get Report</button>
+            </div>
+        </form>
     </div>
+
+    <div class="box" id="reportGenerated">
+    </div>
+
+
+
 </div>
 {% endblock %}
