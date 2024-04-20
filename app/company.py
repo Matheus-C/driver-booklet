@@ -71,3 +71,13 @@ def signup_worker(id_company=None):
         session.close()
 
         return redirect(f'/company/{id_company}')
+    
+@app.route('/company/list',methods=['GET'])
+@login_required
+def company_list():
+    if(current_user):
+        session = Session()
+        results = session.query(Company)\
+            .join(UserCompany,UserCompany.idCompany == Company.id,isouter=True)\
+            .filter(UserCompany.idUser == current_user.id).all()
+        return render_template('htmx/company_list.html',company_list = results)
