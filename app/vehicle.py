@@ -41,12 +41,14 @@ def mileage_add():
     session.close()
     return jsonify({"status": "success"})
 
-@app.route('/vehicle/list/<id_company>',methods=['GET'])
-def vehicle_list(id_company = None):
+@app.route('/vehicle/list/',methods=['POST'])
+def vehicle_list():
+    
     if(current_user):
+        id_company = request.form.get("idCompany")
         session = Session()
         results = session.query(Vehicle)\
-            .join(CompanyVehicle, CompanyVehicle.idCompany == id_company)\
-            .filter(UserCompany.idUser == current_user.id).all()
+            .join(CompanyVehicle, CompanyVehicle.idVehicle == Vehicle.id)\
+            .filter(CompanyVehicle.idCompany == id_company).all()
         session.close()
         return render_template('htmx/vehicle_list.html',vehicle_list = results)
