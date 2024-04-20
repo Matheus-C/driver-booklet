@@ -28,7 +28,7 @@ def mileage_add():
     dt_object = datetime.fromtimestamp(int(json_data["eventTimestamp"])/1000)
     vehicleEvent = VehicleEvent(eventTime = dt_object, mileage = json_data["mileage"],
                                  idVehicle = json_data["idVehicle"], idCompany = json_data["idCompany"], 
-                                 idAttachment = json_data["idAttachment"], idType = 1, idUser = current_user.id)
+                                 idAttachment = json_data["idAttachment"], idType = json_data["idType"], idUser = current_user.id)
     session.add(vehicleEvent)
     session.commit()
     session.close()
