@@ -23,9 +23,15 @@
                     <button @click="isModalVisible = !isModalVisible" class="delete" aria-label="close"></button>
                   </header>
                   <section class="modal-card-body">
-                    <label class="label" for="selectCompany">Company: </label>
-                      <div hx-target="#selectCompany" class="select" hx-get="/company/list" hx-trigger="load" hx-swap="innerHTML">
-                        <select id="selectCompany" x-model="idCompany">
+                    <label class="label" for="idCompany">Company: </label>
+                      <div class="select">
+                        <select id="idCompany" name="idCompany" x-model="idCompany" hx-target="#selectCar" hx-post="/vehicle/list/" hx-swap="innerHTML">
+                        <option hx-get="/company/list" hx-trigger="load" hx-target="this" hx-swap="outerHTML"></option>
+                        </select>
+                      </div>
+                      <label class="label" for="selectCar">Car: </label>
+                      <div class="select" >
+                        <select id="selectCar" name="" x-model="idVehicle">
                         </select>
                       </div>
                       <label class="label" for="mileage">Mileage: </label>
@@ -33,7 +39,7 @@
                   </section>
                   <footer class="modal-card-foot">
                     <div class="buttons" align="right">
-                      <button @click="sendMileage" class="button is-success" x-show="idCompany && currentMileage > 0">Register</button>
+                      <button @click="sendMileage" class="button is-success" x-show="idCompany && idVehicle && currentMileage > 0">Register</button>
                     </div>
                   </footer>
                 </div>
@@ -86,7 +92,6 @@
   </div>
   
   <script>
-    enableLocation()
     htmx.onLoad(function (target) {
       let app = document.querySelector('[x-data]');
       app.__x.$data.enableLocation();

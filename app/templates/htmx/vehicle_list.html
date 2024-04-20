@@ -1,0 +1,4 @@
+<option value="" disabled selected>select an option</option>
+{% for vehicle in vehicle_list %}
+    <option value="{{vehicle.id}}">{{vehicle.model}} {{vehicle.licensePlate}}</option>
+{% endfor %}

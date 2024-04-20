@@ -28,26 +28,32 @@ def company():
 def company_info(id):
     if current_user:
         session = Session()
-        try:
-            if request.method == 'GET':
-                
-                results = session.query(Company,UserCompany,User,Vehicle)\
-                .join(UserCompany,UserCompany.idCompany == Company.id,isouter=True)\
-                .join(User,UserCompany.idUser == User.id,isouter=True)\
-                .join(Vehicle,Vehicle.idCompany == Company.id, isouter=True)\
-                .filter(Company.idUser == current_user.id,Company.id == id).all()
-                return render_template('company.html',company_info = results,current_user=current_user)
+        # try:
+        if request.method == 'GET':
             
-            elif request.method == 'POST' and request.form:
-                dict_data = request.form.to_dict()
-                dict_data['idUser'] = current_user.id
-                company = Company(**dict_data)
-                session.add(company)
-                session.commit()
-                session.close()
-                return redirect('/profile')
-        except:
+            users_company = session.query(User)\
+            .join(UserCompany,UserCompany.idUser == User.id,isouter=True)\
+            .filter(UserCompany.idCompany == id,
+                    UserCompany.validUntil == None).all()
+            vehicles_company = session.query(Vehicle)\
+            .join(CompanyVehicle,Vehicle.id == CompanyVehicle.idVehicle,isouter=True)\
+            .filter(CompanyVehicle.idCompany == id,
+                    CompanyVehicle.validUntil == None).all()
+            company = session.query(Company)\
+            .filter(Company.idUser == current_user.id,
+                    Company.id == id).one()
+            return render_template('company.html',company = company,users_company = users_company, vehicles_company = vehicles_company,current_user=current_user)
+        
+        elif request.method == 'POST' and request.form:
+            dict_data = request.form.to_dict()
+            dict_data['idUser'] = current_user.id
+            company = Company(**dict_data)
+            session.add(company)
+            session.commit()
+            session.close()
             return redirect('/profile')
+        # except:
+            # return redirect('/profile')
         
 @app.route('/signup_worker/<id_company>',methods=['GET','POST'])
 def signup_worker(id_company=None):
@@ -58,6 +64,8 @@ def signup_worker(id_company=None):
         dict_data = request.form.to_dict()
         dict_data['password'] = bcrypt.generate_password_hash(password=dict_data['password'])
         dict_data['userTypeId'] = 2 #Worker
+        start_work = dict_data['startWorkDate']
+        dict_data.pop('startWorkDate')
         # dict_data['is_active'] = 0 #Has to be enabled manually
         
         user = User(**dict_data)
@@ -65,7 +73,7 @@ def signup_worker(id_company=None):
         session.add(user)
         session.commit()
 
-        usercompany = UserCompany(idUser =user.id,idCompany=id_company)         
+        usercompany = UserCompany(idUser =user.id,idCompany=id_company, startWork = start_work)         
         session.add(usercompany)
         session.commit()
         session.close()
@@ -79,5 +87,6 @@ def company_list():
         session = Session()
         results = session.query(Company)\
             .join(UserCompany,UserCompany.idCompany == Company.id,isouter=True)\
-            .filter(UserCompany.idUser == current_user.id).all()
+            .filter(UserCompany.idUser == current_user.id, UserCompany.validUntil == None).all()
+        session.close()
         return render_template('htmx/company_list.html',company_list = results)
