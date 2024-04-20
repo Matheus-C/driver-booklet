@@ -14,6 +14,7 @@
               <br>
               <br>
               <br>
+              
               <div class="modal is-active" x-show="isModalVisible">
                 <div class="modal-background"></div>
                 <div class="modal-card">
@@ -24,7 +25,6 @@
                   <section class="modal-card-body">
                     <label class="label" for="selectCompany">Company: </label>
                       <div hx-target="#selectCompany" class="select" hx-get="/company/list" hx-trigger="load" hx-swap="innerHTML">
-                        
                         <select id="selectCompany" x-model="idCompany">
                         </select>
                       </div>
@@ -86,7 +86,7 @@
   </div>
   
   <script>
-    
+    enableLocation()
     htmx.onLoad(function (target) {
       let app = document.querySelector('[x-data]');
       app.__x.$data.enableLocation();

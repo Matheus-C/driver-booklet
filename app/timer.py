@@ -33,29 +33,29 @@ def event_data():
 def timer_update(id):
     ## needs validation before querying
     query = f"""
-    WITH cleaned_event_names AS
-  (SELECT et.id,
-          CASE
-              WHEN et.name like '%_end' THEN replace(et.name, '_end', '')
-              WHEN et.name like '%_start' THEN replace(et.name, '_start', '')
-          END AS name,
-   		  et.name as old_name,
-          et.description
-   FROM eventType et),
-     lag_query AS
-  (SELECT e.eventTime date_start,
-          et.name CategoryName,
-    	  case when et.old_name like '%_end' then 0
-          ELSE LEAD(eventTime, 1, 0) OVER (PARTITION BY et.name ORDER BY eventTime ASC) 
-   		 END as date_end
-   FROM `event` e
-   INNER JOIN cleaned_event_names et ON et.id = e.idType
-   WHERE idUser = {id}
-   )
-   
-   select *,TIMESTAMPDIFF(SECOND,date_start,date_end)/3600 AS difference from lag_query
-   where date_end <> 0
-    order by date_start desc
+    WITH event_query as 
+                (SELECT e.eventTime dateStart,
+                        et.category,
+                        case when et.name like '%_end' then 0
+                        ELSE LEAD(eventTime, 1, 0) OVER (PARTITION BY et.category ORDER BY eventTime ASC) 
+                        END as dateEnd,
+                        e.idVehicle,
+                        e.idCompany,
+                        e.geolocation,
+                        e.idAttachment
+                FROM `event` e
+                INNER JOIN `eventType` et ON et.id = e.idType
+                WHERE idUser = {id}
+                )
+            
+            select 
+                e.dateStart
+                ,e.dateEnd      
+                ,e.category categoryName
+                ,SEC_TO_TIME(TIMESTAMPDIFF(SECOND,dateStart,dateEnd)) AS timeSpent
+            from event_query e
+            where dateEnd <> 0
+            order by dateStart desc
     """
     if current_user:
         query = text(query)
