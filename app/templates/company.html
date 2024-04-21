@@ -85,7 +85,7 @@
 
                     // Add Tile layer to the map
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        maxZoom: 13,
+                        maxZoom: 16,
                     }).addTo(this.map);
 
                     // Fetch marker data from API
@@ -96,7 +96,7 @@
                         // Add markers to the map
                         this.markers.forEach(marker => {
                             L.marker([marker.latitude, marker.longitude]).addTo(this.map)
-                                .bindPopup(marker.userName+' '+marker.model+' '+marker.eventName)
+                                .bindPopup(marker.userName+' ['+marker.model+'] ['+marker.eventCategory+']')
                                 .openPopup();
                         });
                         const bounds = this.markers.map(marker => [marker.latitude, marker.longitude]);

@@ -82,7 +82,6 @@ function stopwatch() {
         switch (type) {
             case "work":// id: 1
                 if (!this.isWorking && eventType === 'start' ) {
-                  this.timeEventHandler("available","end");
                   this.isWorking = true;
                   this.workingTimeStart = time_now;
                   event_obj.idType = 1;
@@ -172,6 +171,7 @@ function stopwatch() {
         }, 1000);
         }
         else{
+          this.timeEventHandler("available","end");
           this.timeEventHandler("work",'start');
         }
         
@@ -220,6 +220,7 @@ function stopwatch() {
                   this.hours = hoursDifference;
                   this.minutes = minutesDifference;
                   this.seconds = secondsDifference;
+                 
                   if (data.eventName.includes('availability')){
                       this.isAvailable = true;
                   }
@@ -229,9 +230,9 @@ function stopwatch() {
                   if (data.eventName.includes('work')){
                       this.isWorking = true;
                   }
-                  this.startTimer() 
-                  // console.log(`Time Difference: ${hoursDifference} hours,
-                  // ${minutesDifference} minutes, ${secondsDifference} seconds`)
+                  if (!data.eventName.includes('rest')){
+                    this.startTimer() 
+                  }
               }
       
             }

@@ -133,7 +133,7 @@ def geolocation_list(id):
         query = f"""
         SELECT 
             max(eventTime) as eventTime
-            ,et.name eventName
+            ,et.category eventCategory
             ,e.idUser
             ,v.model
             ,v.licensePlate
@@ -159,7 +159,7 @@ def geolocation_list(id):
             for entry in result:
                 data.append({
                     'eventTime':entry.eventTime,
-                    'eventName':entry.eventName,
+                    'eventCategory':entry.eventCategory,
                     'userName':entry.name, 
                     'model':entry.model,
                     'licensePlate':entry.licensePlate,
