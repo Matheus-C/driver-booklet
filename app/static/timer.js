@@ -216,7 +216,6 @@ function stopwatch() {
                 const hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60));
                 const minutesDifference = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
                 const secondsDifference = Math.floor((timeDifference % (1000 * 60)) / 1000);
-                console.log(data.eventName)
                 if (data.eventName.includes('_start')){
                   this.hours = hoursDifference;
                   this.minutes = minutesDifference;
@@ -231,8 +230,8 @@ function stopwatch() {
                       this.isWorking = true;
                   }
                   this.startTimer() 
-                  console.log(`Time Difference: ${hoursDifference} hours,
-                  ${minutesDifference} minutes, ${secondsDifference} seconds`)
+                  // console.log(`Time Difference: ${hoursDifference} hours,
+                  // ${minutesDifference} minutes, ${secondsDifference} seconds`)
               }
       
             }
