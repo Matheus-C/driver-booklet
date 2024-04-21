@@ -5,7 +5,6 @@ from app.models.database import *
 from app import app
 from flask_login import current_user,login_required
 from sqlalchemy.sql import text
-
         
 @app.route('/vehicle/add/<id_company>',methods=['GET','POST'])
 def vehicle_add(id_company=None):
@@ -46,11 +45,34 @@ def mileage_add():
 def vehicle_list():
     
     if(current_user):
-        id_company = request.form.get("idCompany")
+        id_company = int(request.form.get("idCompany"))
+        query = f"""with event_vehicle_ranked as (
+                    select e.*,et.name,
+                            LAST_VALUE(et.name) OVER (
+                            PARTITION BY e.idVehicle
+                            ORDER BY e.eventTime asc
+                            RANGE BETWEEN
+                            UNBOUNDED PRECEDING 
+                            AND
+                            UNBOUNDED FOLLOWING) as last_state
+
+                    from event e 
+                    inner join eventType et on et.id = e.idType
+                    ),
+                    groupped_vehicle as (
+                        select v.id,v.model,v.licensePlate, IFNULL(evr.last_state, "no_event") last_state
+                        from companyVehicle cv
+                            left join vehicle v on v.id = cv.idVehicle
+                            left join event_vehicle_ranked evr on evr.idVehicle =  cv.idVehicle
+                        where cv.idCompany = {id_company}
+                        group by v.id,v.model,v.licensePlate, evr.last_state
+                    )
+                    select * 
+                    from groupped_vehicle; """
+
+        query = text(query)
         session = Session()
-        results = session.query(Vehicle)\
-            .join(CompanyVehicle, CompanyVehicle.idVehicle == Vehicle.id)\
-            .filter(CompanyVehicle.idCompany == id_company).all()
+        results = session.execute(query).all()
         session.close()
         return render_template('htmx/vehicle_list.html',vehicle_list = results)
 
