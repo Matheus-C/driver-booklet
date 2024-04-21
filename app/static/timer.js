@@ -18,7 +18,7 @@ function stopwatch() {
       seconds: 0,
       initialCoords: {lat: 0, lon: 0}, // Initial coordinates
       isModalVisible:true,
-      currentMileage:0,
+      currentMileage:null,
       idCompany:null,
       idVehicle:null,
       currentCoords: {lat: 0, lon: 0},
@@ -38,7 +38,8 @@ function stopwatch() {
       },
 
       sendMileage(){
-        let mileage_data = {mileage: this.currentMileage,
+        let mileage_num = document.getElementById('mileage').value;
+        let mileage_data = {mileage: mileage_num,
                             idVehicle: this.idVehicle,
                             eventTimestamp: Date.now(),
                             idCompany: this.idCompany,

@@ -46,7 +46,7 @@ def reports():
                 ,v.model
                 ,v.licensePlate 
             from event_query e
-                left join vehicle v on v.idCompany = e.idCompany and e.idVehicle = v.id
+                left join vehicle v on v.id = e.idVehicle
                 left join company c on c.id = e.idCompany
             where dateEnd <> 0
             order by dateStart asc

@@ -16,9 +16,15 @@ def company():
         elif request.method == 'POST' and request.form:
             dict_data = request.form.to_dict()
             dict_data['idUser'] = current_user.id
+            # Add Company
             company = Company(**dict_data)
             session = Session()
             session.add(company)
+            session.commit()
+            
+            # Add userCompany
+            user_company = UserCompany(idUser = current_user.id,idCompany = company.id, startWork = '1900-01-01')
+            session.add(user_company)
             session.commit()
             session.close()
             return redirect(url_for('profile'))
@@ -34,11 +40,14 @@ def company_info(id):
             users_company = session.query(User)\
             .join(UserCompany,UserCompany.idUser == User.id,isouter=True)\
             .filter(UserCompany.idCompany == id,
-                    UserCompany.validUntil == None).all()
+                    UserCompany.validUntil == None
+                    ).all()
+            
             vehicles_company = session.query(Vehicle)\
-            .join(CompanyVehicle,Vehicle.id == CompanyVehicle.idVehicle,isouter=True)\
+            .join(CompanyVehicle,CompanyVehicle.idVehicle == Vehicle.id,isouter=True)\
             .filter(CompanyVehicle.idCompany == id,
                     CompanyVehicle.validUntil == None).all()
+            
             company = session.query(Company)\
             .filter(Company.idUser == current_user.id,
                     Company.id == id).one()
