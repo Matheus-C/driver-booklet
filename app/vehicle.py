@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import jsonify, render_template, request, url_for, redirect
+from flask import jsonify, render_template, request, redirect
 from app.models.models import *
 from app.models.database import *
 from app import app
@@ -89,3 +89,35 @@ def current_mileage():
         if result is None:
             result = 0
         return f"""<input min="{str(result)}" value="{str(result)}" id="mileage" name='mileage' class='input' type="number" step="0.01">"""
+    
+
+@app.route('/vehicle/last_state/<id>',methods=['GET'])
+@login_required
+def last_state_vehicle(id):
+    if current_user:
+        session = Session()
+        query = f""" with max_id_vehicle as (
+                select max(id) as id 
+                from event 
+                where idVehicle = {int(id)}
+            )
+            SELECT e.eventTime,e.idVehicle,et.name 
+            FROM `event` e
+            INNER join eventType et on et.id = e.idType
+            inner join max_id_vehicle m on m.id = e.id;"""
+        
+        query = text(query)
+        session = Session()
+        result = session.execute(query).fetchone()
+        session.close()
+
+        if result is not None:
+            formatted_time_string = result.eventTime.strftime("%Y-%m-%dT%H:%M:%S")
+            data ={
+                'eventTime': formatted_time_string,
+                'idVehicle': result.idVehicle,
+                'eventName': result.name }
+
+        else: 
+             data={}
+        return jsonify(data)

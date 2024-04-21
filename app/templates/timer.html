@@ -59,7 +59,7 @@
                   <button class="button is-primary" @click="startTimer" x-show="isAvailable && locationEnabled && !isWorking">Começar Trabalho</button>
                 </p>
                 <p class="control block">
-                  <button class="button is-link" @click="stopTimer" x-show="timerRunning">Repousar</button>
+                  <button class="button is-link" @click="stopTimer" x-show="timerRunning && !isResting">Repousar</button>
                 </p>
                 <p class="control block">
                   <button class="button is-warning" @click="endTimer">Fim do Expediente</button>

@@ -23,14 +23,25 @@ function stopwatch() {
       idVehicle:null,
       currentCoords: {lat: 0, lon: 0},
       
-      send_data(obj, path){//obj = object with the data to send, path = desired route
-       return fetch(path, {
-          method: "POST",
+      send_data(obj,method,path){
+        if (method ===  "GET"){
+          return fetch(path, {
+            method: method,
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+          }).then(response => response.json());
+        }
+      else if (method === "POST"){
+        return fetch(path, {
+          method: method,
           body: JSON.stringify(obj),
           headers: {
             "Content-type": "application/json; charset=UTF-8"
           }
-        });
+        }).then(response => response.json());
+      }
+       
       },
 
       sendAttachment(){//it must return the id of the attachment
@@ -51,9 +62,10 @@ function stopwatch() {
         }else{
           mileage_data.idType = 8;
         }
-        this.send_data(mileage_data, '/vehicle/mileage');
+        this.send_data(mileage_data,"POST",'/vehicle/mileage');
         this.isModalVisible=false;
         this.resetTimer();
+        this.updateLatestFromDB()
       },
 
       timeEventHandler(type,eventType) {
@@ -116,7 +128,7 @@ function stopwatch() {
                 console.log("Unknown type");
         }
         if(event_obj.idType !== null){
-          this.send_data(event_obj, "/event_data");
+          this.send_data(event_obj,"POST","/event_data");
         }
     },
 
@@ -168,8 +180,8 @@ function stopwatch() {
       stopTimer() {
         clearInterval(this.timer);
         this.timerRunning = false;
-        this.timeEventHandler("rest","start");
         this.timeEventHandler("work","end");
+        this.timeEventHandler("rest","start");
         this.timeEventHandler("available","end");
 
       },
@@ -191,14 +203,50 @@ function stopwatch() {
         );
       },
 
-      becomeAvailable(){
-        if (!this.isAvailable){
-          if(this.isResting){
-            this.timeEventHandler("rest","end");
-
-          }
-          this.timeEventHandler("available","start")
+      updateLatestFromDB()
+      {
+        if(this.hours+this.minutes+this.seconds === 0){
+          response = this.send_data(null,'GET','/vehicle/last_state/'+this.idVehicle)
+          .then(data =>{
+            if (data.eventTime != null){
+                const givenTime = new Date(Date.parse(data.eventTime));
+                const currentTime = new Date();
+                const timeDifference =  currentTime - givenTime;
+  
+                const hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60));
+                const minutesDifference = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+                const secondsDifference = Math.floor((timeDifference % (1000 * 60)) / 1000);
+                if (data.eventName.includes('_start')){
+                  this.hours = hoursDifference;
+                  this.minutes = minutesDifference;
+                  this.seconds = secondsDifference;
+                  if (data.eventName.includes('availability')){
+                      this.isAvailable = true;
+                  }
+                  if (data.eventName.includes('rest')){
+                      this.isResting = true;
+                  }
+                  if (data.eventName.includes('work')){
+                      this.isWorking = true;
+                  }
+                  this.startTimer() 
+                  // console.log(`Time Difference: ${hoursDifference} hours,
+                  // ${minutesDifference} minutes, ${secondsDifference} seconds`)
+              }
+      
+            }
+          })
+          
         }
+      },
+
+      becomeAvailable(){
+       if (!this.isAvailable) {
+            if(this.isResting){
+              this.timeEventHandler("rest","end");
+            }
+            this.timeEventHandler("available","start")
+          }
       },
 
       endTimer(){
@@ -210,8 +258,6 @@ function stopwatch() {
           this.timerRunning =  false;
           this.isModalVisible = true;
         }
-        
-
       },
       
       enableLocation() {
