@@ -28,12 +28,12 @@
                     
                     <label class="label" for="idCompany">Company: </label>
                       <div class="select">
-                        <select id="idCompany" name="idCompany" x-model="idCompany" hx-target="#selectCar" hx-post="/vehicle/list/" hx-swap="innerHTML">
+                        <select id="idCompany" name="idCompany" x-model="idCompany" hx-target="#selectCar" hx-post="/vehicle/list/" hx-swap="innerHTML settle:1s">
                         </select>
                       </div>
                       <label class="label" for="selectCar" >Car: </label>
                       <div class="select" >
-                        <select id="selectCar" name="idVehicle" x-model="idVehicle" hx-target="#mileage" hx-post="/vehicle/current_mileage" hx-swap="outerHTML">
+                        <select id="selectCar" name="idVehicle" x-model="idVehicle" hx-target="#mileage" hx-post="/vehicle/current_mileage" hx-swap="outerHTML settle:1s">
                         </select>
                       </div>
                       <label class="label" for="mileage">Mileage: </label>
