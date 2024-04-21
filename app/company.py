@@ -41,10 +41,12 @@ def company_info(id):
             .join(UserCompany,UserCompany.idUser == User.id,isouter=True)\
             .filter(UserCompany.idCompany == id,
                     UserCompany.validUntil == None).all()
+            
             vehicles_company = session.query(Vehicle)\
-            .join(CompanyVehicle,Vehicle.id == CompanyVehicle.idVehicle,isouter=True)\
+            .join(CompanyVehicle,CompanyVehicle.idVehicle == Vehicle.id,isouter=True)\
             .filter(CompanyVehicle.idCompany == id,
                     CompanyVehicle.validUntil == None).all()
+            
             company = session.query(Company)\
             .filter(Company.idUser == current_user.id,
                     Company.id == id).one()

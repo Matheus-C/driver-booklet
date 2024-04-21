@@ -52,3 +52,17 @@ def vehicle_list():
             .filter(CompanyVehicle.idCompany == id_company).all()
         session.close()
         return render_template('htmx/vehicle_list.html',vehicle_list = results)
+
+@app.route('/vehicle/current_mileage',methods=['POST'])
+@login_required
+def current_mileage():
+    if current_user:
+        # rework with more joins to be safer
+        idVehicle = request.form.get('idVehicle')
+        session = Session()
+        result = session.query(func.max(VehicleEvent.mileage)).filter(VehicleEvent.idVehicle == idVehicle).scalar()
+        session.close()
+
+        if result is None:
+            result = 0
+        return f"""<input min="{str(result)}" value="{str(result)}" id="mileage" name='mileage' class='input' type="number" step="0.01">"""
