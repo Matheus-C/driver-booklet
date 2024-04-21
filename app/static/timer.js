@@ -65,7 +65,7 @@ function stopwatch() {
         this.send_data(mileage_data,"POST",'/vehicle/mileage');
         this.isModalVisible=false;
         this.resetTimer();
-        this.update_latest_from_db()
+        this.updateLatestFromDB()
       },
 
       timeEventHandler(type,eventType) {
@@ -203,7 +203,7 @@ function stopwatch() {
         );
       },
 
-      update_latest_from_db()
+      updateLatestFromDB()
       {
         if(this.hours+this.minutes+this.seconds === 0){
           response = this.send_data(null,'GET','/vehicle/last_state/'+this.idVehicle)
