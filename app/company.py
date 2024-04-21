@@ -40,7 +40,8 @@ def company_info(id):
             users_company = session.query(User)\
             .join(UserCompany,UserCompany.idUser == User.id,isouter=True)\
             .filter(UserCompany.idCompany == id,
-                    UserCompany.validUntil == None).all()
+                    UserCompany.validUntil == None
+                    ).all()
             
             vehicles_company = session.query(Vehicle)\
             .join(CompanyVehicle,CompanyVehicle.idVehicle == Vehicle.id,isouter=True)\

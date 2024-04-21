@@ -26,16 +26,16 @@
 
 
 
-
+    {% if current_user.userTypeId == 1 %}
     <div class="columns">
         <div class="column">
             <h3 class="title is-3">Companies</h3>
         </div>
         <div class="column">
-            <div align="right">{% if current_user.userTypeId == 1 %}
+            <div align="right">
                 <button class="button" hx-target="#add_new_company" hx-swap="innerHTML" hx-get="/company">Add
                     Company</button>
-                {% endif %}
+                
             </div>
         </div>
 
@@ -48,6 +48,6 @@
         {% endfor %}
     </div>
     <div id="add_new_company"></div>
-
+    {% endif %}
 </div>
 {% endblock %}

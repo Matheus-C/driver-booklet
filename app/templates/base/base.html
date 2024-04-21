@@ -61,10 +61,11 @@
             <a href='/' class="navbar-item">
               Home
             </a>
-      
+            {% if current_user.userTypeId == 1 or current_user.is_anonymous %} 
             <a class="navbar-item">
               Pricing
             </a>
+            {% endif %}
             {% if current_user.is_anonymous is false %}
             <a href='/timer' class="navbar-item">
                 Timer
@@ -72,7 +73,7 @@
             <a href='/reports' class="navbar-item">
                 Reports
             </a>
-      
+            {% elif current_user.userTypeId == 1 %} 
             <div class="navbar-item has-dropdown is-hoverable">
               <a class="navbar-link">
                 My Fleet
