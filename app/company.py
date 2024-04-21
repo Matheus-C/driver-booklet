@@ -1,8 +1,9 @@
-from flask import render_template, request, url_for, redirect
+from flask import render_template, request, url_for, redirect,jsonify
 from app.models.models import *
 from app.models.database import *
 from app import app,bcrypt
 from flask_login import current_user,login_required
+from sqlalchemy.sql import text
 
 
 @app.route("/company", methods=["GET","POST"])
@@ -51,7 +52,32 @@ def company_info(id):
             company = session.query(Company)\
             .filter(Company.idUser == current_user.id,
                     Company.id == id).one()
-            return render_template('company.html',company = company,users_company = users_company, vehicles_company = vehicles_company,current_user=current_user)
+            
+            query = f"""
+            SELECT 
+                max(eventTime) as eventTime
+                ,et.name eventName
+                ,e.idUser
+                ,v.model
+                ,v.licensePlate
+                ,e.geolocation
+                ,u.name
+
+            FROM `event` e
+            inner join eventType et on et.id = e.idType
+            left join companyVehicle cv on cv.idVehicle = e.idVehicle and cv.validUntil is null
+            left join userCompany uc on uc.idCompany = e.idCompany and uc.validUntil is null
+            inner join vehicle v on v.id = cv.idVehicle
+            inner join users u on u.id = uc.idUser
+            where 1=1
+            and uc.idCompany = {int(id)}
+            group by e.idUser,e.idVehicle;            
+            """
+            query = text(query)
+            session = Session()
+            geolocation = session.execute(query).all()
+            session.close()
+            return render_template('company.html',company = company,users_company = users_company, vehicles_company = vehicles_company,geolocation=geolocation,current_user=current_user)
         
         elif request.method == 'POST' and request.form:
             dict_data = request.form.to_dict()
@@ -92,10 +118,55 @@ def signup_worker(id_company=None):
 @app.route('/company/list',methods=['GET'])
 @login_required
 def company_list():
-    if(current_user):
+    if current_user:
         session = Session()
         results = session.query(Company)\
             .join(UserCompany,UserCompany.idCompany == Company.id,isouter=True)\
             .filter(UserCompany.idUser == current_user.id, UserCompany.validUntil == None).all()
         session.close()
         return render_template('htmx/company_list.html',company_list = results)
+    
+@app.route('/geolocation/list/<id>',methods=['GET'])
+@login_required
+def geolocation_list(id):
+    if current_user:
+        query = f"""
+        SELECT 
+            max(eventTime) as eventTime
+            ,et.name eventName
+            ,e.idUser
+            ,v.model
+            ,v.licensePlate
+            ,e.geolocation
+            ,u.name
+
+        FROM `event` e
+        inner join eventType et on et.id = e.idType
+        left join companyVehicle cv on cv.idVehicle = e.idVehicle and cv.validUntil is null
+        left join userCompany uc on uc.idCompany = e.idCompany and uc.validUntil is null
+        inner join vehicle v on v.id = cv.idVehicle
+        inner join users u on u.id = uc.idUser
+        where 1=1
+        and uc.idCompany = {int(id)}
+        group by e.idUser,e.idVehicle;            
+        """
+        query = text(query)
+        session = Session()
+        result = session.execute(query).all()
+        session.close()
+        if result is not None:
+            data=[]
+            for entry in result:
+                data.append({
+                    'eventTime':entry.eventTime,
+                    'eventName':entry.eventName,
+                    'userName':entry.name, 
+                    'model':entry.model,
+                    'licensePlate':entry.licensePlate,
+                    'latitude':entry.geolocation.split(',')[0],
+                    'longitude':entry.geolocation.split(',')[1]
+            })
+
+        else: 
+             data=[]
+        return jsonify(data)

@@ -3,6 +3,6 @@
     {% if vehicle.last_state in ['no_event','work_end'] %}
     <option value="{{vehicle.id}}">{{vehicle.model}} {{vehicle.licensePlate}}</option>
     {% else %}
-    <option value="{{vehicle.id}}" disabled >{{vehicle.model}} {{vehicle.licensePlate}} (In Use)</option>
+    <option value="{{vehicle.id}}" >{{vehicle.model}} {{vehicle.licensePlate}} (In Use)</option>
     {% endif %}
 {% endfor %}
