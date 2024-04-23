@@ -1,4 +1,4 @@
-from flask import render_template, request, url_for, redirect,jsonify
+from flask import render_template, request, url_for, redirect,jsonify, flash
 from app.models.models import *
 from app.models.database import *
 from app import app,bcrypt
@@ -17,9 +17,14 @@ def company():
         elif request.method == 'POST' and request.form:
             dict_data = request.form.to_dict()
             dict_data['idUser'] = current_user.id
+            
+            session = Session()
+            #checks if exists another company with the same vatcode
+            if(session.query(Company).filter(Company.vatcode==dict_data['vatcode']).first() != None):
+                flash("Vatcode already registered!!", "error")
+                return redirect(url_for('profile'))
             # Add Company
             company = Company(**dict_data)
-            session = Session()
             session.add(company)
             session.commit()
             
@@ -28,6 +33,7 @@ def company():
             session.add(user_company)
             session.commit()
             session.close()
+            flash("registered successfully!!", "success")
             return redirect(url_for('profile'))
         
 @app.route("/company/<id>", methods=["GET","POST"])

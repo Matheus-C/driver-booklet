@@ -1,6 +1,7 @@
 {% extends 'base/base.html' %}
 
 {% block header %}
+{% include 'base/notifications.html' %}
 {% endblock %}
 
 {% block content %}
@@ -41,13 +42,16 @@
 
     </div>
 
-
+    
     <div class="box">
+        
         {% for company in companies %}
         <span class="tag"><a href="/company/{{company.id}}">{{ company.name }} ({{company.vatcode}})</a></span>
         {% endfor %}
     </div>
     <div id="add_new_company"></div>
+    
+    
     {% endif %}
 </div>
 {% endblock %}
