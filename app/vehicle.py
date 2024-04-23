@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import jsonify, render_template, request, redirect
+from flask import jsonify, render_template, request, redirect,flash
 from app.models.models import *
 from app.models.database import *
 from app import app
@@ -13,9 +13,13 @@ def vehicle_add(id_company=None):
     
     elif request.method == 'POST' and request.form:
         dict_data = request.form.to_dict()
+        session = Session()
+        if(session.query(Vehicle).filter(Vehicle.licensePlate==dict_data['licensePlate']).first() != None):
+            flash("license Plate already registered!!", "error")
+            return redirect(f'/company/{id_company}')
         
         vehicle = Vehicle(**dict_data)
-        session = Session()
+        
         session.add(vehicle)
         session.commit()
         dt_object = datetime.now()
@@ -25,7 +29,7 @@ def vehicle_add(id_company=None):
         session.add(company_vehicle)
         session.commit()
         session.close()
-
+        flash("registered successfully!!", "success")
         return redirect(f'/company/{id_company}')
     
 @app.route('/vehicle/mileage',methods=['POST'])
