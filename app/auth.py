@@ -33,6 +33,8 @@ def login(id=None):
             session.close()
             return redirect('/')
         else:
+            session.close()
+            flash("Wrong email or password!", "error")
             return redirect('/')
 
 @app.route('/signup',methods=['GET','POST'])
