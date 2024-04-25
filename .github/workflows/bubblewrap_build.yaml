@@ -1,0 +1,28 @@
+name: Build Android App
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Install dependencies
+      run: npm install  # Or any other command to install dependencies
+    
+    - name: Build PWA
+      run: npm run build  # Or any other command to build your PWA
+      
+    - name: Install Bubblewrap CLI
+      run: npm install -g bubblewrap
+      
+    - name: Initialize Bubblewrap Project
+      run: bubblewrap init
+      
+    - name: Generate Android App
+      run: bubblewrap build
