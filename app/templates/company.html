@@ -33,7 +33,12 @@
         </div>
     </div>
 
-    <div id="workers" hx-get="/worker/list/{{company.id}}" hx-target="this" hx-trigger="load" hx-swap="innerHTML"></div>
+    <div id="workers" class="box">
+
+            {% for worker in users_company %}
+            <p>{{worker.name}} (Ident.(NIF) {{worker.userIdentification}})</p>
+            {% endfor %}
+    </div>
     
     <div id="addUser"></div>
     <div class="columns">
