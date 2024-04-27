@@ -33,7 +33,7 @@ def mileage_add():
     session = Session()
     json_data = request.get_json()
     # dt_object = datetime.fromtimestamp(int(json_data["eventTimestamp"])/1000)
-    dt_object =  datetime.strptime(json_data["eventTimestamp"], '%m/%d/%Y, %I:%M:%S %p')
+    dt_object =  datetime.strptime(json_data["eventTimestamp"], '%m/%d/%Y, %H:%M:%S')
     vehicleEvent = VehicleEvent(eventTime = dt_object, mileage = json_data["mileage"],
                                  idVehicle = json_data["idVehicle"], idCompany = json_data["idCompany"], 
                                  idAttachment = json_data["idAttachment"], idType = json_data["idType"], idUser = current_user.id)

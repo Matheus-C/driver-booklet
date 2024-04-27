@@ -20,7 +20,7 @@ def event_data():
     session = Session()
     json_data = request.get_json()
     # dt_object = datetime.fromtimestamp(int(json_data["eventTimestamp"])/1000)
-    dt_object =  datetime.strptime(json_data["eventTimestamp"], '%m/%d/%Y, %I:%M:%S %p')
+    dt_object =  datetime.strptime(json_data["eventTimestamp"], '%m/%d/%Y, %H:%M:%S')
     event = Event(eventTimestamp = dt_object.strftime("%Y-%m-%d %H:%M:%S"), idType=json_data["idType"], 
                   idUser = current_user.id, idVehicle = json_data["idVehicle"], idCompany = json_data["idCompany"], 
                   geolocation = json_data["geolocation"])

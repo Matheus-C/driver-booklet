@@ -50,7 +50,7 @@ function stopwatch() {
 
       sendMileage(){
         let mileage_num = document.getElementById('mileage').value;
-        let time_now = new Date().toLocaleString();
+        let time_now = new Date().toLocaleString('en-US', {hour12: false});
         let mileage_data = {mileage: mileage_num,
                             idVehicle: this.idVehicle,
                             eventTimestamp: time_now,
@@ -70,7 +70,7 @@ function stopwatch() {
       },
 
       timeEventHandler(type,eventType) {
-        let time_now = new Date().toLocaleString();
+        let time_now = new Date().toLocaleString('en-US', {hour12: false});
         let unix_time_now = new Date(time_now).getTime();
         let event_obj = {};
         event_obj = {
