@@ -3,7 +3,7 @@
   "description": "",
   "short_name": "DBook",
   "start_url": "/",
-  "scope": "https://driver-booklet.vercel.app",
+  "scope": "/",
   "display": "standalone",
   "theme_color": "#317EFB",
   "background_color": "#317EFB",
@@ -34,20 +34,21 @@
   "screenshots": [
     {
       "src": "https://www.pwabuilder.com/assets/screenshots/screen1.png",
-      "sizes": "2880x1800",
+      "sizes": "1630x918",
       "type": "image/png",
       "description": "PWABuilder Home Screen"
     },
     {
       "src": "https://www.pwabuilder.com/assets/screenshots/screen2.png",
-      "sizes": "2880x1800",
+      "sizes": "1631x917",
       "type": "image/png",
       "description": "PWABuilder Report Card"
     },
     {
       "src": "https://www.pwabuilder.com/assets/screenshots/screen3.png",
-      "sizes": "2880x1800",
+      "sizes": "1631x917",
       "type": "image/png",
+      "form_factor":"wide",
       "description": "Manifest information on the Report Card"
     }
   ],
