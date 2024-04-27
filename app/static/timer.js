@@ -50,9 +50,10 @@ function stopwatch() {
 
       sendMileage(){
         let mileage_num = document.getElementById('mileage').value;
+        let time_now = new Date().toLocaleString();
         let mileage_data = {mileage: mileage_num,
                             idVehicle: this.idVehicle,
-                            eventTimestamp: Date.now(),
+                            eventTimestamp: time_now,
                             idCompany: this.idCompany,
                             idAttachment: this.sendAttachment(),
                             idType: null
@@ -69,7 +70,8 @@ function stopwatch() {
       },
 
       timeEventHandler(type,eventType) {
-        let time_now = new Date().getTime();
+        let time_now = new Date().toLocaleString();
+        let unix_time_now = new Date(time_now).getTime();
         let event_obj = {};
         event_obj = {
           idType: null,
@@ -83,12 +85,12 @@ function stopwatch() {
             case "work":// id: 1
                 if (!this.isWorking && eventType === 'start' ) {
                   this.isWorking = true;
-                  this.workingTimeStart = time_now;
+                  this.workingTimeStart = unix_time_now;
                   event_obj.idType = 1;
                 }
                 else if (this.isWorking && eventType === 'end') {// id: 2
                   this.isWorking = false;
-                  this.workedTime += time_now - this.workingTimeStart;
+                  this.workedTime += unix_time_now - this.workingTimeStart;
                   event_obj.idType = 2;
                 }
               
@@ -97,12 +99,12 @@ function stopwatch() {
             case "rest":// id: 3
               if (!this.isResting && eventType === 'start') {
                   this.isResting = true;
-                  this.restTimeStart = time_now;
+                  this.restTimeStart = unix_time_now;
                   event_obj.idType = 3;
               }
               else if (this.isResting && eventType === 'end'){// id: 3
                 this.isResting = false;
-                this.restTime += time_now - this.restTimeStart;
+                this.restTime += unix_time_now - this.restTimeStart;
                 event_obj.idType = 4;
               }
               break;
@@ -111,14 +113,12 @@ function stopwatch() {
               if (!this.isAvailable && eventType === 'start') {
                 this.startTimer();
                 this.isAvailable = true;
-                time_now = Date.now(); //#todo
-                this.availableTimeStart = time_now;
+                this.availableTimeStart = unix_time_now;
                 event_obj.idType = 5;
               }
               else if(this.isAvailable && eventType === 'end'){// id: 6
                 this.isAvailable = false;
-                time_now = Date.now();//#todo
-                this.availableTime += time_now - this.availableTimeStart;
+                this.availableTime += unix_time_now - this.availableTimeStart;
                 event_obj.idType = 6;
               }
               break;
