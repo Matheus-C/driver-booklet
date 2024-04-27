@@ -204,7 +204,8 @@ def vehicle_list(id):
         session = Session()
         results = session.query(Vehicle)\
         .join(CompanyVehicle, CompanyVehicle.idVehicle == Vehicle.id,isouter=True)\
-        .filter(CompanyVehicle.idCompany == id).all()
+        .filter(CompanyVehicle.idCompany == id,
+                CompanyVehicle.validUntil == None).all()
         
         session.close()
         return render_template('htmx/vehicles.html', vehicles = results)
