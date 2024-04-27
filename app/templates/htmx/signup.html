@@ -1,12 +1,12 @@
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
 
-<div x-data="{ isVisible: true }" id="div_form">
+<div x-data="{ isVisible: true }" id="signup_form">
     <div x-show="isVisible" class="box container">
         <div align="right">
             <button class="delete" @click="isVisible = !isVisible"></button>
         </div>
         {% include 'base/notifications.html' %}
-        <form hx-post="{{data.return}}" hx-target="#div_form" hx-swap="outerHTML">
+        <form hx-post="{{data.return}}" hx-target="#signup_form" hx-swap="outerHTML">
             <div class="control">
                 <label class="label">Name</label>
                 <input class="input" type="text" name='name' placeholder="Type your name">
@@ -45,9 +45,9 @@
             {% endif %}
             <hr>
             <div align="right">
-                <button class="button is-primary">Sign up</button>
+                <button id="a" class="button is-primary" data-loading-class="is-loading">Sign up</button>
             </div>
         </form>
     </div>
+    <br>
 </div>
-<br>

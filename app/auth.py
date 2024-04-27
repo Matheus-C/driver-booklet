@@ -47,8 +47,9 @@ def signup():
     elif request.method == 'POST' and request.form:
         dict_data = request.form.to_dict()
         session = Session()
-        if(session.query(User).filter(User.email==dict_data['email']).first() != None):
-            flash("Email already in use.", "error")
+        if(session.query(User).filter(User.email==dict_data['email']).first() != None or\
+            session.query(User).filter(User.userIdentification==dict_data['userIdentification']).first()):
+            flash("User already registered.", "error")
             return render_template('htmx/signup.html',data={'return':'/signup'}, current_user = current_user)
 
         
