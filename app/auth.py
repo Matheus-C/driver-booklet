@@ -30,7 +30,7 @@ def login(id=None):
         user = session.query(User).filter_by(email=email).first()
         session.close()
         if user and bcrypt.check_password_hash(user.password,password):
-            login_user(user)
+            login_user(user,remember=True)
             response = Response()
             response.headers["hx-redirect"] = "/"
             return response

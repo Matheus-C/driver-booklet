@@ -43,6 +43,10 @@
   </script>
 
 
+ 
+</head>
+
+<body hx-ext="loading-states">
   <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <a class="navbar-item" href="/">
@@ -98,10 +102,10 @@
           <div class="buttons">
 
             {% if current_user.is_anonymous %}
-            <a class="button is-primary" hx-target="#changeme" hx-get="{{ url_for('signup') }}" hx-swap="innerHTML">
+            <a class="button is-primary" hx-target="#changeme" hx-get="{{ url_for('signup') }}" hx-swap="innerHTML" data-loading-class="is-loading">
               <strong>Sign up</strong>
             </a>
-            <a class="button is-light" hx-target="#changeme" hx-get="{{ url_for('login') }}" hx-swap="innerHTML">
+            <a class="button is-light" hx-target="#changeme" hx-get="{{ url_for('login') }}" hx-swap="innerHTML" data-loading-class="is-loading">
               Log in
             </a>
             {% else %}
@@ -120,9 +124,7 @@
   <title>{% block title %}{% endblock %} - TimeBank</title>
   {% block header %}
   {% endblock %}
-</head>
-
-<body hx-ext="loading-states">
+  
   <div id="changeme"></div>
   {% block content %}{% endblock %}
 </body>
