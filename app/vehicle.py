@@ -31,7 +31,7 @@ def vehicle_add(id_company=None):
         session.commit()
         session.close()
         flash("Registered successfully.", "success")
-        return render_template('htmx/vehicle_add_form.html', data={'return':f'/vehicle/add/{id_company}'})
+        return redirect(f'/vehicle/list/{id_company}')
         #return redirect(f'/company/{id_company}')
     
 @app.route('/vehicle/mileage',methods=['POST'])
@@ -47,8 +47,8 @@ def mileage_add():
     session.close()
     return jsonify({"status": "success"})
 
-@app.route('/vehicle/list/',methods=['POST'])
-def vehicle_list():
+@app.route('/vehicle/select/',methods=['POST'])
+def vehicle_select():
     
     if(current_user):
         id_company = int(request.form.get("idCompany"))

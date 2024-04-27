@@ -104,8 +104,9 @@ def signup_worker(id_company=None):
     elif request.method == 'POST' and request.form:
         dict_data = request.form.to_dict()
         session = Session()
-        if(session.query(User).filter(User.userIdentification==dict_data['userIdentification']).first() != None):
-            flash("NIF already registered.", "error")
+        if(session.query(User).filter(User.userIdentification==dict_data['userIdentification']).first() != None or\
+           session.query(User).filter(User.email==dict_data['email']).first() != None):
+            flash("User already registered.", "error")
             return render_template('htmx/signup.html',data={'return':f'/signup_worker/{id_company}'})
         dict_data['password'] = bcrypt.generate_password_hash(password=dict_data['password'])
         dict_data['userTypeId'] = 2 #Worker
@@ -195,3 +196,15 @@ def worker_list(id):
         
         session.close()
         return render_template('htmx/workers.html', workers = results)
+
+@app.route('/vehicle/list/<id>',methods=['GET'])
+@login_required
+def vehicle_list(id):
+    if current_user:
+        session = Session()
+        results = session.query(Vehicle)\
+        .join(CompanyVehicle, CompanyVehicle.idVehicle == Vehicle.id,isouter=True)\
+        .filter(CompanyVehicle.idCompany == id).all()
+        
+        session.close()
+        return render_template('htmx/vehicles.html', vehicles = results)
