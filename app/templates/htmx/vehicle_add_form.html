@@ -1,4 +1,4 @@
-<div x-data="{ isVisible: true }" id="div_form">
+<div x-data="{ isVisible: true }" id="vehicle_form">
     <div x-show="isVisible" class="box container">
         <div align="right">
             <button class="delete" @click="isVisible = !isVisible"></button>
@@ -6,7 +6,7 @@
         {% include 'base/notifications.html' %}
         <div>
 
-            <form hx-post="{{data.return}}" hx-target="#div_form" hx-swap="outerHTML">
+            <form hx-post="{{data.return}}" hx-target="#vehicle_form" hx-swap="outerHTML">
                 <div class="field">
                     <label class="label">Register Your Vehicle</label>
                     <div class="control">
@@ -18,7 +18,7 @@
                     </div>
                     <hr>
                     <div align="right">
-                        <button class="button is-primary">Register</button>
+                        <button class="button is-primary" data-loading-class="is-loading">Register</button>
                     </div>
                 </div>
             </form>

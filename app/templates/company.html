@@ -27,7 +27,7 @@
             <div align="right">
                 {% if current_user.userTypeId == 1 %}
                 <button class="button" hx-target="#addUser" hx-swap="innerHTML"
-                    hx-get="/signup_worker/{{company.id}}">Add User</button>
+                    hx-get="/signup_worker/{{company.id}}" data-loading-class="is-loading">Add User</button>
                 {% endif %}
             </div>
         </div>
@@ -49,7 +49,7 @@
             <div align="right">
                 {% if current_user.userTypeId == 1 %}
                 <button class="button" hx-target="#addCar" hx-swap="innerHTML"
-                    hx-get="/vehicle/add/{{company.id}}">Add Vehicle</button>
+                    hx-get="/vehicle/add/{{company.id}}" data-loading-class="is-loading">Add Vehicle</button>
                 
                 {% endif %}
             </div>
