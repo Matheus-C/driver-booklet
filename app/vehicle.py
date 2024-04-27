@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import jsonify, render_template, request, redirect
+from flask import jsonify, render_template, request, redirect,flash
 from app.models.models import *
 from app.models.database import *
 from app import app
@@ -13,9 +13,14 @@ def vehicle_add(id_company=None):
     
     elif request.method == 'POST' and request.form:
         dict_data = request.form.to_dict()
+        session = Session()
+        if(session.query(Vehicle).filter(Vehicle.licensePlate==dict_data['licensePlate']).first() != None):
+            flash("License plate already registered.", "error")
+            return render_template('htmx/vehicle_add_form.html', data={'return':f'/vehicle/add/{id_company}'})
+
         
         vehicle = Vehicle(**dict_data)
-        session = Session()
+        
         session.add(vehicle)
         session.commit()
         dt_object = datetime.now()
@@ -25,8 +30,9 @@ def vehicle_add(id_company=None):
         session.add(company_vehicle)
         session.commit()
         session.close()
-
-        return redirect(f'/company/{id_company}')
+        flash("Registered successfully.", "success")
+        return redirect(f'/vehicle/list/{id_company}')
+        #return redirect(f'/company/{id_company}')
     
 @app.route('/vehicle/mileage',methods=['POST'])
 def mileage_add():
@@ -41,8 +47,8 @@ def mileage_add():
     session.close()
     return jsonify({"status": "success"})
 
-@app.route('/vehicle/list/',methods=['POST'])
-def vehicle_list():
+@app.route('/vehicle/select/',methods=['POST'])
+def vehicle_select():
     
     if(current_user):
         id_company = int(request.form.get("idCompany"))

@@ -28,22 +28,19 @@
                 {% if current_user.userTypeId == 1 %}
                 <button class="button" hx-target="#addUser" hx-swap="innerHTML"
                     hx-get="/signup_worker/{{company.id}}">Add User</button>
-                
                 {% endif %}
             </div>
         </div>
     </div>
 
-    <div class="box">
-        {% for user in users_company %}
-        {% if user %}
-        <p>{{user.name}} (Ident.(NIF) {{user.userIdentification}})</p>
-        {% endif %}
-        {% endfor %}
+    <div id="workers" class="box">
+
+            {% for worker in users_company %}
+            <p>{{worker.name}} (Ident.(NIF) {{worker.userIdentification}})</p>
+            {% endfor %}
     </div>
+    
     <div id="addUser"></div>
-
-
     <div class="columns">
         <div class="column">
             <h3 class="title is-3">Vehicles</h3>
@@ -59,7 +56,7 @@
         </div>
     </div>
 
-    <div class="box">
+    <div class="box" id="vehicles">
         {% for vehicle in vehicles_company %}
         {% if vehicle %}
         <p>{{vehicle.model}} ({{vehicle.licensePlate}})</p>

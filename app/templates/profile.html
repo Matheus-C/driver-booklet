@@ -4,6 +4,7 @@
 {% endblock %}
 
 {% block content %}
+{% include 'base/notifications.html' %}
 <div class="container">
     <br>
     <h3 class="title is-3">User Info</h3>
@@ -41,13 +42,16 @@
 
     </div>
 
-
+    
     <div class="box">
+        
         {% for company in companies %}
         <span class="tag"><a href="/company/{{company.id}}">{{ company.name }} ({{company.vatcode}})</a></span>
         {% endfor %}
     </div>
     <div id="add_new_company"></div>
+    
+    
     {% endif %}
 </div>
 {% endblock %}

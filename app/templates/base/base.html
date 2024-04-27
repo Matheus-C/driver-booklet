@@ -1,127 +1,129 @@
 <!doctype html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://unpkg.com/htmx.org@1.9.11"
-        integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0"
-        crossorigin="anonymous"></script>
-    <script type="text/javascript" src="/static/register_service_worker.js">
-    </script>
-    <script type="text/javascript">
-        registerServiceWorker(
-            "/static/sw.js",
-            "BIQgErEfMAg3DSMCy85_kHVgE9uS3NSb5Rl4pmXPknmbrd4CvdvTMUwZ8K2RUxE2_6KkKh3VYG1tLaFRXiGURxA",
-            "/api/push-subscriptions"
-        );
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://unpkg.com/htmx.org@1.9.11"
+    integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0"
+    crossorigin="anonymous"></script>
+  <script type="text/javascript" src="/static/register_service_worker.js">
+  </script>
+  <script type="text/javascript">
+    registerServiceWorker(
+      "/static/sw.js",
+      "BIQgErEfMAg3DSMCy85_kHVgE9uS3NSb5Rl4pmXPknmbrd4CvdvTMUwZ8K2RUxE2_6KkKh3VYG1tLaFRXiGURxA",
+      "/api/push-subscriptions"
+    );
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
 
-            // Get all "navbar-burger" elements
-            const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-          
-            // Add a click event on each of them
-            $navbarBurgers.forEach( el => {
-              el.addEventListener('click', () => {
-          
-                // Get the target from the "data-target" attribute
-                const target = el.dataset.target;
-                const $target = document.getElementById(target);
-          
-                // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-                el.classList.toggle('is-active');
-                $target.classList.toggle('is-active');
-          
-              });
-            });
-          
-          });
-    </script>
+      // Get all "navbar-burger" elements
+      const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+      // Add a click event on each of them
+      $navbarBurgers.forEach(el => {
+        el.addEventListener('click', () => {
+
+          // Get the target from the "data-target" attribute
+          const target = el.dataset.target;
+          const $target = document.getElementById(target);
+
+          // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+          el.classList.toggle('is-active');
+          $target.classList.toggle('is-active');
+
+        });
+      });
+
+    });
+  </script>
 
 
-    <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-          <a class="navbar-item" href="/">
-            <img src="/static/windows11/LargeTile.scale-100.png" alt="">
+  <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="/">
+        <img src="/static/windows11/LargeTile.scale-100.png" alt="">
+      </a>
+
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div id="navbarBasicExample" class="navbar-menu">
+      <div class="navbar-start">
+        <a href='/' class="navbar-item">
+          Home
+        </a>
+        {% if current_user.userTypeId == 1 or current_user.is_anonymous %}
+        <a class="navbar-item">
+          Pricing
+        </a>
+        {% endif %}
+        {% if current_user.is_anonymous is false %}
+        <a href='/timer' class="navbar-item">
+          Timer
+        </a>
+        <a href='/reports' class="navbar-item">
+          Reports
+        </a>
+        {% elif current_user.userTypeId == 1 %}
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link">
+            My Fleet
           </a>
-      
-          <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-          </a>
-        </div>
-      
-        <div id="navbarBasicExample" class="navbar-menu">
-          <div class="navbar-start">
-            <a href='/' class="navbar-item">
-              Home
-            </a>
-            {% if current_user.userTypeId == 1 or current_user.is_anonymous %} 
+
+          <div class="navbar-dropdown">
             <a class="navbar-item">
-              Pricing
+              Employees
             </a>
-            {% endif %}
-            {% if current_user.is_anonymous is false %}
-            <a href='/timer' class="navbar-item">
-                Timer
+            <a class="navbar-item">
+              Vehicles
             </a>
-            <a href='/reports' class="navbar-item">
-                Reports
-            </a>
-            {% elif current_user.userTypeId == 1 %} 
-            <div class="navbar-item has-dropdown is-hoverable">
-              <a class="navbar-link">
-                My Fleet
-              </a>
-      
-              <div class="navbar-dropdown">
-                <a class="navbar-item">
-                  Employees
-                </a>
-                <a class="navbar-item">
-                  Vehicles
-                </a>
-              </div>
-            </div>
-            {% endif %}
-
-          </div>
-      
-          <div class="navbar-end">
-            <div class="navbar-item">
-              <div class="buttons">
-                
-                {% if current_user.is_anonymous %}
-                <a class="button is-primary" hx-target="#changeme" hx-get="{{ url_for('signup') }}" hx-swap="innerHTML">
-                  <strong>Sign up</strong>
-                </a>
-                <a class="button is-light" hx-target="#changeme" hx-get="{{ url_for('login') }}" hx-swap="innerHTML">
-                    Log in
-                </a>
-                {% else %}
-                <a class="button is-primary" href="/profile">
-                    <strong>{{current_user.name}}</strong>
-                  </a>
-                  <a class="button is-light" href="/logout">
-                    Logout
-                  </a>
-                {% endif %}
-                </div>
-            </div>
           </div>
         </div>
-      </nav>
-    <title>{% block title %}{% endblock %} - TimeBank</title>
-    {% block header %}
-    {% endblock %}
+        {% endif %}
+
+      </div>
+
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="buttons">
+
+            {% if current_user.is_anonymous %}
+            <a class="button is-primary" hx-target="#changeme" hx-get="{{ url_for('signup') }}" hx-swap="innerHTML">
+              <strong>Sign up</strong>
+            </a>
+            <a class="button is-light" hx-target="#changeme" hx-get="{{ url_for('login') }}" hx-swap="innerHTML">
+              Log in
+            </a>
+            {% else %}
+            <a class="button is-primary" href="/profile">
+              <strong>{{current_user.name}}</strong>
+            </a>
+            <a class="button is-light" href="/logout">
+              Logout
+            </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <title>{% block title %}{% endblock %} - TimeBank</title>
+  {% block header %}
+  {% endblock %}
 </head>
+
 <body>
-    <div id="changeme"></div>
-    {% block content %}{% endblock %}
+  <div id="changeme"></div>
+  {% block content %}{% endblock %}
 </body>
+
 </html>

@@ -1,10 +1,12 @@
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
-<div x-data="{ isVisible: true }">
+
+<div x-data="{ isVisible: true }" id="div_form">
     <div x-show="isVisible" class="box container">
         <div align="right">
             <button class="delete" @click="isVisible = !isVisible"></button>
         </div>
-        <form action="{{data.return}}" method="post">
+        {% include 'base/notifications.html' %}
+        <form hx-post="{{data.return}}" hx-target="#div_form" hx-swap="outerHTML">
             <div class="control">
                 <label class="label">Name</label>
                 <input class="input" type="text" name='name' placeholder="Type your name">
@@ -48,3 +50,4 @@
         </form>
     </div>
 </div>
+<br>
