@@ -122,7 +122,7 @@ def signup_worker(id_company=None):
         session.add(usercompany)
         session.commit()
         session.close()
-        #flash("Registered successfully.", "success")
+        flash("Registered successfully.", "success")
         return redirect(f'/worker/list/{id_company}')
     
 @app.route('/company/list',methods=['GET'])
