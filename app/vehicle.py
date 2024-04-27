@@ -15,8 +15,9 @@ def vehicle_add(id_company=None):
         dict_data = request.form.to_dict()
         session = Session()
         if(session.query(Vehicle).filter(Vehicle.licensePlate==dict_data['licensePlate']).first() != None):
-            flash("license Plate already registered!!", "error")
-            return redirect(f'/company/{id_company}')
+            flash("License plate already registered.", "error")
+            return render_template('htmx/vehicle_add_form.html', data={'return':f'/vehicle/add/{id_company}'})
+
         
         vehicle = Vehicle(**dict_data)
         
@@ -29,8 +30,9 @@ def vehicle_add(id_company=None):
         session.add(company_vehicle)
         session.commit()
         session.close()
-        flash("registered successfully!!", "success")
-        return redirect(f'/company/{id_company}')
+        flash("Registered successfully.", "success")
+        return render_template('htmx/vehicle_add_form.html', data={'return':f'/vehicle/add/{id_company}'})
+        #return redirect(f'/company/{id_company}')
     
 @app.route('/vehicle/mileage',methods=['POST'])
 def mileage_add():

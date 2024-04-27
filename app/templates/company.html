@@ -4,7 +4,6 @@
 {% endblock %}
 
 {% block content %}
-{% include 'base/notifications.html' %}
 <div class="container">
     <br>
     <h3 class="title is-3">Company Info</h3>
@@ -29,22 +28,14 @@
                 {% if current_user.userTypeId == 1 %}
                 <button class="button" hx-target="#addUser" hx-swap="innerHTML"
                     hx-get="/signup_worker/{{company.id}}">Add User</button>
-                
                 {% endif %}
             </div>
         </div>
     </div>
 
-    <div class="box">
-        {% for user in users_company %}
-        {% if user %}
-        <p>{{user.name}} (Ident.(NIF) {{user.userIdentification}})</p>
-        {% endif %}
-        {% endfor %}
-    </div>
+    <div id="workers" hx-get="/worker/list/{{company.id}}" hx-target="this" hx-trigger="load" hx-swap="innerHTML"></div>
+    
     <div id="addUser"></div>
-
-
     <div class="columns">
         <div class="column">
             <h3 class="title is-3">Vehicles</h3>

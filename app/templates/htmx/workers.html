@@ -1,0 +1,7 @@
+<div class="box" id="workers" hx-swap-oob="true"><!-- replaces the div workers with the new content -->
+    {% for worker in workers %}
+    {% if worker %}
+    <p>{{worker.name}} (Ident.(NIF) {{worker.userIdentification}})</p>
+    {% endif %}
+    {% endfor %}
+</div>

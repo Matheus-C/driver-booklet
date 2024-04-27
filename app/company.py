@@ -21,7 +21,7 @@ def company():
             session = Session()
             #checks if exists another company with the same vatcode
             if(session.query(Company).filter(Company.vatcode==dict_data['vatcode']).first() != None):
-                flash("Vatcode already registered!!", "error")
+                flash("Vatcode already registered.", "error")
                 return redirect(url_for('profile'))
             # Add Company
             company = Company(**dict_data)
@@ -33,7 +33,7 @@ def company():
             session.add(user_company)
             session.commit()
             session.close()
-            flash("registered successfully!!", "success")
+            flash("Registered successfully.", "success")
             return redirect(url_for('profile'))
         
 @app.route("/company/<id>", methods=["GET","POST"])
@@ -103,6 +103,10 @@ def signup_worker(id_company=None):
     
     elif request.method == 'POST' and request.form:
         dict_data = request.form.to_dict()
+        session = Session()
+        if(session.query(User).filter(User.userIdentification==dict_data['userIdentification']).first() != None):
+            flash("NIF already registered.", "error")
+            return render_template('htmx/signup.html',data={'return':f'/signup_worker/{id_company}'})
         dict_data['password'] = bcrypt.generate_password_hash(password=dict_data['password'])
         dict_data['userTypeId'] = 2 #Worker
         start_work = dict_data['startWorkDate']
@@ -110,7 +114,7 @@ def signup_worker(id_company=None):
         # dict_data['is_active'] = 0 #Has to be enabled manually
         
         user = User(**dict_data)
-        session = Session()
+        
         session.add(user)
         session.commit()
 
@@ -118,8 +122,8 @@ def signup_worker(id_company=None):
         session.add(usercompany)
         session.commit()
         session.close()
-
-        return redirect(f'/company/{id_company}')
+        #flash("Registered successfully.", "success")
+        return redirect(f'/worker/list/{id_company}')
     
 @app.route('/company/list',methods=['GET'])
 @login_required
@@ -176,3 +180,18 @@ def geolocation_list(id):
         else: 
              data=[]
         return jsonify(data)
+
+    
+@app.route('/worker/list/<id>',methods=['GET'])
+@login_required
+def worker_list(id):
+    if current_user:
+        session = Session()
+        results = session.query(User)\
+        .join(UserCompany, UserCompany.idUser == User.id,isouter=True)\
+        .filter(User.userTypeId == 2, 
+                UserCompany.idCompany == id,
+                UserCompany.validUntil == None).all()
+        
+        session.close()
+        return render_template('htmx/workers.html', workers = results)
