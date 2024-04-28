@@ -10,11 +10,11 @@
 
 {% for entry in data %}
 
-{% if entry.categoryName == 'work' %}
+{% if entry.categoryName == 'Work' %}
 {% set color = 'is-success' %}
-{% elif entry.categoryName == 'rest' %}
+{% elif entry.categoryName == 'Rest' %}
 {% set color = 'is-link' %}
-{% elif entry.categoryName == 'availability' %}
+{% elif entry.categoryName == 'Availability' %}
 {% set color = 'is-warning' %}
 {% endif %}
 <div class="container">
