@@ -66,3 +66,47 @@ def timer_update(id):
         return render_template('htmx/timer_updates.html',data=data)
     else:
         return redirect('/')
+    
+@app.route('/timer/progress/<id>')
+@login_required
+def timer_progress(id):
+    session = Session()
+    query = f"""
+                WITH event_query as 
+                (SELECT e.eventTime dateStart,
+                        et.category,
+                        case when et.name like '%_end' then 0
+                        ELSE LEAD(eventTime, 1, 0) OVER (PARTITION BY et.category ORDER BY eventTime ASC) 
+                        END as dateEnd,
+                        e.idVehicle,
+                        e.idCompany,
+                        e.geolocation,
+                        e.idAttachment
+                FROM `event` e
+                INNER JOIN `eventType` et ON et.id = e.idType
+                WHERE idUser = {id}
+                and e.eventTime >= DATE_ADD(CURDATE(), INTERVAL 0 HOUR)
+                )
+            
+            select 
+                e.category categoryName
+                ,SEC_TO_TIME(SUM(TIMESTAMPDIFF(SECOND,dateStart,dateEnd))) AS timeSpent
+                ,CASE
+                	WHEN e.category = 'availability' THEN SUM(TIMESTAMPDIFF(SECOND,dateStart,dateEnd)) / 50400
+                    WHEN e.category = 'work' THEN SUM(TIMESTAMPDIFF(SECOND,dateStart,dateEnd)) / 36000
+                    WHEN e.category = 'rest' THEN SUM(TIMESTAMPDIFF(SECOND,dateStart,dateEnd)) / 50400
+                    END as percentage_total
+            from event_query e
+            where dateEnd <> 0
+            group by e.category
+            order by e.category desc
+            """
+    if current_user:
+        query = text(query)
+        session = Session()
+        data = session.execute(query).all()
+        session.close()
+
+        return render_template('htmx/timer_progress.html',data=data)
+    else:
+        return redirect('/')
