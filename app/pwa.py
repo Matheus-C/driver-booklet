@@ -80,3 +80,7 @@ def serve_manifest():
 @app.route('/sw.js')
 def service_worker():
     return send_file('static/sw.js', mimetype='application/javascript')
+
+@app.route('/.well-known/assetlinks.json')
+def serve_assetlinks():
+    return send_file('static/assetlinks.json', mimetype='application/javascript')
