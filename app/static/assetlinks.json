@@ -3,6 +3,6 @@
       "target": {
         "namespace": "android_app",
         "package_name": "app.vercel.driver_booklet.twa",
-        "sha256_cert_fingerprints": ["EE:0B:85:87:D1:90:87:C0:73:29:3F:33:AA:89:C4:39:DF:30:8C:8D:C9:AC:F0:A2:C1:6E:D5:B4:02:A2:D0:0F"]
+        "sha256_cert_fingerprints": ["A5:0B:E7:F2:C3:DF:54:5C:C6:72:6B:3A:F7:E9:BD:C2:EE:19:55:A5:99:F5:02:55:D7:FF:15:BC:38:4B:71:2C"]
       }
     }]
