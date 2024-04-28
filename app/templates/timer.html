@@ -51,9 +51,9 @@
             <p class="subtitle is-3" x-text="formattedTime" x-on:change="checkTime($event.target.innerText)"></p>
 
               <!-- <div class="field has-addons" > -->
-                <div>
+                <div id="control-panel">
                 <p class="control block">
-                  <button class="button is-dark" @click="becomeAvailable" x-show="!isAvailable && !isWorking && locationEnabled">Ficar disponivel</button>
+                  <button class="button is-warning" @click="becomeAvailable" x-show="!isAvailable && !isWorking && locationEnabled">Ficar disponivel</button>
                 </p>
                 <p class="control block">
                   <button class="button is-primary" @click="startTimer" x-show="isAvailable && locationEnabled && !isWorking">Começar Trabalho</button>
@@ -62,20 +62,21 @@
                   <button class="button is-link" @click="stopTimer" x-show="timerRunning && !isResting">Repousar</button>
                 </p>
                 <p class="control block">
-                  <button class="button is-warning" @click="endTimer">Fim do Expediente</button>
+                  <button class="button is-danger" @click="endTimer">Fim do Expediente</button>
                 </p>
               </div>
               <!-- </div> -->
             </div>
             <div class="box block">
               <div align="right">
-              <button class="button is-light is-small" hx-trigger="load, click" hx-target="tbody" hx-get="/timer/update/{{ current_user.id }}" hx-swap="outerHTML transition:true">
+              <button class="button is-light is-small" hx-trigger="load, click, click from:#control-panel" hx-target="#progress-bar" hx-get="/timer/progress/{{ current_user.id }}" hx-swap="innerHTML transition:true">
                 <span class="icon">
                   <i class="fas fa-refresh"></i>
                 </span>
               </button>
             </div>
-            <div class="table-container">
+            <div id="progress-bar"></div>
+            <!-- <div class="table-container">
               <table class="table is-striped">
                 <thead>
                   <tr>
@@ -88,7 +89,7 @@
                 <tbody>
                 </tbody>
                 </table>
-              </div>
+              </div> -->
             </div>
             
           </div>

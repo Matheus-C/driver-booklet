@@ -1,0 +1,25 @@
+<style>
+    /* Custom CSS for text inside progress bar */
+    .progress-text {
+        position: absolute;
+        top: 80%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+
+{% for entry in data %}
+
+{% if entry.categoryName == 'Work' %}
+{% set color = 'is-success' %}
+{% elif entry.categoryName == 'Rest' %}
+{% set color = 'is-link' %}
+{% elif entry.categoryName == 'Availability' %}
+{% set color = 'is-warning' %}
+{% endif %}
+<div class="container">
+    <label for="{{entry.categoryName}}">{{entry.categoryName}}</label>
+    <progress id="{{entry.categoryName}}" class="progress {{color}}" value="{{entry.percentage_total*100}}" max="100"></progress>
+    <span class="progress-text">{{entry.timeSpent}}</span>
+</div>
+{% endfor %}
