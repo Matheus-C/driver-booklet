@@ -27,31 +27,20 @@
 
 
 
-    {% if current_user.userTypeId == 1 %}
     <div class="columns">
         <div class="column">
             <h3 class="title is-3">Companies</h3>
         </div>
-        <div class="column">
-            <div align="right">
-                <button class="button" hx-target="#add_new_company" hx-swap="innerHTML" hx-get="/company" data-loading-class="is-loading">Add
-                    Company</button>
-                
-            </div>
-        </div>
 
     </div>
 
-    
     <div class="box">
         
         {% for company in companies %}
-        <span class="tag"><a href="/company/{{company.id}}">{{ company.name }} ({{company.vatcode}})</a></span>
+        <span class="tag"><a>{{ company.name }} ({{company.vatcode}})</a></span>
         {% endfor %}
     </div>
-    <div id="add_new_company"></div>
     
     
-    {% endif %}
 </div>
 {% endblock %}

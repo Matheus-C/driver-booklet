@@ -5,6 +5,16 @@ from app import app,bcrypt
 from flask_login import current_user,login_required
 from sqlalchemy.sql import text
 
+@app.route("/companies", methods=["GET","POST"])
+@login_required
+def companies():
+    if current_user:
+        
+        if request.method == 'GET':
+            session = Session()
+            results = session.query(Company).filter(Company.idUser == current_user.id).all()
+            session.close()
+            return render_template('companies.html',current_user=current_user,companies=results)
 
 @app.route("/company", methods=["GET","POST"])
 @login_required
@@ -83,7 +93,7 @@ def company_info(id):
             session = Session()
             geolocation = session.execute(query).all()
             session.close()
-            return render_template('company.html',company = company,users_company = users_company, vehicles_company = vehicles_company,geolocation=geolocation,current_user=current_user)
+            return render_template('htmx/company.html',company = company,users_company = users_company, vehicles_company = vehicles_company,geolocation=geolocation,current_user=current_user)
         
         elif request.method == 'POST' and request.form:
             dict_data = request.form.to_dict()

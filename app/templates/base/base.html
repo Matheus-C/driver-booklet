@@ -66,6 +66,9 @@
         {% if current_user.userTypeId == 1 or current_user.is_anonymous %}
         {% endif %}
         {% if current_user.is_anonymous is false %}
+        <a href='/companies' class="navbar-item">
+          Companies
+        </a>
         <a href='/timer' class="navbar-item">
           Timer
         </a>
