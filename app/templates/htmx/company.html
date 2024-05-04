@@ -1,10 +1,7 @@
-{% extends 'base/base.html' %}
-
 {% block header %}
 {% endblock %}
 
 {% block content %}
-<div class="container">
     <br>
     <h3 class="title is-3">Company Info</h3>
     <div class="box">
@@ -64,9 +61,7 @@
         {% endfor %}
     </div>
     <div id="addCar"></div>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2"></script>
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    
     <h3 class="title is-3">Map</h3>
 
     <div id="map" x-data="mapData()" x-init="initMap" style="height: 400px;"></div>
@@ -105,9 +100,5 @@
             };
         }
     </script>
-
-
-   
-    
 </div>
 {% endblock %}

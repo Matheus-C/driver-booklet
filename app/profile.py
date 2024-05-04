@@ -11,7 +11,10 @@ from flask_login import current_user,login_required
 def profile():
     if current_user:
         session = Session()
-        results = session.query(Company).filter(Company.idUser == current_user.id).all()
+        results = session.query(Company)\
+        .join(UserCompany, UserCompany.idCompany == Company.id,isouter=True)\
+        .filter(UserCompany.idUser == current_user.id,
+                UserCompany.validUntil == None).all()
         session.close()
         return render_template('profile.html',current_user = current_user ,companies=results)
     

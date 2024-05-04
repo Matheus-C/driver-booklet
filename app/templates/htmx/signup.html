@@ -3,7 +3,9 @@
 <div x-data="{ isVisible: true }" id="signup_form">
     <div x-show="isVisible" class="box container">
         <div align="right">
+            {% if current_user.is_anonymous == False%}
             <button class="delete" @click="isVisible = !isVisible"></button>
+            {% endif %}
         </div>
         {% include 'base/notifications.html' %}
         <form hx-post="{{data.return}}" hx-target="#signup_form" hx-swap="outerHTML">
@@ -45,6 +47,9 @@
             {% endif %}
             <hr>
             <div align="right">
+                {% if current_user.is_anonymous %}
+                <button class="button is-light" hx-trigger ='click' hx-target="#signup_form" hx-get="{{ url_for('login') }}" hx-swap="innerHTML" data-loading-class="is-loading">Go back to Login</button>
+                {% endif %}
                 <button id="a" class="button is-primary" data-loading-class="is-loading">Sign up</button>
             </div>
         </form>
