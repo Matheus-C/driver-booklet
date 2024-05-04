@@ -8,29 +8,14 @@
 <div class="container">
 <section class="hero">
     <div class="hero-body">
-        <p class="title">{% block title %}TimeBank{% endblock %}</p>
+        <p class="title">{% block title %}Driver Booklet{% endblock %}</p>
        
     </div>
 
 </section>
 
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean venenatis porta tellus sed auctor. Ut quis vestibulum
-libero. Praesent gravida, risus id volutpat sagittis, elit sem fringilla augue, in venenatis massa lacus sit amet nulla.
-Sed et lorem ac nibh consequat dignissim eget non velit. Quisque tincidunt sagittis felis. Sed consequat, augue vel
-vehicula molestie, ante augue tempor odio, et sollicitudin neque nunc a quam. Pellentesque pellentesque, nulla et
-sodales lacinia, ex augue egestas felis, sit amet sollicitudin sapien libero eget nulla. Nullam ac finibus risus.
-Pellentesque suscipit nec ipsum sit amet tristique. Vivamus et ultricies neque. Proin eget diam aliquam, fermentum leo
-eu, dapibus lorem. Nulla sit amet sem urna. Praesent hendrerit molestie sapien.</p>
-<br>
-<p>Aliquam id aliquet sapien. Sed et dignissim lacus. Praesent at dui non sapien ornare placerat eget eget dolor. Nullam eu
-semper est. Quisque convallis vitae tortor rhoncus aliquam. Sed viverra tempor faucibus. Vestibulum enim nulla, laoreet
-nec suscipit non, aliquam ut elit. Proin ornare, turpis in tristique congue, diam nibh fermentum ex, vitae dignissim
-elit lectus sit amet tellus. Donec a risus facilisis, porttitor nibh ut, luctus ipsum. Fusce sagittis, lorem ac pretium
-varius, ex felis malesuada risus, vel elementum tortor velit non risus. In mollis, dui ac tempus sagittis, mauris ligula
-volutpat diam, eget condimentum felis erat in leo. Vivamus quis eros at arcu efficitur vulputate. Vestibulum at tortor
-sed sapien malesuada pretium. Pellentesque facilisis ligula et risus ornare, in ultrices ante ornare. Proin pulvinar sit
-amet ex eu feugiat. Proin viverra tellus a dolor hendrerit fermentum.
-</p>
+
+<div lass="button is-light" hx-trigger ='load' hx-get="{{ url_for('login') }}" hx-swap="innerHTML" data-loading-class="is-loading"></div>
 </div>
 
 {% endblock %}

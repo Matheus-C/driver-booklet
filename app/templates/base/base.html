@@ -47,7 +47,7 @@
 </head>
 
 <body hx-ext="loading-states">
-  <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+  <nav class="navbar is-dark is-hidden-mobile" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <a class="navbar-item" href="/">
         <img src="/static/windows11/LargeTile.scale-100.png" alt="">
@@ -63,13 +63,7 @@
 
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
-        <a href='/' class="navbar-item">
-          Home
-        </a>
         {% if current_user.userTypeId == 1 or current_user.is_anonymous %}
-        <a class="navbar-item">
-          Pricing
-        </a>
         {% endif %}
         {% if current_user.is_anonymous is false %}
         <a href='/timer' class="navbar-item">
@@ -102,12 +96,7 @@
           <div class="buttons">
 
             {% if current_user.is_anonymous %}
-            <a class="button is-primary" hx-target="#changeme" hx-get="{{ url_for('signup') }}" hx-swap="innerHTML" data-loading-class="is-loading">
-              <strong>Sign up</strong>
-            </a>
-            <a class="button is-light" hx-target="#changeme" hx-get="{{ url_for('login') }}" hx-swap="innerHTML" data-loading-class="is-loading">
-              Log in
-            </a>
+           
             {% else %}
             <a class="button is-primary" href="/profile">
               <strong>{{current_user.name}}</strong>
@@ -121,11 +110,41 @@
       </div>
     </div>
   </nav>
-  <title>{% block title %}{% endblock %} - TimeBank</title>
+  <!-- Bottm bar -->
+  <nav class="navbar is-dark is-fixed-bottom is-hidden-tablet" role="navigation">
+    <div class="navbar-brand">
+      {% if current_user.is_anonymous %}
+      {% else %}
+      {% if current_user.userTypeId == 1%}
+        <a class="navbar-item is-expanded is-block has-text-centered" href='/companies'>
+            <i class="fa fa-building"></i>
+            <p class="is-size-7">Companies</p>
+        </a>
+      {% endif %}
+        <a class="navbar-item is-expanded is-block has-text-centered" href='/timer'>
+            <i class="fa fa-clock"></i>
+            <p class="is-size-7">Timer</p>
+        </a>
+        <a class="navbar-item is-expanded is-block has-text-centered" href='/reports'>
+            <i class="fa fa-file-excel"></i>
+            <p class="is-size-7">Reports</p>
+        </a>
+        <a class="navbar-item is-expanded is-block has-text-centered" href='/profile'>
+            <i class="fa fa-user"></i>
+            <p class="is-size-7">Profile</p>
+        </a>
+        <a class="navbar-item is-expanded is-block has-text-centered" href='/logout'>
+          <i class="fa fa-right-from-bracket"></i>
+          <p class="is-size-7">Logout</p>
+      </a>
+        {% endif %}
+    </div>
+</nav>
+  <!-- End bottom bar -->
+  <title>{% block title %}{% endblock %} - DBook  </title>
   {% block header %}
   {% endblock %}
   
-  <div id="changeme"></div>
   {% block content %}{% endblock %}
 </body>
 

@@ -1,9 +1,12 @@
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
 <div x-data="{ isVisible: true }" id="login_form">
+    
     <div x-show="isVisible" class="box container">
-        <div align="right">
+        <!-- <div align="right">
             <button class="delete" @click="isVisible = !isVisible"></button>
-        </div>
+        </div> -->
+        <label class="label">If you dont have an account</label>
+         <a hx-get="{{ url_for('signup') }}" hx-target="#login_form" hx-swap="innerHTML" data-loading-class="is-loading" class="button is-small">Register here!</a>
         {% include 'base/notifications.html' %}
         <form hx-post="{{data.return}}" hx-target="#login_form" hx-swap="outerHTML">
             <div class="field">
@@ -21,6 +24,7 @@
                 <div align="right">
                     <button class="button is-primary" data-loading-class="is-loading">Login</button>
                 </div>
+                
             </div>
         </form>
     </div>

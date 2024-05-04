@@ -14,8 +14,10 @@ def load_user(id):
 @app.route('/')
 def index():
     if current_user.is_authenticated:
-        print('this route')
-        return render_template('index.html', current_user=current_user)
+        if current_user.userTypeId == 1: # Company Owner
+            return render_template('profile.html',current_user=current_user)
+        else: #Other
+            return render_template('timer.html',current_user=current_user)
     else:
         return render_template('index.html')
 
