@@ -7,7 +7,9 @@
 {% block content %}
 <div class="container">
     <br>
-    <h3 class="title is-3">Reports</h3>
+    <div class="column">
+        <h3 class="title is-3">Reports</h3>
+    </div>
     <div class="box">
         <form>
             <label class="label" for="selectCompany">Company: </label>
@@ -27,7 +29,9 @@
         </form>
         
     </div>
-    <h4 class="title is-4">Report for {{current_user.name}}, {{current_user.userIdentification}}</h4>
+    <div class="column">
+        <h4 class="title is-4">Report for {{current_user.name}} ({{current_user.userIdentification}})</h4>
+    </div>
     <div class="box" id="reportGenerated">
     </div>
 
