@@ -15,7 +15,7 @@ def load_user(id):
 def index():
     if current_user.is_authenticated:
         if current_user.userTypeId == 1: # Company Owner
-            return render_template('profile.html',current_user=current_user)
+            return render_template('companies.html',current_user=current_user)
         else: #Other
             return render_template('timer.html',current_user=current_user)
     else:
