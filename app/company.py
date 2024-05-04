@@ -9,7 +9,6 @@ from sqlalchemy.sql import text
 @login_required
 def companies():
     if current_user:
-        
         if request.method == 'GET':
             session = Session()
             results = session.query(Company).filter(Company.idUser == current_user.id).all()

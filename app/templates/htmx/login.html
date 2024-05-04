@@ -5,8 +5,11 @@
         <!-- <div align="right">
             <button class="delete" @click="isVisible = !isVisible"></button>
         </div> -->
-        <label class="label">If you dont have an account</label>
-         <a hx-get="{{ url_for('signup') }}" hx-target="#login_form" hx-swap="innerHTML" data-loading-class="is-loading" class="button is-small">Register here!</a>
+        
+        <p>
+            If you dont have an account  <a hx-get="{{ url_for('signup') }}" hx-target="#login_form" hx-swap="innerHTML" data-loading-class="is-loading" class="tag is-dark is-small">Register here!</a>
+        </p>
+        <hr>
         {% include 'base/notifications.html' %}
         <form hx-post="{{data.return}}" hx-target="#login_form" hx-swap="outerHTML">
             <div class="field">
