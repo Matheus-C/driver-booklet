@@ -24,6 +24,8 @@ scheduler = APScheduler()
 # if you don't wanna use a config, you can set options here:
 scheduler.api_enabled = True
 scheduler.init_app(app)
+
+
+from app import auth, profile, pwa, timer, company, routing, vehicle, reports, jobs
 scheduler.start()
 
-from app import auth, profile, pwa, timer, company, routing, vehicle, reports

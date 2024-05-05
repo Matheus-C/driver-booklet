@@ -27,7 +27,7 @@ def create_push_subscription():
         return jsonify({"status": "success"})
     else:
         return jsonify({"status": "failure"})
-    
+# default function to trigger notifications with routing
 @app.route("/admin-api/trigger-push-notifications", methods=["POST"])
 def trigger_push_notifications():
     json_data = request.get_json()
@@ -42,23 +42,32 @@ def trigger_push_notifications():
         "status": "success",
         "result": results
     })
+# default function to trigger notifications without routing
+def trigger_notifications(subscriptions, title, body):
+    results = []
+    for subscription in subscriptions:
+        results.append(trigger_push_notification(subscription, title, body))
+    # return jsonify({
+    #     "status": "success",
+    #     "result": results
+    # })
 
 def trigger_push_notifications_for_subscriptions(subscriptions, title, body):
     return [trigger_push_notification(subscription, title, body)
             for subscription in subscriptions]
 
 def trigger_push_notification(push_subscription, title, body):
-    print(push_subscription, current_app.config["VAPID_PRIVATE_KEY"])
     try:
-        response = webpush(
-            subscription_info=json.loads(push_subscription.subscription_json),
-            data=json.dumps({"title": title, "body": body}),
-            vapid_private_key=current_app.config["VAPID_PRIVATE_KEY"],
-            vapid_claims={
-                "sub": "mailto:{}".format(
-                    current_app.config["VAPID_CLAIM_EMAIL"])
-            }
-        )
+        with app.app_context():
+            response = webpush(
+                subscription_info=json.loads(push_subscription.subscription_json),
+                data=json.dumps({"title": title, "body": body}),
+                vapid_private_key=current_app.config["VAPID_PRIVATE_KEY"],
+                vapid_claims={
+                    "sub": "mailto:{}".format(
+                        current_app.config["VAPID_CLAIM_EMAIL"])
+                }
+            )
         return response.ok
     except WebPushException as ex:
         if ex.response and ex.response.json():

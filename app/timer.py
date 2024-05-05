@@ -5,11 +5,6 @@ from app import app
 from flask_login import login_required,current_user
 from datetime import datetime
 from sqlalchemy.sql import text
-from flask_apscheduler import APScheduler
-
-@APScheduler.task('interval', id='do_job_1', seconds=10, misfire_grace_time=900)
-def job1():
-    print('Job 1 executed')
 
 @app.route('/timer')
 @login_required
@@ -22,7 +17,6 @@ def timer():
 @app.route("/event_data", methods=["POST"])
 @login_required
 def event_data():
-    APScheduler.add_job(self, id='do_job_1',func=job1, trigger='interval', seconds=10)
     session = Session()
     json_data = request.get_json()
     dt_object =  datetime.strptime(json_data["eventTimestamp"], '%m/%d/%Y, %H:%M:%S')
