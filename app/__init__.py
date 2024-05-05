@@ -2,6 +2,7 @@ from flask import Flask
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from app.models import * # importing db + models
+from flask_apscheduler import APScheduler
 
 app = Flask(__name__)
 app.secret_key = 'ousadiaealegria'
@@ -17,5 +18,12 @@ login_manager.init_app(app)
 
 
 bcrypt = Bcrypt(app)
+
+# initialize scheduler
+scheduler = APScheduler()
+# if you don't wanna use a config, you can set options here:
+scheduler.api_enabled = True
+scheduler.init_app(app)
+scheduler.start()
 
 from app import auth, profile, pwa, timer, company, routing, vehicle, reports

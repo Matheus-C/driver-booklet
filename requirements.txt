@@ -5,3 +5,4 @@ flask-bcrypt
 sqlalchemy
 mysql-connector-python
 pywebpush
+Flask-APScheduler
