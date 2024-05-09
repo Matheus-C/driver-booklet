@@ -60,9 +60,17 @@
 
         <div id="control-panel">
 
-          <div class="control block" x-show='!isAvailable & !isWorking'>
-            <a @htmx:after-request="updateTimer(mode='availability_start')" class="button is-warning" hx-post="/event_data"
-              hx-swap="none" hx-include="select,[name='geolocation']"
+
+          <div class="control block" x-show='isEnd'>
+            <a class="button is-info" @click="openModal()">
+              <p><i class="fa-solid fa-car"></i> Escolher Veículo</p>
+            </a>
+          </div>
+
+
+          <div class="control block" x-show='!isAvailable & !isWorking & !isEnd'>
+            <a @htmx:after-request="updateTimer(mode='availability_start')" class="button is-warning"
+              hx-post="/event_data" hx-swap="none" hx-include="select,[name='geolocation']"
               hx-vals="js:{eventTimestamp: new Date().toLocaleString('en-US', {hour12: false}),idType:5}">
               <p><i class="fa-solid fa-briefcase"></i> Ficar disponível</p>
             </a>
@@ -120,7 +128,6 @@
   htmx.onLoad(function (target) {
     let app = document.querySelector('[x-data]');
     app.__x.$data.enableLocation();
-    
     if (Notification.permission !== 'granted') {
       Notification.requestPermission()
     }

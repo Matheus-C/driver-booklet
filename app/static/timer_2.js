@@ -33,17 +33,20 @@ function stopwatch() {
             if (data.eventName != 'day_end'){
               this.updateTimer(data.eventName,data.eventTime);
             }
+           
           }
         );
       },
       
       checkVisibilityPage(){
-        document.addEventListener('visibilitychange', () => {
+        const handler = () => {
           const isVisible = !document.hidden;
           if (isVisible){
             this.getUpdatesFromDB();
           }
-        });
+        }
+        document.removeEventListener('visibilitychange',handler);
+        document.addEventListener('visibilitychange',handler);
       },
 
       Timer() {
@@ -100,7 +103,6 @@ function stopwatch() {
           'rest_start':[{isResting:true},{isWorking:false},{isAvailable:false},{isEnd:false}],
           'day_end':[{isEnd:true},{isResting:false},{isWorking:false},{isAvailable:false}],
         }
-        console.log(mode);
         config[mode].forEach(element => {
           const propertyName = Object.keys(element)[0];
           this[propertyName] = element[propertyName];
@@ -133,10 +135,16 @@ function stopwatch() {
         this.currentActivityName = config[mode];
       },
 
+      openModal(){
+        this.isModalVisible=true;
+        this.isEnd = false;
+        this.currentActivityName = 'Atividade Atual';
+      },
+
       closeModal(){
         this.isModalVisible=false;
         if (!this.isEnd) {
-          this.checkVisibilityPage();
+           this.checkVisibilityPage();
           this.getUpdatesFromDB();
         }
       },
@@ -150,8 +158,7 @@ function stopwatch() {
           const newCoords = { lat: position.coords.latitude, lon: position.coords.longitude };
           if (this.isAvailable && this.distance_ari(this.coords, newCoords) >= 0.00003) { // Only start timer after initial location
             // In case of any gps movement will auto start working
-            if (this.idCompany && this.idVehicle && this.isModalVisible === false)
-              {
+            if (this.idCompany && this.idVehicle && this.isModalVisible === false){
                 document.querySelector('body').dispatchEvent(
                   new Event('start_working')
                 )
