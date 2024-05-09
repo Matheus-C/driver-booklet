@@ -17,14 +17,14 @@
                 <select id="selectCompany" name="idCompany" x-model="idCompany" required>
                 </select>
             </div>
-            <label class="label" for="selectCompany">Start Date</label>
-            <input class="input" name="dateStart" type="date" required>
-            <label class="label" for="selectCompany">End Date</label>
-            <input class="input" name="dateEnd" type="date" required>
+            <label class="label" for="dateStart">Start Date</label>
+            <input class="input" id="dateStart" name="dateStart" type="date" required>
+            <label class="label" for="dateEnd">End Date</label>
+            <input class="input" id="dateEnd" name="dateEnd" type="date" required>
             <hr>
 
             <div align="right">
-                <button hx-include="closest form"  class="button is-info" hx-target="#reportGenerated" hx-post="/reports" data-loading-class="is-loading">Get Report</button>
+                <button id="reportButton" hx-include="closest form"  class="button is-info" hx-target="#reportGenerated" hx-post="/reports" data-loading-class="is-loading">Get Report</button>
             </div>
         </form>
         
