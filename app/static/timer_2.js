@@ -22,7 +22,6 @@ function stopwatch() {
       isResting:false,
       isEnd:false,
 
-
       getUpdatesFromDB(){
         fetch('/vehicle/last_state/' + this.idVehicle, {
           method: 'GET',
@@ -31,10 +30,20 @@ function stopwatch() {
           }
         }).then(response => response.json()).then(
           data => {
-            const eventName = data.eventName.split('_')
-            this.updateTimer(eventName[0],data.eventTime)
+            if (data.eventName != 'day_end'){
+              this.updateTimer(data.eventName,data.eventTime);
+            }
           }
         );
+      },
+      
+      checkVisibilityPage(){
+        document.addEventListener('visibilitychange', () => {
+          const isVisible = !document.hidden;
+          if (isVisible){
+            this.getUpdatesFromDB();
+          }
+        });
       },
 
       Timer() {
@@ -86,21 +95,21 @@ function stopwatch() {
 
       updateTimer(mode,event_time){
         config = {
-          'availability':[{isAvailable:true},{isWorking:false},{isResting:false},{isEnd:false}],
-          'work':[{isWorking:true},{isAvailable:false},{isResting:false},{isEnd:false}],
-          'rest':[{isResting:true},{isWorking:false},{isAvailable:false},{isEnd:false}],
-          'end':[{isEnd:true},{isResting:false},{isWorking:false},{isAvailable:false}],
+          'availability_start':[{isAvailable:true},{isWorking:false},{isResting:false},{isEnd:false}],
+          'work_start':[{isWorking:true},{isAvailable:false},{isResting:false},{isEnd:false}],
+          'rest_start':[{isResting:true},{isWorking:false},{isAvailable:false},{isEnd:false}],
+          'day_end':[{isEnd:true},{isResting:false},{isWorking:false},{isAvailable:false}],
         }
-
+        console.log(mode);
         config[mode].forEach(element => {
           const propertyName = Object.keys(element)[0];
           this[propertyName] = element[propertyName];
         });
         if (!event_time) {
-          if (mode === 'available'){
+          if (mode === 'availability_start'){
             this.Timer();
           }
-          else if (mode === 'end'){
+          else if (mode === 'day_end'){
             this.Timer();
             this.isModalVisible = true;
             this.seconds = 0;
@@ -111,16 +120,15 @@ function stopwatch() {
         else{
           this.setdiffBetweenTimestamps(event_time)
         }
-        
         this.setActivityName(mode)
       },
 
       setActivityName(mode){
         config = {
-          'availability':'Disponível',
-          'work':'Trabalhando',
-          'rest':'Descansando',
-          'end':'Sessão Finalizada',
+          'availability_start':'Disponível',
+          'work_start':'Trabalhando',
+          'rest_start':'Descansando',
+          'day_end':'Sessão Finalizada',
         }
         this.currentActivityName = config[mode];
       },
@@ -128,7 +136,8 @@ function stopwatch() {
       closeModal(){
         this.isModalVisible=false;
         if (!this.isEnd) {
-          this.getUpdatesFromDB()
+          this.checkVisibilityPage();
+          this.getUpdatesFromDB();
         }
       },
 

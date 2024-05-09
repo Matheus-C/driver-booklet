@@ -61,7 +61,7 @@
         <div id="control-panel">
 
           <div class="control block" x-show='!isAvailable & !isWorking'>
-            <a @htmx:after-request="updateTimer(mode='availability')" class="button is-warning" hx-post="/event_data"
+            <a @htmx:after-request="updateTimer(mode='availability_start')" class="button is-warning" hx-post="/event_data"
               hx-swap="none" hx-include="select,[name='geolocation']"
               hx-vals="js:{eventTimestamp: new Date().toLocaleString('en-US', {hour12: false}),idType:5}">
               <p><i class="fa-solid fa-briefcase"></i> Ficar disponível</p>
@@ -69,7 +69,7 @@
           </div>
 
           <div class="control block" x-show='!isWorking && isAvailable'>
-            <a @htmx:after-request="updateTimer(mode='work')" hx-trigger="click,start_working from:body"
+            <a @htmx:after-request="updateTimer(mode='work_start')" hx-trigger="click,start_working from:body"
               class="button is-primary" hx-post="/event_data" hx-swap="none" hx-include="select,[name='geolocation']"
               hx-vals="js:{eventTimestamp: new Date().toLocaleString('en-US', {hour12: false}),idType:1}">
               <p><i class="fa-solid fa-car"></i> Trabalhar</p>
@@ -77,7 +77,7 @@
           </div>
 
           <div class="control block" x-show='!isResting && isAvailable||isWorking'>
-            <a @htmx:after-request="updateTimer(mode='rest')" class="button is-link" hx-post="/event_data"
+            <a @htmx:after-request="updateTimer(mode='rest_start')" class="button is-link" hx-post="/event_data"
               hx-swap="none" hx-include="select,[name='geolocation']"
               hx-vals="js:{eventTimestamp: new Date().toLocaleString('en-US', {hour12: false}),idType:3}">
               <p><i class="fa-solid fa-bed"></i> Descansar (Pausar)</p>
@@ -85,7 +85,7 @@
           </div>
 
           <div class="control block" x-show='!isEnd && isWorking||isResting||isAvailable'>
-            <a @htmx:after-request="updateTimer(mode='end')" class="button is-danger" hx-post="/event_data"
+            <a @htmx:after-request="updateTimer(mode='day_end')" class="button is-danger" hx-post="/event_data"
               hx-swap="none" hx-include="select,[name='geolocation']"
               hx-vals="js:{eventTimestamp: new Date().toLocaleString('en-US', {hour12: false}),idType:9}"
               hx-confirm="Quer mesmo finalizar a sessão?">
