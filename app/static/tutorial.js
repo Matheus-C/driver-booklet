@@ -1,18 +1,16 @@
+const tour = new Shepherd.Tour({
+    defaultStepOptions: {
+        cancelIcon: {
+            enabled: true
+        },
+        classes: 'class-1 class-2',
+        scrollTo: { behavior: 'smooth', block: 'center' }
+    }
+});
 switch (window.location.pathname) {
     case '/timer':
         //modal Timer
-        const tourModalTimer = new Shepherd.Tour({
-            id: 'modalTimer',
-            defaultStepOptions: {
-                cancelIcon: {
-                    enabled: true
-                },
-                classes: 'class-1 class-2',
-                scrollTo: { behavior: 'smooth', block: 'center' }
-            }
-        });
-
-        tourModalTimer.addStep({
+        tour.addStep({
             title: 'Selecione a empresa',
             text: 'Para iniciar selecione a empresa que você deseja.',
             attachTo: {
@@ -30,7 +28,7 @@ switch (window.location.pathname) {
             id: 'selectCompany'
         });
 
-        tourModalTimer.addStep({
+        tour.addStep({
             title: 'Selecionar veículo',
             text: 'Agora selecione o carro que você deseja.',
             attachTo: {
@@ -55,7 +53,7 @@ switch (window.location.pathname) {
             id: 'selectCar'
         });
 
-        tourModalTimer.addStep({
+        tour.addStep({
             title: 'Quilometragem',
             text: 'Agora selecione a quilometragem atual do veículo.',
             attachTo: {
@@ -79,23 +77,11 @@ switch (window.location.pathname) {
             ],
             id: 'mileage'
         });
-        tourModalTimer.start();
         break;
 
     //Companies page
     case '/companies':
-        const tourCompanies = new Shepherd.Tour({
-            id: 'companies',
-            defaultStepOptions: {
-                cancelIcon: {
-                    enabled: true
-                },
-                classes: 'class-1 class-2',
-                scrollTo: { behavior: 'smooth', block: 'center' }
-            }
-        });
-
-        tourCompanies.addStep({
+        tour.addStep({
             title: 'Empresas',
             text: 'Aqui é onde ficarão as empresas cadastradas, você pode clicar nelas para ser levado a tela de cada uma.',
             attachTo: {
@@ -113,7 +99,7 @@ switch (window.location.pathname) {
             id: 'CompanyBox'
         });
 
-        tourCompanies.addStep({
+        tour.addStep({
             title: 'Cadastrar nova empresa',
             text: 'Você pode adicionar uma nova empresa clicando aqui.',
             attachTo: {
@@ -137,23 +123,10 @@ switch (window.location.pathname) {
             ],
             id: 'addNewCompany'
         });
-
-        tourCompanies.start();
         break;
     //reports page
     case '/reports':
-        const tourReports = new Shepherd.Tour({
-            id: 'reports',
-            defaultStepOptions: {
-                cancelIcon: {
-                    enabled: true
-                },
-                classes: 'class-1 class-2',
-                scrollTo: { behavior: 'smooth', block: 'center' }
-            }
-        });
-
-        tourReports.addStep({
+        tour.addStep({
             title: 'Empresa',
             text: 'Selecione aqui a empresa desejada para gerar o relatório.',
             attachTo: {
@@ -171,7 +144,7 @@ switch (window.location.pathname) {
             id: 'selectCompany'
         });
 
-        tourReports.addStep({
+        tour.addStep({
             title: 'Data de início',
             text: 'Especifique a data inicial desejada.',
             attachTo: {
@@ -196,7 +169,7 @@ switch (window.location.pathname) {
             id: 'dateStart'
         });
 
-        tourReports.addStep({
+        tour.addStep({
             title: 'Data final',
             text: 'Especifique a data final desejada.',
             attachTo: {
@@ -221,7 +194,7 @@ switch (window.location.pathname) {
             id: 'dateEnd'
         });
 
-        tourReports.addStep({
+        tour.addStep({
             title: 'Gerar relatório',
             text: 'Clique aqui para gerar o relatório.',
             attachTo: {
@@ -245,8 +218,6 @@ switch (window.location.pathname) {
             ],
             id: 'reportButton'
         });
-
-        tourReports.start();
         break;
-
 }
+tour.start();
