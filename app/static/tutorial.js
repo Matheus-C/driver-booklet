@@ -221,3 +221,90 @@ switch (window.location.pathname) {
         break;
 }
 tour.start();
+
+function timerTour(button){
+    const tour = new Shepherd.Tour({
+        defaultStepOptions: {
+            cancelIcon: {
+                enabled: true
+            },
+            classes: 'class-1 class-2',
+            scrollTo: { behavior: 'smooth', block: 'center' }
+        }
+    });
+    switch(button){
+        case 'register':
+            tour.addStep({
+                title: 'Ficar Disponível',
+                text: 'Clique aqui para ficar disponível e começar a contabilizar o tempo.',
+                attachTo: {
+                    element: '#'+identifier,
+                    on: 'top'
+                },
+                buttons: [
+                    {
+                        action() {
+                            return this.next();
+                        },
+                        text: 'Fechar'
+                    }
+                ],
+                id: identifier
+            });
+            break;
+        case 'available':
+            tour.addStep({
+                title: 'Começar trabalho',
+                text: 'Clique aqui para começar a contabilizar o tempo de trabalho.',
+                attachTo: {
+                    element: '#'+identifier,
+                    on: 'top'
+                },
+                buttons: [
+                    {
+                        action() {
+                            return this.next();
+                        },
+                        text: 'Próximo'
+                    }
+                ],
+                id: identifier
+            });
+            tour.addStep({
+                title: 'Começar descanso',
+                text: 'Clique aqui para começar a contabilizar o tempo de descanso.',
+                attachTo: {
+                    element: '#'+identifier,
+                    on: 'top'
+                },
+                buttons: [
+                    {
+                        action() {
+                            return this.next();
+                        },
+                        text: 'Próximo'
+                    }
+                ],
+                id: identifier
+            });
+            tour.addStep({
+                title: 'Encerrar trabalho',
+                text: 'Clique aqui para finalizar o trabalho.',
+                attachTo: {
+                    element: '#'+identifier,
+                    on: 'top'
+                },
+                buttons: [
+                    {
+                        action() {
+                            return this.next();
+                        },
+                        text: 'Fechar'
+                    }
+                ],
+                id: identifier
+            });
+            break;
+    }
+    tour.start();
+}
