@@ -10,7 +10,7 @@ from sqlalchemy.sql import text
 @login_required
 def timer():
     if current_user:
-        return render_template('timer.html',current_user=current_user)
+        return render_template('timer_2.html',current_user=current_user)
     else:
         return redirect('/')
 
@@ -18,7 +18,7 @@ def timer():
 @login_required
 def event_data():
     session = Session()
-    json_data = request.get_json()
+    json_data = request.form.to_dict()
     dt_object =  datetime.strptime(json_data["eventTimestamp"], '%m/%d/%Y, %H:%M:%S')
     event = Event(eventTimestamp = dt_object.strftime("%Y-%m-%d %H:%M:%S"), idType=json_data["idType"], 
                   idUser = current_user.id, idVehicle = json_data["idVehicle"], idCompany = json_data["idCompany"], 

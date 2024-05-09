@@ -37,11 +37,11 @@ def vehicle_add(id_company=None):
 @app.route('/vehicle/mileage',methods=['POST'])
 def mileage_add():
     session = Session()
-    json_data = request.get_json()
+    json_data = request.form.to_dict()
     dt_object =  datetime.strptime(json_data["eventTimestamp"], '%m/%d/%Y, %H:%M:%S')
     vehicleEvent = VehicleEvent(eventTime = dt_object, mileage = json_data["mileage"],
                                  idVehicle = json_data["idVehicle"], idCompany = json_data["idCompany"], 
-                                 idAttachment = json_data["idAttachment"], idType = json_data["idType"], idUser = current_user.id)
+                                  idType = json_data["idType"], idUser = current_user.id)
     session.add(vehicleEvent)
     session.commit()
     session.close()
