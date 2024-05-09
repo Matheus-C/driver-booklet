@@ -37,7 +37,7 @@ def timer_update(id):
                 (SELECT e.eventTime dateStart,
                         et.category,
                         case when et.name like '%_end' then 0
-                        ELSE LEAD(eventTime, 1, 0) OVER (PARTITION BY et.category ORDER BY eventTime ASC) 
+                        ELSE LEAD(eventTime, 1, 0) OVER (ORDER BY eventTime ASC)
                         END as dateEnd,
                         e.idVehicle,
                         e.idCompany,
@@ -76,7 +76,7 @@ def timer_progress(id):
                 (SELECT e.eventTime dateStart,
                         et.category,
                         case when et.name like '%_end' then 0
-                        ELSE LEAD(eventTime, 1, 0) OVER (PARTITION BY et.category ORDER BY eventTime ASC) 
+                        ELSE LEAD(eventTime, 1, 0) OVER (ORDER BY eventTime ASC)
                         END as dateEnd,
                         e.idVehicle,
                         e.idCompany,
