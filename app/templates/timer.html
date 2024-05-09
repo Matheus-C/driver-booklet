@@ -29,12 +29,12 @@
                     <div hx-get="/company/list" hx-trigger="load" hx-target="#idCompany" hx-swap="innerHTML"></div>
                     
                     <label class="label" for="idCompany">Empresa: </label>
-                      <div class="select">
+                      <div class="select" id="selectCompany">
                         <select id="idCompany" name="idCompany" x-model="idCompany" hx-target="#selectCar" hx-post="/vehicle/select/" hx-swap="innerHTML">
                         </select>
                       </div>
                       <label class="label" for="selectCar" >Veículo: </label>
-                      <div class="select" >
+                      <div class="select" id="selectVehicle">
                         <select id="selectCar" name="idVehicle" x-model="idVehicle" hx-target="#mileage" hx-post="/vehicle/current_mileage" hx-swap="outerHTML">
                         </select>
                       </div>
@@ -133,5 +133,7 @@
       }
     });
     
+  </script>
+  <script src="/static/tutorial.js">
   </script>
 {% endblock %}

@@ -39,9 +39,9 @@ select * from max_event_data WHERE timeSpent>=36000;
     trigger_notifications(data, "Timer is open.", "remember to close the timer if you aren't using it.")
 
 #test function
-@scheduler.task('interval', id='test_push_login', seconds=10, misfire_grace_time=900)
-def test_push_login():
-    session = Session()
-    data = session.query(PushSubscription).filter(
-    PushSubscription.userId == 7).first()
-    trigger_notifications([data], "you are logged", "hahahahahahahahah")
+# @scheduler.task('interval', id='test_push_login', seconds=10, misfire_grace_time=900)
+# def test_push_login():
+#     session = Session()
+#     data = session.query(PushSubscription).filter(
+#     PushSubscription.userId == 7).first()
+#     trigger_notifications([data], "you are logged", "hahahahahahahahah")
