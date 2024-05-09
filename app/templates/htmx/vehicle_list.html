@@ -1,6 +1,6 @@
 <option hidden>Select an Option</option>
 {% for vehicle in vehicle_list %}
-    {% if vehicle.last_state in ['no_event','work_end'] %}
+    {% if vehicle.last_state in ['no_event','day_end'] %}
     <option value="{{vehicle.id}}">{{vehicle.model}} {{vehicle.licensePlate}}</option>
     {% else %}
     <option value="{{vehicle.id}}" >{{vehicle.model}} {{vehicle.licensePlate}} (In Use)</option>
