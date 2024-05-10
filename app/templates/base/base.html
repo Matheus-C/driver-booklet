@@ -107,20 +107,20 @@
       {% if current_user.is_anonymous %}
       {% else %}
       {% if current_user.userTypeId == 1%}
-        <a class="navbar-item is-expanded is-block has-text-centered" href='/companies'>
+        <a id="companies" class="navbar-item is-expanded is-block has-text-centered" href='/companies'>
             <i class="fa fa-building"></i>
             <p class="is-size-7">Companies</p>
         </a>
       {% endif %}
-        <a class="navbar-item is-expanded is-block has-text-centered" href='/timer'>
+        <a id="timer" class="navbar-item is-expanded is-block has-text-centered" href='/timer'>
             <i class="fa fa-clock"></i>
             <p class="is-size-7">Timer</p>
         </a>
-        <a class="navbar-item is-expanded is-block has-text-centered" href='/reports'>
+        <a id="reports" class="navbar-item is-expanded is-block has-text-centered" href='/reports'>
             <i class="fa fa-file-excel"></i>
             <p class="is-size-7">Reports</p>
         </a>
-        <a class="navbar-item is-expanded is-block has-text-centered" href='/profile'>
+        <a id="profile" class="navbar-item is-expanded is-block has-text-centered" href='/profile'>
             <i class="fa fa-user"></i>
             <p class="is-size-7">Profile</p>
         </a>
@@ -131,6 +131,11 @@
         {% endif %}
     </div>
 </nav>
+<script>
+  var elementName = window.location.pathname.replace('/','');
+  var element = document.getElementById(elementName);
+  element.classList.add('has-background-grey-dark');
+</script>
   <!-- End bottom bar -->
   <title>{% block title %}{% endblock %} - DBook  </title>
   {% block header %}

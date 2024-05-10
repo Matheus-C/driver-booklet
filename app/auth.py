@@ -17,7 +17,7 @@ def index():
         if current_user.userTypeId == 1: # Company Owner
             return redirect('/companies')
         else: #Other
-            return render_template('/timer')
+            return redirect('/timer')
     else:
         return render_template('index.html')
 
