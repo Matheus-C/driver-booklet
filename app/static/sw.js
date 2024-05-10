@@ -32,3 +32,28 @@ self.addEventListener('push', function(event) {
     self.registration.showNotification(title, options)
   );
 });
+
+self.addEventListener('pushsubscriptionchange', function(event) {
+  console.log('[Service Worker]: \'pushsubscriptionchange\' event fired.');
+  const applicationServerPublicKey = localStorage.getItem('applicationServerPublicKey');
+  const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
+  event.waitUntil(
+    self.registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: applicationServerKey
+    })
+    .then(function(newSubscription) {
+      fetch('/api/update-subscription', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          old_endpoint: event.oldSubscription ? event.oldSubscription.endpoint : null,
+          new_endpoint: event.newSubscription ? event.newSubscription.endpoint : null,
+          new_p256dh: event.newSubscription ? event.newSubscription.toJSON().keys.p256dh : null,
+          new_auth: event.newSubscription ? event.newSubscription.toJSON().keys.auth : null
+        })
+      })
+      console.log('[Service Worker] New subscription: ', newSubscription);
+    })
+  );
+});

@@ -18,12 +18,15 @@
 
     <div class="columns">
         <div class="column">
-            <h3 class="title is-3">Employees</h3>
+            <span class="title is-3">Employees</span>
+            <span class="icon has-text-info">
+                <button class="fas fa-info-circle" onclick="tutorial('employees');"></button>
+            </span>
         </div>
         <div class="column">
             <div align="right">
                 {% if current_user.userTypeId == 1 %}
-                <button class="button" hx-target="#addUser" hx-swap="innerHTML"
+                <button id="addEmployee" class="button" hx-target="#addUser" hx-swap="innerHTML"
                     hx-get="/signup_worker/{{company.id}}" data-loading-class="is-loading">Add User</button>
                 {% endif %}
             </div>
@@ -40,12 +43,15 @@
     <div id="addUser"></div>
     <div class="columns">
         <div class="column">
-            <h3 class="title is-3">Vehicles</h3>
+            <span class="title is-3">Vehicles</span>
+            <span class="icon has-text-info">
+                <button class="fas fa-info-circle" onclick="tutorial('vehicles');"></button>
+            </span>
         </div>
         <div class="column">
             <div align="right">
                 {% if current_user.userTypeId == 1 %}
-                <button class="button" hx-target="#addCar" hx-swap="innerHTML"
+                <button id="addVehicle" class="button" hx-target="#addCar" hx-swap="innerHTML"
                     hx-get="/vehicle/add/{{company.id}}" data-loading-class="is-loading">Add Vehicle</button>
                 
                 {% endif %}

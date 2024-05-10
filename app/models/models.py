@@ -1,7 +1,8 @@
-from sqlalchemy import ForeignKey,Column,String,Integer,Float,CHAR,DateTime,Date,Boolean
+from sqlalchemy import ForeignKey,Column,String,Integer,Float,CHAR,DateTime,Date,Boolean, TIMESTAMP 
 from sqlalchemy.ext.declarative import declarative_base
 from flask_login import UserMixin
 from .database import *
+from datetime import datetime
 
 Base = declarative_base()
 
@@ -66,6 +67,7 @@ class Event(Base):
   idCompany = Column(Integer, ForeignKey('company.id'))
   geolocation = Column('geolocation', String(512))
   idAttachment = Column(Integer, ForeignKey('attachment.id'))
+  createdAt = Column(TIMESTAMP, server_default='CURRENT_TIMESTAMP')
 
 class Attachment(Base):
   __tablename__ = 'attachment'

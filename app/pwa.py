@@ -13,9 +13,10 @@ def create_push_subscription():
         session = Session()
         json_data = request.get_json()
         subscription = session.query(PushSubscription).filter(
-            # PushSubscription.subscription_json == json_data['subscription_json'],
+            PushSubscription.subscription_json == json_data['subscription_json'],
             PushSubscription.userId == current_user.id
         ).first()
+        print(subscription)
         if subscription is None:
             subscription = PushSubscription(
                 subscription_json=json_data['subscription_json'],
@@ -28,6 +29,25 @@ def create_push_subscription():
     else:
         return jsonify({"status": "failure"})
     
+@app.route("/api/update-subscription", methods=["POST"])
+@login_required
+def update_push_subscription():
+    if current_user:
+        session = Session()
+        json_data = request.get_json()
+        subscription = session.query(PushSubscription).filter(
+            PushSubscription.subscription_json == json_data['old_endpoint']
+        ).first()
+        if subscription:
+            subscription.subscription_json=json_data['new_endpoint']
+            session.commit()
+            session.close()
+        return jsonify({"status": "success"})
+    else:
+        return jsonify({"status": "failure"})
+
+
+# default function to trigger notifications with routing
 @app.route("/admin-api/trigger-push-notifications", methods=["POST"])
 def trigger_push_notifications():
     json_data = request.get_json()
@@ -42,23 +62,28 @@ def trigger_push_notifications():
         "status": "success",
         "result": results
     })
+# default function to trigger notifications without routing
+def trigger_notifications(subscriptions, title, body):
+    results = []
+    for subscription in subscriptions:
+        results.append(trigger_push_notification(subscription, title, body))
 
 def trigger_push_notifications_for_subscriptions(subscriptions, title, body):
     return [trigger_push_notification(subscription, title, body)
             for subscription in subscriptions]
 
 def trigger_push_notification(push_subscription, title, body):
-    print(push_subscription, current_app.config["VAPID_PRIVATE_KEY"])
     try:
-        response = webpush(
-            subscription_info=json.loads(push_subscription.subscription_json),
-            data=json.dumps({"title": title, "body": body}),
-            vapid_private_key=current_app.config["VAPID_PRIVATE_KEY"],
-            vapid_claims={
-                "sub": "mailto:{}".format(
-                    current_app.config["VAPID_CLAIM_EMAIL"])
-            }
-        )
+        with app.app_context():
+            response = webpush(
+                subscription_info=json.loads(push_subscription.subscription_json),
+                data=json.dumps({"title": title, "body": body}),
+                vapid_private_key=current_app.config["VAPID_PRIVATE_KEY"],
+                vapid_claims={
+                    "sub": "mailto:{}".format(
+                        current_app.config["VAPID_CLAIM_EMAIL"])
+                }
+            )
         return response.ok
     except WebPushException as ex:
         if ex.response and ex.response.json():
