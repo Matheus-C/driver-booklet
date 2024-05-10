@@ -13,9 +13,10 @@ def create_push_subscription():
         session = Session()
         json_data = request.get_json()
         subscription = session.query(PushSubscription).filter(
-            # PushSubscription.subscription_json == json_data['subscription_json'],
+            PushSubscription.subscription_json == json_data['subscription_json'],
             PushSubscription.userId == current_user.id
         ).first()
+        print(subscription)
         if subscription is None:
             subscription = PushSubscription(
                 subscription_json=json_data['subscription_json'],
