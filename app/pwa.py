@@ -27,6 +27,25 @@ def create_push_subscription():
         return jsonify({"status": "success"})
     else:
         return jsonify({"status": "failure"})
+    
+@app.route("/api/update-subscription", methods=["POST"])
+@login_required
+def update_push_subscription():
+    if current_user:
+        session = Session()
+        json_data = request.get_json()
+        subscription = session.query(PushSubscription).filter(
+            PushSubscription.subscription_json == json_data['old_endpoint']
+        ).first()
+        if subscription:
+            subscription.subscription_json=json_data['new_endpoint']
+            session.commit()
+            session.close()
+        return jsonify({"status": "success"})
+    else:
+        return jsonify({"status": "failure"})
+
+
 # default function to trigger notifications with routing
 @app.route("/admin-api/trigger-push-notifications", methods=["POST"])
 def trigger_push_notifications():
@@ -47,10 +66,6 @@ def trigger_notifications(subscriptions, title, body):
     results = []
     for subscription in subscriptions:
         results.append(trigger_push_notification(subscription, title, body))
-    # return jsonify({
-    #     "status": "success",
-    #     "result": results
-    # })
 
 def trigger_push_notifications_for_subscriptions(subscriptions, title, body):
     return [trigger_push_notification(subscription, title, body)
