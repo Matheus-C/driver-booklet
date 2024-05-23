@@ -9,50 +9,55 @@
     <br>
     <div class="column">
         <h3 class="title is-3">Visão geral</h3>
-    {% for company in companies %}
-    <button class="accordion button">{{company.name}}</button>
-    <div class="panel">
-        <p>Lorem ipsum...</p>
+        {% for company in companies %}
+        <button class="accordion button is-primary" hx-swap="innerHTML" hx-get="/overview/actual/{{company.id}}"
+            data-loading-class="is-loading" hx-target="#c{{company.id}}" hx-trigger="load">{{company.name}} <i style="position: absolute;right: 20px;"
+                class="fa-solid fa-chevron-down"></i></button>
+        <div class="panel" id="c{{company.id}}">
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-</div>
 </div>
 
 <script>
     var acc = document.getElementsByClassName("accordion");
-var i;
+    var i;
 
-for (i = 0; i < acc.length; i++) {
-  acc[i].addEventListener("click", function() {
-    /* Toggle between adding and removing the "active" class,
-    to highlight the button that controls the panel */
-    this.classList.toggle("active");
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function () {
+            /* Toggle between adding and removing the "active" class,
+            to highlight the button that controls the panel */
+            this.classList.toggle("active");
 
-    /* Toggle between hiding and showing the active panel */
-    var panel = this.nextElementSibling;
-    if (panel.style.display === "block") {
-      panel.style.display = "none";
-    } else {
-      panel.style.display = "block";
+            /* Toggle between hiding and showing the active panel */
+            var panel = this.nextElementSibling;
+            if (panel.style.display === "block") {
+                panel.style.display = "none";
+            } else {
+                panel.style.display = "block";
+            }
+        });
     }
-  });
-}
 </script>
 
 <style>
     /* Style the buttons that are used to open and close the accordion panel */
-.accordion {
-    cursor: pointer;
-    padding: 18px;
-    width: 100%;
-    transition: 0.4s;
-  }
-  
-  /* Style the accordion panel. Note: hidden by default */
-  .panel {
-    padding: 0 18px;
-    display: none;
-    overflow: hidden;
-  }
+    .accordion {
+        position: relative;
+        cursor: pointer;
+        padding: 18px;
+        margin-bottom: 5px;
+        width: 100%;
+        transition: 0.4s;
+    }
+
+    /* Style the accordion panel. Note: hidden by default */
+    .panel {
+        padding: 0 18px;
+        padding-bottom: 5px;
+        margin-bottom: 50px;
+        display: none;
+        overflow: hidden;
+    }
 </style>
 {% endblock %}

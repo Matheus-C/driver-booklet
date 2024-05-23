@@ -1,0 +1,25 @@
+<style>
+    /* Custom CSS for text inside progress bar */
+    .progress-text {
+        position: absolute;
+        top: 80%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+
+{% for key, value in status.items() %}
+
+{% if key == 'Work' %}
+{% set color = 'is-success' %}
+{% elif key == 'Rest' %}
+{% set color = 'is-link' %}
+{% elif key == 'Availability' %}
+{% set color = 'is-warning' %}
+{% endif %}
+<div class="container">
+    <label for="{{key}}">{{key}}</label>
+    <progress id="{{key}}" class="progress {{color}}" value="{{value/max}}" max="{{max}}"></progress>
+    <span class="progress-text">{{value~"/"~max}}</span>
+</div>
+{% endfor %}
