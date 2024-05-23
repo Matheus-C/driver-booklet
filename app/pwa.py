@@ -16,7 +16,6 @@ def create_push_subscription():
             PushSubscription.subscription_json == json_data['subscription_json'],
             PushSubscription.userId == current_user.id
         ).first()
-        print(subscription)
         if subscription is None:
             subscription = PushSubscription(
                 subscription_json=json_data['subscription_json'],
