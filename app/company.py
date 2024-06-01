@@ -86,7 +86,7 @@ def company_info(id):
             inner join users u on u.id = uc.idUser
             where 1=1
             and uc.idCompany = {int(id)}
-            group by e.idUser,e.idVehicle;            
+            group by u.id, e.idVehicle, e.id;            
             """
             query = text(query)
             session = Session()
@@ -127,7 +127,6 @@ def signup_worker(id_company=None):
         
         session.add(user)
         session.commit()
-
         usercompany = UserCompany(idUser =user.id,idCompany=id_company, startWork = start_work)         
         session.add(usercompany)
         session.commit()
@@ -168,7 +167,7 @@ def geolocation_list(id):
         inner join users u on u.id = uc.idUser
         where 1=1
         and uc.idCompany = {int(id)}
-        group by e.idUser,e.idVehicle;            
+        group by u.id, e.id,e.idVehicle;            
         """
         query = text(query)
         session = Session()
@@ -199,8 +198,7 @@ def worker_list(id):
         session = Session()
         results = session.query(User)\
         .join(UserCompany, UserCompany.idUser == User.id,isouter=True)\
-        .filter(User.userTypeId == 2, 
-                UserCompany.idCompany == id,
+        .filter(UserCompany.idCompany == id,
                 UserCompany.validUntil == None).all()
         
         session.close()
