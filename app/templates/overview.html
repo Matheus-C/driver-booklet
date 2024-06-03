@@ -11,10 +11,16 @@
         <h3 class="title is-3">Visão geral</h3>
         {% for company in companies %}
         <button class="accordion button is-primary" hx-swap="innerHTML" hx-get="/overview/actual/{{company.id}}"
-            data-loading-class="is-loading" hx-target="#c{{company.id}}" hx-trigger="load">{{company.name}} <i style="position: absolute;right: 20px;"
-                class="fa-solid fa-chevron-down"></i></button>
+            data-loading-class="is-loading" hx-target="#status{{company.id}}" hx-trigger="load">{{company.name}} <i
+                style="position: absolute;right: 20px;" class="fa-solid fa-chevron-down"></i></button>
         <h4>Status atual dos colaboradores</h4>
-        <div class="panel" id="c{{company.id}}">
+        <div class="panel" id="status{{company.id}}">
+        </div>
+        <button class="accordion button is-primary" hx-swap="innerHTML" hx-get="/overview/month/{{company.id}}"
+            data-loading-class="is-loading" hx-target="#month{{company.id}}" hx-trigger="load">{{company.name}} <i
+                style="position: absolute;right: 20px;" class="fa-solid fa-chevron-down"></i></button>
+        <h4>Status Mensal</h4>
+        <div class="panel" id="month{{company.id}}">
         </div>
         {% endfor %}
     </div>

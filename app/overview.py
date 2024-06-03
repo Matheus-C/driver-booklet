@@ -56,3 +56,36 @@ def overview_actual(id):
                 elif d.category == "Rest":
                     status["Rest"] += 1
             return render_template('htmx/employee_status.html',status = status, max = max)
+
+@app.route("/overview/month/<id>", methods=["GET"])
+@login_required
+def overview_month(id):
+    if current_user:
+        if request.method == 'GET':
+            query = f""" 
+            WITH event_query as (
+                SELECT idUser,
+                 		e.eventTime dateStart,
+                        et.category,
+                        case when et.name like '%_end' then 0
+                        ELSE LEAD(eventTime, 1, 0) OVER (ORDER BY eventTime ASC)
+                        END as dateEnd,
+                        e.idCompany
+                FROM `event` e
+                INNER JOIN `eventType` et ON et.id = e.idType
+                WHERE e.idCompany = 1
+                and e.eventTime BETWEEN DATE_FORMAT(NOW() ,'%Y-%m-01') and LAST_DAY(NOW())
+                ), max_time as (
+                    select e.idUser AS idUser
+                ,TIMESTAMPDIFF(SECOND,dateStart,dateEnd) AS timeSpent
+            from event_query e
+                left join company c on c.id = e.idCompany
+            where dateEnd <> 0
+            order by dateStart asc)
+            SELECT SEC_TO_TIME(SUM(max_time.timeSpent)/COUNT(DISTINCT max_time.idUser)) FROM max_time"""
+            query = text(query)
+            session = Session()
+            avg = session.execute(query).first()
+            session.close()
+            
+            return render_template('htmx/company_month.html',avg = avg)
