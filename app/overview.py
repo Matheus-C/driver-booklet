@@ -1,4 +1,4 @@
-from flask import render_template, request, url_for, redirect,jsonify, flash
+from flask import render_template, request
 from app.models.models import *
 from app.models.database import *
 from app import app
@@ -73,7 +73,7 @@ def overview_month(id):
                         e.idCompany
                 FROM `event` e
                 INNER JOIN `eventType` et ON et.id = e.idType
-                WHERE e.idCompany = 1
+                WHERE e.idCompany = {id}
                 and e.eventTime BETWEEN DATE_FORMAT(NOW() ,'%Y-%m-01') and LAST_DAY(NOW())
                 ), max_time as (
                     select e.idUser AS idUser
@@ -82,10 +82,10 @@ def overview_month(id):
                 left join company c on c.id = e.idCompany
             where dateEnd <> 0
             order by dateStart asc)
-            SELECT SEC_TO_TIME(SUM(max_time.timeSpent)/COUNT(DISTINCT max_time.idUser)) FROM max_time"""
+            SELECT SEC_TO_TIME(SUM(max_time.timeSpent)/COUNT(DISTINCT max_time.idUser)) as total FROM max_time"""
             query = text(query)
             session = Session()
-            avg = session.execute(query).first()
+            avg = session.execute(query).first().total
             session.close()
             
             return render_template('htmx/company_month.html',avg = avg)
