@@ -5,7 +5,7 @@ from app import app
 from flask_login import current_user,login_required
 from sqlalchemy.sql import text
 
-@app.route("/overview", methods=["GET"])
+@app.route("/overview", methods=["GET"])# travar para usuarios normais
 @login_required
 def overview():
     if current_user:
