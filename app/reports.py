@@ -57,4 +57,4 @@ def reports():
             data = session.execute(query).all()
             session.close()
 
-            return render_template('htmx/report.html',data=data)
+            return render_template('htmx/report/report.html',data=data)
