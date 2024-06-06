@@ -7,25 +7,25 @@
         </div> -->
         
         <p>
-            If you dont have an account  <a hx-get="{{ url_for('signup') }}" hx-target="#login_form" hx-swap="innerHTML" data-loading-class="is-loading" class="tag is-dark is-small">Register here!</a>
+            If you dont have an account  <a hx-get="{{ url_for('signup') }}" hx-target="#login_form" hx-swap="innerHTML" data-loading-class="is-loading" class="tag is-dark is-small">Registre-se aqui!</a>
         </p>
         <hr>
         {% include 'base/notifications.html' %}
         <form hx-post="{{data.return}}" hx-target="#login_form" hx-swap="outerHTML">
             <div class="field">
                 <div class="control">
-                    <label class="label">Email</label>
+                    <label class="label">Email:</label>
 
-                    <input class="input" type="email" name='email' placeholder="Type your email">
+                    <input class="input" type="email" name='email' placeholder="Digite seu email">
                 </div>
                 <div class="control">
-                    <label class="label">Password</label>
+                    <label class="label">Senha:</label>
 
-                    <input class="input" type="password" name='password' placeholder="Type your password">
+                    <input class="input" type="password" name='password' placeholder="Digite sua senha">
                 </div>
                 <hr>
                 <div align="right">
-                    <button class="button is-primary" data-loading-class="is-loading">Login</button>
+                    <button class="button is-primary" data-loading-class="is-loading"><p><i class="fa-solid fa-arrow-right-to-bracket fa-lg"></i></p></button>
                 </div>
                 
             </div>

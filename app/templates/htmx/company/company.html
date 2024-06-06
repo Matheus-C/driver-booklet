@@ -8,9 +8,9 @@
 
         <div class="fixed-grid has-1-cols">
             <div class="grid">
-                <div class="cell"><span class="tag is-medium">Name: {{ company.name }}</span></div>
-                <div class="cell"><span class="tag is-medium">Description: {{company.description}}</span></div>
-                <div class="cell"><span class="tag is-medium">Address: {{ company.address }}</span></div>
+                <div class="cell"><span class="tag is-medium">Nome: {{ company.name }}</span></div>
+                <div class="cell"><span class="tag is-medium">Descrição: {{company.description}}</span></div>
+                <div class="cell"><span class="tag is-medium">Endereço: {{ company.address }}</span></div>
                 <div class="cell"><span class="tag is-medium">VatCode(NIF): {{company.vatcode}}</span></div>
             </div>
         </div>
@@ -18,7 +18,7 @@
 
     <div class="columns">
         <div class="column">
-            <span class="title is-3">Employees</span>
+            <span class="title is-3">Colaboradores</span>
             <span class="icon has-text-info">
                 <button class="fas fa-info-circle" onclick="tutorial('employees');"></button>
             </span>
@@ -27,7 +27,7 @@
             <div align="right">
                 {% if current_user.userTypeId == 1 %}
                 <button id="addEmployee" class="button" hx-target="#addUser" hx-swap="innerHTML"
-                    hx-get="/signup_worker/{{company.id}}" data-loading-class="is-loading">Add User</button>
+                    hx-get="/signup_worker/{{company.id}}" data-loading-class="is-loading"><p><i class="fa-solid fa-plus fa-lg"></i> <i class="fa-solid fa-user fa-lg"></i></p></button>
                 {% endif %}
             </div>
         </div>
@@ -43,7 +43,7 @@
     <div id="addUser"></div>
     <div class="columns">
         <div class="column">
-            <span class="title is-3">Vehicles</span>
+            <span class="title is-3">Veículos</span>
             <span class="icon has-text-info">
                 <button class="fas fa-info-circle" onclick="tutorial('vehicles');"></button>
             </span>
@@ -52,7 +52,7 @@
             <div align="right">
                 {% if current_user.userTypeId == 1 %}
                 <button id="addVehicle" class="button" hx-target="#addCar" hx-swap="innerHTML"
-                    hx-get="/vehicle/add/{{company.id}}" data-loading-class="is-loading">Add Vehicle</button>
+                    hx-get="/vehicle/add/{{company.id}}" data-loading-class="is-loading"><p><i class="fa-solid fa-plus fa-lg"></i> <i class="fa-solid fa-car fa-lg"></i></p></button>
                 
                 {% endif %}
             </div>
@@ -68,7 +68,7 @@
     </div>
     <div id="addCar"></div>
     
-    <h3 class="title is-3">Map</h3>
+    <h3 class="title is-3">Mapa</h3>
 
     <div id="map" x-data="mapData()" x-init="initMap" style="height: 400px;"></div>
     <script>
