@@ -8,21 +8,21 @@
 <div class="container">
     <br>
     <div class="column">
-        <span class="title is-3">Reports</span>
+        <span class="title is-3">Relatórios</span>
         <span class="icon has-text-info">
             <button class="fas fa-info-circle" onclick="tutorial('reports');"></button>
         </span>
     </div>
     <div class="box">
         <form>
-            <label class="label" for="selectCompany">Company: </label>
+            <label class="label" for="selectCompany">Empresa: </label>
             <div hx-target="#selectCompany" class="select" hx-get="/company/list" hx-trigger="load" hx-swap="innerHTML">
                 <select id="selectCompany" name="idCompany" x-model="idCompany" required>
                 </select>
             </div>
-            <label class="label" for="dateStart">Start Date</label>
+            <label class="label" for="dateStart">Data início</label>
             <input class="input" id="dateStart" name="dateStart" type="date" required>
-            <label class="label" for="dateEnd">End Date</label>
+            <label class="label" for="dateEnd">Data fim</label>
             <input class="input" id="dateEnd" name="dateEnd" type="date" required>
             <hr>
 
@@ -33,7 +33,7 @@
         
     </div>
     <div class="column">
-        <h4 class="title is-4">Report for {{current_user.name}} ({{current_user.userIdentification}})</h4>
+        <h4 class="title is-4">Relatório para {{current_user.name}} ({{current_user.userIdentification}})</h4>
     </div>
     <div class="box" id="reportGenerated">
     </div>
