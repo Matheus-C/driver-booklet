@@ -15,13 +15,15 @@
             <button class="fas fa-info-circle" onclick="tutorial('companies');"></button>
         </span>
     </div>
+    {% if current_user.userTypeId == 1 %}
     <div class="column">
         <div align="right" >
-            <button class="button" id="add_new_company_button" hx-target="#add_new_company" hx-swap="innerHTML" hx-get="/company" data-loading-class="is-loading">Add
-                Empresa</button>
+            <button class="button" id="add_new_company_button" hx-target="#add_new_company" hx-swap="innerHTML" hx-get="/company" data-loading-class="is-loading">
+                <p><i class="fa-solid fa-plus fa-lg"></i> <i class="fa fa-building fa-xl"></i></p></button>
             
         </div>
     </div>
+    {% endif %}
     <div class="box" id="companiesBox">
     
         {% for company in companies %}
