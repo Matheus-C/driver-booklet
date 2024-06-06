@@ -21,7 +21,7 @@ def company():
     if current_user:
         
         if request.method == 'GET':
-            return render_template('htmx/company_add_form.html',current_user=current_user)
+            return render_template('htmx/company/company_add_form.html',current_user=current_user)
         
         elif request.method == 'POST' and request.form:
             dict_data = request.form.to_dict()
@@ -92,7 +92,7 @@ def company_info(id):
             session = Session()
             geolocation = session.execute(query).all()
             session.close()
-            return render_template('htmx/company.html',company = company,users_company = users_company, vehicles_company = vehicles_company,geolocation=geolocation,current_user=current_user)
+            return render_template('htmx/company/company.html',company = company,users_company = users_company, vehicles_company = vehicles_company,geolocation=geolocation,current_user=current_user)
         
         elif request.method == 'POST' and request.form:
             dict_data = request.form.to_dict()
@@ -108,7 +108,7 @@ def company_info(id):
 @app.route('/signup_worker/<id_company>',methods=['GET','POST'])
 def signup_worker(id_company=None):
     if request.method == 'GET':
-        return render_template('htmx/signup.html',data={'return':f'/signup_worker/{id_company}'})
+        return render_template('htmx/user/signup.html',data={'return':f'/signup_worker/{id_company}'})
     
     elif request.method == 'POST' and request.form:
         dict_data = request.form.to_dict()
@@ -116,7 +116,7 @@ def signup_worker(id_company=None):
         if(session.query(User).filter(User.userIdentification==dict_data['userIdentification']).first() != None or\
            session.query(User).filter(User.email==dict_data['email']).first() != None):
             flash("User already registered.", "error")
-            return render_template('htmx/signup.html',data={'return':f'/signup_worker/{id_company}'})
+            return render_template('htmx/user/signup.html',data={'return':f'/signup_worker/{id_company}'})
         dict_data['password'] = bcrypt.generate_password_hash(password=dict_data['password'])
         dict_data['userTypeId'] = 2 #Worker
         start_work = dict_data['startWorkDate']
@@ -143,7 +143,7 @@ def company_list():
             .join(UserCompany,UserCompany.idCompany == Company.id,isouter=True)\
             .filter(UserCompany.idUser == current_user.id, UserCompany.validUntil == None).all()
         session.close()
-        return render_template('htmx/company_list.html',company_list = results)
+        return render_template('htmx/company/company_list.html',company_list = results)
     
 @app.route('/geolocation/list/<id>',methods=['GET'])
 @login_required
@@ -202,7 +202,7 @@ def worker_list(id):
                 UserCompany.validUntil == None).all()
         
         session.close()
-        return render_template('htmx/workers.html', workers = results)
+        return render_template('htmx/company/workers.html', workers = results)
 
 @app.route('/vehicle/list/<id>',methods=['GET'])
 @login_required
@@ -215,4 +215,4 @@ def vehicle_list(id):
                 CompanyVehicle.validUntil == None).all()
         
         session.close()
-        return render_template('htmx/vehicles.html', vehicles = results)
+        return render_template('htmx/vehicle/vehicles.html', vehicles = results)
