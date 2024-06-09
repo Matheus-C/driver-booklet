@@ -9,9 +9,9 @@ from .pwa import trigger_notifications
 def check_time_10():
     query = f"""with max_id_per_user as (
     SELECT 
-    e.idUser
+    e."idUser"
     ,max(e.id) max_id
-    FROM `event` e 
+    FROM event e 
     group by idUser),
 
     max_event_data as (
@@ -23,8 +23,8 @@ def check_time_10():
     ,ps.*
     from max_id_per_user mipu 
     inner join event as e on e.id = mipu.max_id
-    inner join eventType as et on et.id = e.idType
-    inner join push_subscription as ps on ps.userid = mipu.idUser
+    inner join eventType as et on et.id = e."idType"
+    inner join push_subscription as ps on ps.userid = mipu."idUser"
     where 1=1
     and et.category in ('Availability','Work', 'Rest')
 ) 
@@ -41,9 +41,9 @@ select * from max_event_data WHERE timeSpent>=36000;
 def check_time_4():
     query = f"""with max_id_per_user as (
     SELECT 
-    e.idUser
+    e."idUser"
     ,max(e.id) max_id
-    FROM `event` e 
+    FROM event e 
     group by idUser),
 
     max_event_data as (
@@ -55,8 +55,8 @@ def check_time_4():
     ,ps.*
     from max_id_per_user mipu 
     inner join event as e on e.id = mipu.max_id
-    inner join eventType as et on et.id = e.idType
-    inner join push_subscription as ps on ps.userid = mipu.idUser
+    inner join eventType as et on et.id = e."idType"
+    inner join push_subscription as ps on ps.userid = mipu."idUser"
     where 1=1
     and et.category = 'Work'
 )

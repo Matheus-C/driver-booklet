@@ -54,10 +54,8 @@ def signup():
             flash("User already registered.", "error")
             return render_template('htmx/signup.html',data={'return':'/signup'}, current_user = current_user)
 
-        
-        dict_data['password'] = bcrypt.generate_password_hash(password=dict_data['password'])
+        dict_data['password'] = bcrypt.generate_password_hash(password=dict_data['password']).decode('utf-8')
         dict_data['userTypeId'] = 1 #Owner
-        # dict_data['is_active'] = 0 #Has to be enabled manually
         
         user = User(**dict_data)
         

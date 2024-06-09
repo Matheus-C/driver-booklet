@@ -39,12 +39,12 @@ def timer_update(id):
                         case when et.name like '%_end' then 0
                         ELSE LEAD(eventTime, 1, 0) OVER (ORDER BY eventTime ASC)
                         END as dateEnd,
-                        e.idVehicle,
-                        e.idCompany,
+                        e."idVehicle",
+                        e."idCompany",
                         e.geolocation,
                         e.idAttachment
-                FROM `event` e
-                INNER JOIN `eventType` et ON et.id = e.idType
+                FROM event e
+                INNER JOIN "eventType" et ON et.id = e."idType"
                 WHERE idUser = {id}
                 )
             
@@ -78,12 +78,12 @@ def timer_progress(id):
                         case when et.name like '%_end' then 0
                         ELSE LEAD(eventTime, 1, 0) OVER (ORDER BY eventTime ASC)
                         END as dateEnd,
-                        e.idVehicle,
-                        e.idCompany,
+                        e."idVehicle",
+                        e."idCompany",
                         e.geolocation,
                         e.idAttachment
-                FROM `event` e
-                INNER JOIN `eventType` et ON et.id = e.idType
+                FROM event e
+                INNER JOIN "eventType" et ON et.id = e."idType"
                 WHERE idUser = {id}
                 and e.eventTime >= DATE_ADD(CURDATE(), INTERVAL 0 HOUR)
                 )

@@ -26,14 +26,14 @@ def reports():
                         case when et.name like '%_end' then 0
                         ELSE LEAD(eventTime, 1, 0) OVER (ORDER BY eventTime ASC)
                         END as dateEnd,
-                        e.idVehicle,
-                        e.idCompany,
+                        e."idVehicle",
+                        e."idCompany",
                         e.geolocation,
                         e.idAttachment
-                FROM `event` e
-                INNER JOIN `eventType` et ON et.id = e.idType
+                FROM event e
+                INNER JOIN "eventType" et ON et.id = e."idType"
                 WHERE idUser = {current_user.id}
-                and e.idCompany = {dict_data['idCompany']}
+                and e."idCompany" = {dict_data['idCompany']}
                 and e.eventTime between (date('{dict_data['dateStart']}') - 1) and (date('{dict_data['dateEnd']}') + 1)
                 )
             
@@ -46,8 +46,8 @@ def reports():
                 ,v.model
                 ,v.licensePlate 
             from event_query e
-                left join vehicle v on v.id = e.idVehicle
-                left join company c on c.id = e.idCompany
+                left join vehicle v on v.id = e."idVehicle"
+                left join company c on c.id = e."idCompany"
             where dateEnd <> 0
             order by dateStart asc
                 """
