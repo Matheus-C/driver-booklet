@@ -50,7 +50,7 @@
                 {% if current_user.is_anonymous %}
                 <button class="button is-light" hx-trigger ='click' hx-target="#signup_form" hx-get="{{ url_for('login') }}" hx-swap="innerHTML" data-loading-class="is-loading"><p><i class="fa-solid fa-arrow-left fa-lg"></i></p></button>
                 {% endif %}
-                <button id="a" class="button is-primary" data-loading-class="is-loading"><p>Registrar <i class="fa-solid fa-file-arrow-down fa-lg"></i></p></button>
+                <button id="a" class="button is-primary" data-loading-class="is-loading"><p><i class="fa-solid fa-floppy-disk fa-lg"></i> Salvar</p></button>
             </div>
         </form>
     </div>
