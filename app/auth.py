@@ -24,7 +24,7 @@ def index():
 @app.route('/login',methods=['GET','POST'])
 def login(id=None):
     if request.method == 'GET':
-        return render_template('htmx/login.html', data={'return':'/login'})
+        return render_template('htmx/user/login.html', data={'return':'/login'})
     elif request.method == 'POST' and request.form:
         session = Session()
         email = request.form.get('email')
@@ -38,13 +38,13 @@ def login(id=None):
             return response
         else:
             flash("Wrong email or password.", "error")
-            return render_template('htmx/login.html', data={'return':'/login'}, current_user = current_user)
+            return render_template('htmx/user/login.html', data={'return':'/login'}, current_user = current_user)
 
 
 @app.route('/signup',methods=['GET','POST'])
 def signup():
     if request.method == 'GET':
-        return render_template('htmx/signup.html',data={'return':'/signup'}, current_user = current_user)
+        return render_template('htmx/user/signup.html',data={'return':'/signup'}, current_user = current_user)
     
     elif request.method == 'POST' and request.form:
         dict_data = request.form.to_dict()
@@ -52,7 +52,7 @@ def signup():
         if(session.query(User).filter(User.email==dict_data['email']).first() != None or\
             session.query(User).filter(User.userIdentification==dict_data['userIdentification']).first()):
             flash("User already registered.", "error")
-            return render_template('htmx/signup.html',data={'return':'/signup'}, current_user = current_user)
+            return render_template('htmx/user/signup.html',data={'return':'/signup'}, current_user = current_user)
 
         dict_data['password'] = bcrypt.generate_password_hash(password=dict_data['password']).decode('utf-8')
         dict_data['userTypeId'] = 1 #Owner
@@ -63,7 +63,7 @@ def signup():
         session.commit()
         session.close()
         flash("Registered successfully.", "success")
-        return render_template('htmx/signup.html',data={'return':'/signup'}, current_user = current_user)
+        return render_template('htmx/user/signup.html',data={'return':'/signup'}, current_user = current_user)
 
 
 @app.route('/logout')

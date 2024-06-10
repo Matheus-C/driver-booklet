@@ -9,14 +9,14 @@ from sqlalchemy.sql import text
 @app.route('/vehicle/add/<id_company>',methods=['GET','POST'])
 def vehicle_add(id_company=None):
     if request.method == 'GET':
-        return render_template('htmx/vehicle_add_form.html',data={'return':f'/vehicle/add/{id_company}'})
+        return render_template('htmx/vehicle/vehicle_add_form.html',data={'return':f'/vehicle/add/{id_company}'})
     
     elif request.method == 'POST' and request.form:
         dict_data = request.form.to_dict()
         session = Session()
         if(session.query(Vehicle).filter(Vehicle.licensePlate==dict_data['licensePlate']).first() != None):
             flash("License plate already registered.", "error")
-            return render_template('htmx/vehicle_add_form.html', data={'return':f'/vehicle/add/{id_company}'})
+            return render_template('htmx/vehicle/vehicle_add_form.html', data={'return':f'/vehicle/add/{id_company}'})
 
         
         vehicle = Vehicle(**dict_data)
@@ -80,7 +80,7 @@ def vehicle_select():
         session = Session()
         results = session.execute(query).all()
         session.close()
-        return render_template('htmx/vehicle_list.html',vehicle_list = results)
+        return render_template('htmx/vehicle/vehicle_list.html',vehicle_list = results)
 
 @app.route('/vehicle/current_mileage',methods=['POST'])
 @login_required

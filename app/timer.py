@@ -63,7 +63,7 @@ def timer_update(id):
         data = session.execute(query).fetchmany(5)
         session.close()
 
-        return render_template('htmx/timer_updates.html',data=data)
+        return render_template('htmx/timer/timer_updates.html',data=data)
     else:
         return redirect('/')
     
@@ -107,6 +107,6 @@ def timer_progress(id):
         data = session.execute(query).all()
         session.close()
 
-        return render_template('htmx/timer_progress.html',data=data)
+        return render_template('htmx/timer/timer_progress.html',data=data)
     else:
         return redirect('/')
