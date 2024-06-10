@@ -19,8 +19,8 @@
                         Cor: <input class="input" type="text" name='color' placeholder="Digite a cor do carro">
                     </div>
                     <div class="control">
-                        Placa: <input class="input" type="text" name='licensePlate'
-                            placeholder="digite a placa do veículo">
+                        Placa: <input class="input" type="text" id="licensePlate" name='licensePlate'
+                            placeholder="digite a placa do veículo" style="text-transform:uppercase">
                     </div>
                     <hr>
                     <div align="right">
@@ -32,3 +32,7 @@
     </div>
 </div>
 <br>
+<script>
+    //vanilla-masker 
+    VMasker(document.getElementById("licensePlate")).maskPattern("99-AA-99");
+</script>
