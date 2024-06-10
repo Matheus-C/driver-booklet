@@ -34,28 +34,31 @@ def timer_update(id):
     ## needs validation before querying
     query = f"""
     WITH event_query as 
-                (SELECT e.eventTime dateStart,
+                (SELECT e."eventTime" "dateStart",
                         et.category,
-                        case when et.name like '%_end' then 0
-                        ELSE LEAD(eventTime, 1, 0) OVER (ORDER BY eventTime ASC)
-                        END as dateEnd,
+                        case when et.name like '%_end' then null
+                        ELSE LEAD("eventTime", 1, null) OVER (ORDER BY "eventTime" ASC)
+                        END as "dateEnd",
                         e."idVehicle",
                         e."idCompany",
                         e.geolocation,
-                        e.idAttachment
+                        e."idAttachment"
                 FROM event e
                 INNER JOIN "eventType" et ON et.id = e."idType"
                 WHERE idUser = {id}
                 )
             
             select 
-                e.dateStart
-                ,e.dateEnd      
-                ,e.category categoryName
-                ,SEC_TO_TIME(TIMESTAMPDIFF(SECOND,dateStart,dateEnd)) AS timeSpent
+                e."dateStart"
+                ,e."dateEnd"      
+                ,e.category "categoryName"
+                ,sec_to_time(SUM(EXTRACT(EPOCH FROM ("dateEnd" -"dateStart")))) AS "timeSpent"
             from event_query e
-            where dateEnd <> 0
-            order by dateStart desc
+            where "dateEnd" is not null
+            group by e."dateStart"
+                ,e."dateEnd"      
+                ,e.category "categoryName"
+            order by "dateStart" desc
     """
     if current_user:
         query = text(query)
@@ -73,31 +76,30 @@ def timer_progress(id):
     session = Session()
     query = f"""
                 WITH event_query as 
-                (SELECT e."eventTime" dateStart,
+                (SELECT e."eventTime" "dateStart",
                         et.category,
                         case when et.name like '%_end' then null
                         ELSE LEAD(e."eventTime", 1, null) OVER (ORDER BY e."eventTime" ASC)
-                        END as dateEnd,
+                        END as "dateEnd",
                         e."idVehicle",
                         e."idCompany",
                         e.geolocation,
                         e."idAttachment"
                 FROM event e
                 INNER JOIN "eventType" et ON et.id = e."idType"
-                WHERE e."idUser" = {id}
-                and e."eventTime" >= current_date
+                WHERE e."idUser" = 6
                 )
             
             select 
-                e.category categoryName
-                ,sec_to_time(SUM(EXTRACT(EPOCH FROM (dateEnd -dateStart)))) AS timeSpent
+                e.category "categoryName"
+                ,sec_to_time(SUM(EXTRACT(EPOCH FROM ("dateEnd" -"dateStart")))) AS "timeSpent"
                 ,CASE
-                	WHEN e.category = 'availability' THEN SUM(EXTRACT(EPOCH FROM (dateEnd -dateStart))) / 50400
-                    WHEN e.category = 'work' THEN SUM(EXTRACT(EPOCH FROM (dateEnd -dateStart))) / 36000
-                    WHEN e.category = 'rest' THEN SUM(EXTRACT(EPOCH FROM (dateEnd -dateStart))) / 50400
+                	WHEN e.category = 'availability' THEN SUM(EXTRACT(EPOCH FROM ("dateEnd" -"dateStart"))) / 50400
+                    WHEN e.category = 'work' THEN SUM(EXTRACT(EPOCH FROM ("dateEnd" -"dateStart"))) / 36000
+                    WHEN e.category = 'rest' THEN SUM(EXTRACT(EPOCH FROM ("dateEnd" -"dateStart"))) / 50400
                     END as percentage_total
             from event_query e
-            where dateEnd <> null
+            where "dateEnd" is not null
             group by e.category
             order by e.category desc
             """

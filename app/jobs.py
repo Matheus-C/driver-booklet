@@ -12,13 +12,13 @@ def check_time_10():
     e."idUser"
     ,max(e.id) max_id
     FROM event e 
-    group by idUser),
+    group by "idUser"),
 
     max_event_data as (
     select 
     e."createdAt"
     ,et.name event_name
-    ,ABS(EXTRACT(EPOCH FROM (CURRENT_TIMESTAMP(0) - e.createdAt)) as timeSpent
+    ,ABS(EXTRACT(EPOCH FROM (CURRENT_TIMESTAMP(0) - e."createdAt")) as "timeSpent"
     ,et.category
     ,ps.*
     from max_id_per_user mipu 
@@ -44,13 +44,13 @@ def check_time_4():
     e."idUser"
     ,max(e.id) max_id
     FROM event e 
-    group by idUser),
+    group by "idUser"),
 
     max_event_data as (
     select 
     e."createdAt"
     ,et.name event_name
-    ,ABS(TIMESTAMPDIFF(SECOND,CURRENT_TIMESTAMP(),e.createdAt)) as timeSpent
+    ,ABS(TIMESTAMPDIFF(SECOND,CURRENT_TIMESTAMP(),e.createdAt)) as "timeSpent"
     ,et.category
     ,ps.*
     from max_id_per_user mipu 

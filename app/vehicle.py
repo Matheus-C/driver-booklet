@@ -105,9 +105,9 @@ def last_state_vehicle(id):
         query = f""" with max_id_vehicle as (
                 select max(id) as id 
                 from event 
-                where idVehicle = {int(id)}
+                where "idVehicle" = {int(id)}
             )
-            SELECT e.eventTime,e."idVehicle",et.name 
+            SELECT e."eventTime",e."idVehicle",et.name 
             FROM event e
             INNER join "eventType" et on et.id = e."idType"
             inner join max_id_vehicle m on m.id = e.id;"""

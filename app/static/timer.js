@@ -23,7 +23,7 @@ function stopwatch() {
       isEnd:false,
 
       getUpdatesFromDB(){
-        fetch('/vehicle/last_state/' + this."idVehicle", {
+        fetch('/vehicle/last_state/' + this.idVehicle, {
           method: 'GET',
           headers: {
             "Content-type": "application/json; charset=UTF-8"
@@ -158,7 +158,7 @@ function stopwatch() {
           const newCoords = { lat: position.coords.latitude, lon: position.coords.longitude };
           if (this.isAvailable && this.distance_ari(this.coords, newCoords) >= 0.00003) { // Only start timer after initial location
             // In case of any gps movement will auto start working
-            if (this."idCompany" && this."idVehicle" && this.isModalVisible === false){
+            if (this.idCompany && this.idVehicle && this.isModalVisible === false){
                 document.querySelector('body').dispatchEvent(
                   new Event('start_working')
                 )
