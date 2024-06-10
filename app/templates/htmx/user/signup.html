@@ -10,47 +10,47 @@
         {% include 'base/notifications.html' %}
         <form hx-post="{{data.return}}" hx-target="#signup_form" hx-swap="outerHTML">
             <div class="control">
-                <label class="label">Name</label>
-                <input class="input" type="text" name='name' placeholder="Type your name">
+                <label class="label">Nome:</label>
+                <input class="input" type="text" name='name' placeholder="Digite seu nome">
             </div>
             <div class="control">
-                <label class="label">User Identification (NIF)</label><input class="input" type="number"
-                    name='userIdentification' placeholder="Type your NIF">
+                <label class="label">Identificação (NIF):</label><input class="input" type="number"
+                    name='userIdentification' placeholder="Digite seu NIF">
             </div>
             <div class="control">
-                <label class="label">Email</label><input class="input" type="email" name='email'
-                    placeholder="Type your email">
+                <label class="label">Email:</label><input class="input" type="email" name='email'
+                    placeholder="Digite seu email">
             </div>
             <div class="control">
-                <label class="label">Password</label><input class="input" type="password" name='password'
-                    placeholder="Type your password">
-            </div>
-
-            <div class="control">
-                <label class="label">Phone</label><input class="input" type="tel" name='phone'
-                    placeholder="Type your phone">
-            </div>
-            <div class="control">
-                <label class="label">Address</label><input class="input" type="text" name='address'
-                    placeholder="Type your address">
+                <label class="label">Senha:</label><input class="input" type="password" name='password'
+                    placeholder="Digite sua senha">
             </div>
 
             <div class="control">
-                <label class="label">Birthdate</label><input class="input" type="date" name='birthDate'
-                    placeholder="Type your BirthDate">
+                <label class="label">Telefone:</label><input class="input" type="tel" name='phone'
+                    placeholder="Digite seu telefone">
+            </div>
+            <div class="control">
+                <label class="label">Endereço:</label><input class="input" type="text" name='address'
+                    placeholder="Digite seu endereço">
+            </div>
+
+            <div class="control">
+                <label class="label">Data de nascimento:</label><input class="input" type="date" name='birthDate'
+                    placeholder="Digite sua data de nascimento">
             </div>
             {% if current_user.is_anonymous is false %}
             <div class="control">
-                <label class="label">Started Worked on</label><input class="input" type="date" name='startWorkDate'
-                    placeholder="Type your StartWorkDate">
+                <label class="label">Trabalha desde:</label><input class="input" type="date" name='startWorkDate'
+                    placeholder="Digite desde quando esta pessoa trabalha nesta empresa">
             </div>
             {% endif %}
             <hr>
             <div align="right">
                 {% if current_user.is_anonymous %}
-                <button class="button is-light" hx-trigger ='click' hx-target="#signup_form" hx-get="{{ url_for('login') }}" hx-swap="innerHTML" data-loading-class="is-loading">Go back to Login</button>
+                <button class="button is-light" hx-trigger ='click' hx-target="#signup_form" hx-get="{{ url_for('login') }}" hx-swap="innerHTML" data-loading-class="is-loading"><p><i class="fa-solid fa-arrow-left fa-lg"></i></p></button>
                 {% endif %}
-                <button id="a" class="button is-primary" data-loading-class="is-loading">Sign up</button>
+                <button id="a" class="button is-primary" data-loading-class="is-loading"><p><i class="fa-solid fa-floppy-disk fa-lg"></i> Salvar</p></button>
             </div>
         </form>
     </div>

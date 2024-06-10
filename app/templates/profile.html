@@ -8,25 +8,25 @@
 <div class="container">
     <br>
     <div class="column">
-        <h3 class="title is-3">User Info</h3>
+        <h3 class="title is-3">Suas informações</h3>
     </div>
     <div class="box">
         <div class="fixed-grid has-1-cols">
             <div class="grid">
-                <div class="cell"><span class="tag is-medium">Name: {{ current_user.name }}</span></div>
-                <div class="cell"><span class="tag is-medium">User identification: {{ current_user.userIdentifcation
+                <div class="cell"><span class="tag is-medium">Nome: {{ current_user.name }}</span></div>
+                <div class="cell"><span class="tag is-medium">identificação do usuário: {{ current_user.userIdentifcation
                         }}</span></div>
-                <div class="cell"><span class="tag is-medium">Phone: {{ current_user.phone }}</span></div>
-                <div class="cell"><span class="tag is-medium">Address: {{ current_user.address }}</span></div>
+                <div class="cell"><span class="tag is-medium">Telefone: {{ current_user.phone }}</span></div>
+                <div class="cell"><span class="tag is-medium">Endereço: {{ current_user.address }}</span></div>
                 <div class="cell"><span class="tag is-medium">Email: {{ current_user.email }}</span></div>
-                <div class="cell"><span class="tag is-medium">Birthdate: {{ current_user.birthDate }}</span></div>
-                <div class="cell"><span class="tag is-medium">Started Working on: {{ current_user.StartWork }}</span>
+                <div class="cell"><span class="tag is-medium">Data de nascimento: {{ current_user.birthDate }}</span></div>
+                <div class="cell"><span class="tag is-medium">Começou a trabalhar em: {{ current_user.StartWork }}</span>
                 </div>
             </div>
         </div>
     </div>
         <div class="column">
-            <h3 class="title is-3">Companies</h3>
+            <h3 class="title is-3">Empresas</h3>
         </div>
     <div class="box">
         {% for company in companies %}
