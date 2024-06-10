@@ -16,9 +16,9 @@ def check_time_10():
 
     max_event_data as (
     select 
-    e.createdAt
+    e."createdAt"
     ,et.name event_name
-    ,ABS(TIMESTAMPDIFF(SECOND,CURRENT_TIMESTAMP(),e.createdAt)) as timeSpent
+    ,ABS(EXTRACT(EPOCH FROM (CURRENT_TIMESTAMP(0) - e.createdAt)) as timeSpent
     ,et.category
     ,ps.*
     from max_id_per_user mipu 
@@ -48,7 +48,7 @@ def check_time_4():
 
     max_event_data as (
     select 
-    e.createdAt
+    e."createdAt"
     ,et.name event_name
     ,ABS(TIMESTAMPDIFF(SECOND,CURRENT_TIMESTAMP(),e.createdAt)) as timeSpent
     ,et.category
