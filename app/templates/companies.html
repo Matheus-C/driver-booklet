@@ -8,20 +8,23 @@
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@2"></script>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <div class="container">
+    <br>
+    <div class="columns">
     <div class="column">
-        <br>
-        <span class="title is-3">Companies</span>
+        <span class="title is-3">Empresas</span>
         <span class="icon has-text-info">
             <button class="fas fa-info-circle" onclick="tutorial('companies');"></button>
         </span>
     </div>
+    {% if current_user.userTypeId == 1 %}
     <div class="column">
         <div align="right" >
-            <button class="button" id="add_new_company_button" hx-target="#add_new_company" hx-swap="innerHTML" hx-get="/company" data-loading-class="is-loading">Add
-                Company</button>
-            
+            <button class="button" id="add_new_company_button" hx-target="#add_new_company" hx-swap="innerHTML" hx-get="/company" data-loading-class="is-loading">
+                <p><i class="fa-solid fa-plus fa-lg"></i> <i class="fa fa-building fa-xl"></i></p></button>
         </div>
     </div>
+</div>
+    {% endif %}
     <div class="box" id="companiesBox">
     
         {% for company in companies %}

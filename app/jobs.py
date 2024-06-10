@@ -9,22 +9,22 @@ from .pwa import trigger_notifications
 def check_time_10():
     query = f"""with max_id_per_user as (
     SELECT 
-    e.idUser
+    e."idUser"
     ,max(e.id) max_id
-    FROM `event` e 
-    group by idUser),
+    FROM event e 
+    group by "idUser"),
 
     max_event_data as (
     select 
-    e.createdAt
+    e."createdAt"
     ,et.name event_name
-    ,ABS(TIMESTAMPDIFF(SECOND,CURRENT_TIMESTAMP(),e.createdAt)) as timeSpent
+    ,ABS(EXTRACT(EPOCH FROM (CURRENT_TIMESTAMP(0) - e."createdAt")) as "timeSpent"
     ,et.category
     ,ps.*
     from max_id_per_user mipu 
     inner join event as e on e.id = mipu.max_id
-    inner join eventType as et on et.id = e.idType
-    inner join push_subscription as ps on ps.userid = mipu.idUser
+    inner join eventType as et on et.id = e."idType"
+    inner join push_subscription as ps on ps.userid = mipu."idUser"
     where 1=1
     and et.category in ('Availability','Work', 'Rest')
 ) 
@@ -41,22 +41,22 @@ select * from max_event_data WHERE timeSpent>=36000;
 def check_time_4():
     query = f"""with max_id_per_user as (
     SELECT 
-    e.idUser
+    e."idUser"
     ,max(e.id) max_id
-    FROM `event` e 
-    group by idUser),
+    FROM event e 
+    group by "idUser"),
 
     max_event_data as (
     select 
-    e.createdAt
+    e."createdAt"
     ,et.name event_name
-    ,ABS(TIMESTAMPDIFF(SECOND,CURRENT_TIMESTAMP(),e.createdAt)) as timeSpent
+    ,ABS(TIMESTAMPDIFF(SECOND,CURRENT_TIMESTAMP(),e.createdAt)) as "timeSpent"
     ,et.category
     ,ps.*
     from max_id_per_user mipu 
     inner join event as e on e.id = mipu.max_id
-    inner join eventType as et on et.id = e.idType
-    inner join push_subscription as ps on ps.userid = mipu.idUser
+    inner join eventType as et on et.id = e."idType"
+    inner join push_subscription as ps on ps.userid = mipu."idUser"
     where 1=1
     and et.category = 'Work'
 )

@@ -70,23 +70,29 @@ def company_info(id):
             
             query = f"""
             SELECT 
-                max(eventTime) as eventTime
-                ,et.name eventName
-                ,e.idUser
+                max(e."eventTime") as "e.eventTime"
+                ,et.name "eventName"
+                ,e."idUser"
                 ,v.model
-                ,v.licensePlate
+                ,v."licensePlate"
                 ,e.geolocation
                 ,u.name
 
-            FROM `event` e
-            inner join eventType et on et.id = e.idType
-            left join companyVehicle cv on cv.idVehicle = e.idVehicle and cv.validUntil is null
-            left join userCompany uc on uc.idCompany = e.idCompany and uc.validUntil is null
-            inner join vehicle v on v.id = cv.idVehicle
-            inner join users u on u.id = uc.idUser
+            FROM event e
+            inner join "eventType" et on et.id = e."idType"
+            left join "companyVehicle" cv on cv."idVehicle" = e."idVehicle" and cv."validUntil" is null
+            left join "userCompany" uc on uc."idCompany" = e."idCompany" and uc."validUntil" is null
+            inner join vehicle v on v.id = cv."idVehicle"
+            inner join users u on u.id = uc."idUser"
             where 1=1
-            and uc.idCompany = {int(id)}
-            group by u.id, e.idVehicle, e.id;            
+            and uc."idCompany" = {int(id)}
+            group by
+                et.name
+                ,e."idUser"
+                ,v.model
+                ,v."licensePlate"
+                ,e.geolocation
+                ,u.name;            
             """
             query = text(query)
             session = Session()
@@ -151,23 +157,29 @@ def geolocation_list(id):
     if current_user:
         query = f"""
         SELECT 
-            max(eventTime) as eventTime
-            ,et.category eventCategory
-            ,e.idUser
+            max(e."eventTime") as "eventTime"
+            ,et.category "eventCategory"
+            ,e."idUser"
             ,v.model
-            ,v.licensePlate
+            ,v."licensePlate"
             ,e.geolocation
             ,u.name
 
-        FROM `event` e
-        inner join eventType et on et.id = e.idType
-        left join companyVehicle cv on cv.idVehicle = e.idVehicle and cv.validUntil is null
-        left join userCompany uc on uc.idCompany = e.idCompany and uc.validUntil is null
-        inner join vehicle v on v.id = cv.idVehicle
-        inner join users u on u.id = uc.idUser
+        FROM event e
+        inner join "eventType" et on et.id = e."idType"
+        left join "companyVehicle" cv on cv."idVehicle" = e."idVehicle" and cv."validUntil" is null
+        left join "userCompany" uc on uc."idCompany" = e."idCompany" and uc."validUntil" is null
+        inner join vehicle v on v.id = cv."idVehicle"
+        inner join users u on u.id = uc."idUser"
         where 1=1
-        and uc.idCompany = {int(id)}
-        group by u.id, e.id,e.idVehicle;            
+        and uc."idCompany" = {int(id)}
+        group by 
+            et.category
+            ,e."idUser"
+            ,v.model
+            ,v."licensePlate"
+            ,e.geolocation
+            ,u.name;            
         """
         query = text(query)
         session = Session()

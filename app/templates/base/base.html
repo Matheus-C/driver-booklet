@@ -68,13 +68,13 @@
       <div class="navbar-start">
         {% if current_user.is_anonymous is false %}
         <a href='/companies' class="navbar-item">
-          Companies
+          Empresas
         </a>
         <a href='/timer' class="navbar-item">
           Timer
         </a>
         <a href='/reports' class="navbar-item">
-          Reports
+          Relatórios
         </a>
         {% endif %}
 
@@ -109,7 +109,7 @@
       {% if current_user.userTypeId == 1%}
         <a id="companies" class="navbar-item is-expanded is-block has-text-centered" href='/companies'>
             <i class="fa fa-building"></i>
-            <p class="is-size-7">Companies</p>
+            <p class="is-size-7">Empresas</p>
         </a>
       {% endif %}
         <a id="timer" class="navbar-item is-expanded is-block has-text-centered" href='/timer'>
@@ -118,11 +118,11 @@
         </a>
         <a id="reports" class="navbar-item is-expanded is-block has-text-centered" href='/reports'>
             <i class="fa fa-file-excel"></i>
-            <p class="is-size-7">Reports</p>
+            <p class="is-size-7">Relatórios</p>
         </a>
         <a id="profile" class="navbar-item is-expanded is-block has-text-centered" href='/profile'>
             <i class="fa fa-user"></i>
-            <p class="is-size-7">Profile</p>
+            <p class="is-size-7">Perfil</p>
         </a>
         <a class="navbar-item is-expanded is-block has-text-centered" href='/logout'>
           <i class="fa fa-right-from-bracket"></i>
