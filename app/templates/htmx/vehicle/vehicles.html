@@ -1,8 +1,8 @@
-<div class="box" id="vehicles" hx-swap-oob="true"><!-- replaces the div workers with the new content -->
+<div class="box" id="vehicles" hx-swap-oob="true"><!-- replaces the div vehicles with the new content -->
     {% include 'base/notifications.html' %}
     {% for vehicle in vehicles %}
     {% if vehicle %}
-    <p>{{vehicle.model}} ({{vehicle.licensePlate}})</p>
+    <p>{{vehicle.manufacturer}} {{vehicle.model}} {{vehicle.color}} ({{vehicle.licensePlate}})</p>
     {% endif %}
     {% endfor %}
 </div>
