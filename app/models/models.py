@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey,Column,String,Integer,Float,CHAR,DateTime,Date,Boolean, TIMESTAMP, text
+from sqlalchemy import ForeignKey,Column,String,Integer,Float,CHAR,DateTime,Date,Boolean, TIMESTAMP, TEXT,text
 from sqlalchemy.ext.declarative import declarative_base
 from flask_login import UserMixin
 from .database import *
@@ -23,7 +23,7 @@ class User(Base,UserMixin):
   address = Column('address', String(255))
   email = Column('email', String(255))
   birthDate = Column('birthDate', Date)
-  password = Column('password', String(255))
+  password = Column('password', TEXT(255))
   is_active = Column(Boolean, default=False)
 
   def __repr__(self):

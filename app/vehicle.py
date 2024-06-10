@@ -55,23 +55,23 @@ def vehicle_select():
         query = f"""with event_vehicle_ranked as (
                     select e.*,et.name,
                             LAST_VALUE(et.name) OVER (
-                            PARTITION BY e.idVehicle
-                            ORDER BY e.eventTime asc
+                            PARTITION BY e."idVehicle"
+                            ORDER BY e."eventTime" asc
                             RANGE BETWEEN
                             UNBOUNDED PRECEDING 
                             AND
                             UNBOUNDED FOLLOWING) as last_state
 
                     from event e 
-                    inner join eventType et on et.id = e.idType
+                    inner join "eventType" et on et.id = e."idType"
                     ),
                     groupped_vehicle as (
-                        select v.id,v.model,v.licensePlate, IFNULL(evr.last_state, "no_event") last_state
-                        from companyVehicle cv
-                            left join vehicle v on v.id = cv.idVehicle
-                            left join event_vehicle_ranked evr on evr.idVehicle =  cv.idVehicle
-                        where cv.idCompany = {id_company}
-                        group by v.id,v.model,v.licensePlate, evr.last_state
+                        select v.id,v.model,v."licensePlate", Coalesce(evr.last_state, 'no_event') last_state
+                        from "companyVehicle" cv
+                            left join vehicle v on v.id = cv."idVehicle"
+                            left join event_vehicle_ranked evr on evr."idVehicle" =  cv."idVehicle"
+                        where cv."idCompany" = {id_company}
+                        group by v.id,v.model,v."licensePlate", evr.last_state
                     )
                     select * 
                     from groupped_vehicle; """
@@ -105,11 +105,11 @@ def last_state_vehicle(id):
         query = f""" with max_id_vehicle as (
                 select max(id) as id 
                 from event 
-                where idVehicle = {int(id)}
+                where "idVehicle" = {int(id)}
             )
-            SELECT e.eventTime,e.idVehicle,et.name 
-            FROM `event` e
-            INNER join eventType et on et.id = e.idType
+            SELECT e."eventTime",e."idVehicle",et.name 
+            FROM event e
+            INNER join "eventType" et on et.id = e."idType"
             inner join max_id_vehicle m on m.id = e.id;"""
         
         query = text(query)
