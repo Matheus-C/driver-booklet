@@ -62,7 +62,7 @@
     <div class="box" id="vehicles">
         {% for vehicle in vehicles_company %}
         {% if vehicle %}
-        <p>{{vehicle.model}} ({{vehicle.licensePlate}})</p>
+        <p> {{vehicle.manufacturer}} {{vehicle.model}} {{vehicle.color}} ({{vehicle.licensePlate}})</p>
         {% endif %}
         {% endfor %}
     </div>
