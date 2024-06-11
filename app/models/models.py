@@ -107,6 +107,8 @@ class Vehicle(Base):
   __tablename__ = 'vehicle'
   id = Column('id', Integer, primary_key=True)
   model = Column('model', String(255))
+  manufacturer = Column('manufacturer', String(255))
+  color = Column('color', String(255))
   licensePlate = Column('licensePlate', String(255))
 
 class VehicleEvent(Base):
