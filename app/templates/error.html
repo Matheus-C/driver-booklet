@@ -5,11 +5,12 @@
 
 {% block content %}
 
-<div class="container">
+<div class="container" align="center">
     <section class="hero">
         <div class="hero-body">
-            <p class="title">{% block title %}{{error_type}}{% endblock %}</p>
-            <h3 class="subtitle is-3">{{error_description}}</h3>
+            <p class="title is-4">{% block title %}{{error_type}} <i class="fa-solid fa-triangle-exclamation"></i> {% endblock %}</p>
+            
+            <h3 class="subtitle is-5">{{error_description}}</h3>
         </div>
         <br>
         
