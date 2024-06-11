@@ -13,6 +13,8 @@ app.config['VAPID_PRIVATE_KEY'] = "LXemf14HHkxNVXhsZOnn1nCcCUpI68pFSjtNRPKUIc4"
 
 app.config['VAPID_CLAIM_EMAIL'] = "a@a.com"
 
+app.config['TRAP_HTTP_EXCEPTIONS']=True
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 
@@ -26,6 +28,5 @@ scheduler.api_enabled = True
 scheduler.init_app(app)
 
 
-from app import auth, profile, pwa, timer, company, routing, vehicle, reports, jobs
+from app import auth, profile, pwa, timer, company, routing, vehicle, reports, jobs, error
 scheduler.start()
-
