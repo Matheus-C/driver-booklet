@@ -1,3 +1,9 @@
+<!-- Alpine Plugins -->
+<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
+ 
+<!-- Alpine Core -->
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
 <div x-data="{ isVisible: true }" id="vehicle_form">
     <div x-show="isVisible" class="box container">
         <div align="right">
@@ -20,7 +26,7 @@
                     </div>
                     <div class="control">
                         Placa: <input class="input" type="text" id="licensePlate" name='licensePlate'
-                            placeholder="digite a placa do veículo" oninput="this.value = this.value.toUpperCase()">
+                            placeholder="XX-XX-XX" x-mask="**-**-**" oninput="this.value = this.value.toUpperCase()">
                     </div>
                     <hr>
                     <div align="right">
@@ -32,7 +38,3 @@
     </div>
 </div>
 <br>
-<script>
-    //vanilla-masker 
-    VMasker(document.getElementById("licensePlate")).maskPattern("99-AA-99");
-</script>
