@@ -1,0 +1,19 @@
+{% extends 'base/base.html' %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container" align="center">
+    <section class="hero">
+        <div class="hero-body">
+            <p class="title is-4">{% block title %}{{error_type}} <i class="fa-solid fa-triangle-exclamation"></i> {% endblock %}</p>
+            
+            <h3 class="subtitle is-5">{{error_description}}</h3>
+        </div>
+        <br>
+        
+    </section>
+    
+{% endblock %}
