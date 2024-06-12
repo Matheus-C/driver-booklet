@@ -28,7 +28,10 @@ def reports():
                         END as "dateEnd",
                         e."idVehicle",
                         e."idCompany",
-                        e.geolocation,
+                        e.geolocation as "locStart",
+                        case when et.name like '%_end' then null
+                        ELSE LEAD(e.geolocation, 1, null) OVER (ORDER BY "eventTime" ASC)
+                        END as "locEnd",
                         e."idAttachment"
                 FROM event e
                 INNER JOIN "eventType" et ON et.id = e."idType"
@@ -45,6 +48,8 @@ def reports():
                 ,sec_to_time(SUM(EXTRACT(EPOCH FROM ("dateEnd" -"dateStart")))) AS "timeSpent"
                 ,v.model
                 ,v."licensePlate"
+                ,e."locStart"
+                ,e."locEnd"
             from event_query e
                 left join vehicle v on v.id = e."idVehicle"
                 left join company c on c.id = e."idCompany"
@@ -55,6 +60,8 @@ def reports():
                 ,"dateEnd"
                 ,v.model
                 ,v."licensePlate"
+                ,e."locStart"
+                ,e."locEnd"
             order by "dateStart" asc
                 """
                 
