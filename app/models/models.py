@@ -24,7 +24,7 @@ class User(Base,UserMixin):
   email = Column('email', String(255))
   birthDate = Column('birthDate', Date)
   password = Column('password', TEXT(255))
-  is_active = Column(Boolean, default=False)
+  _is_active = Column('is_active', Boolean, default=False)
 
   def __repr__(self):
     return f'<User: {self.id},{self.name},{self.email}>'
@@ -38,7 +38,11 @@ class User(Base,UserMixin):
 
   @property
   def is_active(self):
-    return True
+    return self._is_active
+  
+  @is_active.setter
+  def is_active(self, value):
+    self._is_active = value
 
   @property
   def is_anonymous(self):

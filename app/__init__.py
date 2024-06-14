@@ -15,6 +15,21 @@ app.config['VAPID_CLAIM_EMAIL'] = "a@a.com"
 
 app.config['TRAP_HTTP_EXCEPTIONS']=True
 
+app.config['SECURITY_PASSWORD_SALT']="temperro"
+
+# mail settings
+app.config["MAIL_SERVER"] = 'smtp.mailersend.net'
+app.config["MAIL_PORT"] = 587
+app.config["MAIL_USE_TLS"] = True
+app.config["MAIL_USE_SSL"] = False
+
+# gmail authentication
+app.config["MAIL_USERNAME"] = "MS_joirAu@trial-yzkq340o0yk4d796.mlsender.net"
+app.config["MAIL_PASSWORD"] = "sY8yvn9DR6suWYBk"
+
+# mail accounts
+app.config["MAIL_DEFAULT_SENDER"] = 'MS_joirAu@trial-yzkq340o0yk4d796.mlsender.net'
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 
