@@ -11,7 +11,7 @@ def generate_confirmation_token(email):
     return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_SALT'])
 
 
-def confirm_token(token, expiration=3600):
+def confirm_token(token, expiration=43200):
     serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
     try:
         email = serializer.loads(
@@ -34,6 +34,14 @@ def send_email(to, subject, template):
     mail = Mail(app)
     mail.send(msg)
 
+def send_confirmation(email):
+    token = generate_confirmation_token(email)
+    url = url_for('confirm_email', token=token, _external=True)
+    msg = "Bem vindo ao Driver Booklet, Confirme seu email clicando no link abaixo:"
+    html = render_template('email/email_template.html', url=url, msg=msg)
+    subject = "Confirme seu email"
+    send_email(email, subject, html)
+
 @login_manager.user_loader
 def load_user(id):
     session = Session()
@@ -45,7 +53,10 @@ def load_user(id):
 def index():
     if current_user.is_authenticated:
         if current_user.userTypeId == 1: # Company Owner
-            return redirect('/companies')
+            if current_user._mail_verified:
+                return redirect('/companies')
+            else:
+                return render_template('not_verified.html', current_user = current_user)
         else: #Other
             return redirect('/timer')
     else:
@@ -90,17 +101,12 @@ def signup():
         
         session.add(user)
         session.commit()
-        token = generate_confirmation_token(dict_data['email'])
-        url = url_for('confirm_email', token=token, _external=True)
-        msg = "Bem vindo ao Driver Booklet, Confirme seu email clicando no link abaixo:"
-        html = render_template('email_template.html', url=url, msg=msg)
-        subject = "Confirme seu email"
-        send_email(dict_data['email'], subject, html)
-        session.refresh(user)
-        login_user(user)
         session.close()
-        flash('A confirmation email has been sent via email.', 'success')
-        return render_template('notice_email.html', current_user = current_user)
+        if(dict_data['userTypeId'] != 2):
+            send_confirmation(dict_data['email'])            
+            flash('Uma confirmação foi enviada para o seu email.', 'success')
+            return render_template('notice_email.html', current_user = current_user)
+        return render_template('htmx/user/signup.html',data={'return':'/signup'}, current_user = current_user)
 
 
 @app.route('/logout')
@@ -120,10 +126,10 @@ def confirm_email(token):
         return render_template('index.html')
     session = Session()
     user = session.query(User).filter(User.email==email).first()
-    if user.is_active:
+    if user._mail_verified:
         flash('Email já confirmado. Por favor faça o login', 'success')
     else:
-        user.is_active = True
+        user._mail_verified = True
         session.add(user)
         session.commit()
         session.close()
@@ -177,3 +183,11 @@ def new_password(token):
         session.close()
         flash('Senha trocada com sucesso.', 'success')
         return redirect('/')
+    
+@app.route('/resend/confirmation')
+def resend_confirmation():
+    if(current_user.is_authenticated):
+        send_confirmation(current_user.email)
+        flash('Uma confirmação foi enviada para o seu email.', 'success')
+        return render_template('not_verified.html', current_user = current_user)
+        

@@ -104,7 +104,7 @@
   <!-- Bottm bar -->
   <nav class="navbar is-dark is-fixed-bottom is-hidden-tablet" role="navigation">
     <div class="navbar-brand">
-      {% if current_user.is_anonymous %}
+      {% if current_user.is_anonymous or not current_user._mail_verified %}
       {% else %}
       {% if current_user.userTypeId == 1%}
         <a id="companies" class="navbar-item is-expanded is-block has-text-centered" href='/companies'>

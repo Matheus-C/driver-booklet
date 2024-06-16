@@ -24,7 +24,8 @@ class User(Base,UserMixin):
   email = Column('email', String(255))
   birthDate = Column('birthDate', Date)
   _password = Column('password', TEXT(255))
-  _is_active = Column('is_active', Boolean, default=False)
+  _mail_verified = Column('mail_verified', Boolean, default=False)
+  is_active = Column(Boolean, default=False)
 
   def __repr__(self):
     return f'<User: {self.id},{self.name},{self.email}>'
@@ -38,11 +39,7 @@ class User(Base,UserMixin):
 
   @property
   def is_active(self):
-    return self._is_active
-  
-  @is_active.setter
-  def is_active(self, value):
-    self._is_active = value
+    return True
 
   @property
   def password(self):
@@ -51,6 +48,14 @@ class User(Base,UserMixin):
   @password.setter
   def password(self, value):
     self._password = value
+
+  @property
+  def mail_verified(self):
+    return self._mail_verified
+  
+  @password.setter
+  def mail_verified(self, value):
+    self._mail_verified = value
 
   @property
   def is_anonymous(self):
