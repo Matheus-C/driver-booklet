@@ -145,15 +145,15 @@ def forgot_password():
             url = url_for('new_password', token=token, _external=True)
             msg = "Clique no link abaixo para redefinir sua senha:"
             html = render_template('email/email_template.html', url=url, msg=msg)
-            subject = "Please confirm your email"
+            subject = "Redefinição de senha"
             send_email(dict_data['email'], subject, html)
             flash("Foi enviado um Email contendo um link para a redefinição da senha.", "success")
             return render_template('forgot_password.html', data={'return': '/forgot'})
 
 
 
-@app.route('/password/<token>', methods=['GET'])
-def password(token):
+@app.route('/password/<token>', methods=['GET', 'POST'])
+def new_password(token):
     try:
         email = confirm_token(token)
         if not email:
@@ -162,18 +162,15 @@ def password(token):
         flash('O link de troca de senha é inválido ou expirou.', 'error')
         return render_template('index.html')
     if request.method == 'GET':
-        return render_template('new_password.html', data={'return': '/password', 'email': email})
-    
-@app.route('/password/new', methods=['POST'])
-def new_password():
-    if request.method == 'POST':
+        return render_template('new_password.html', data={'return': f'/password/{token}'})
+    elif request.method == 'POST':
         dict_data = request.form.to_dict()
         if(dict_data['password'] != dict_data['confirm']):
             flash("A senha e a confirmação não são identicas", "error")
-            return render_template('new_password.html', data={'return': '/password', 'email': dict_data['email']})
+            return render_template('new_password.html', data={'return': f'/password/{token}'})
         session = Session()
         dict_data['password'] = bcrypt.generate_password_hash(password=dict_data['password']).decode('utf-8')
-        user = session.query(User).filter(User.email==dict_data['email']).first()
+        user = session.query(User).filter(User.email==email).first()
         user.password = dict_data['password']
         session.add(user)
         session.commit()
