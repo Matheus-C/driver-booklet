@@ -23,6 +23,9 @@
 
                     <input class="input" type="password" name='password' placeholder="Digite sua senha">
                 </div>
+                <p>
+                    Esqueceu a senha?  <a hx-get="{{ url_for('forgot_password') }}" hx-target="#login_form" hx-swap="innerHTML" data-loading-class="is-loading" class="tag is-dark is-small">Clique aqui!</a>
+                </p>
                 <hr>
                 <div align="right">
                     <button class="button is-primary" data-loading-class="is-loading">Login</button>

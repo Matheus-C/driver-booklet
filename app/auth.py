@@ -91,9 +91,10 @@ def signup():
         session.add(user)
         session.commit()
         token = generate_confirmation_token(dict_data['email'])
-        confirm_url = url_for('confirm_email', token=token, _external=True)
-        html = render_template('confirmation_email.html', confirm_url=confirm_url)
-        subject = "Please confirm your email"
+        url = url_for('confirm_email', token=token, _external=True)
+        msg = "Bem vindo ao Driver Booklet, Confirme seu email clicando no link abaixo:"
+        html = render_template('email_template.html', url=url, msg=msg)
+        subject = "Confirme seu email"
         send_email(dict_data['email'], subject, html)
         session.refresh(user)
         login_user(user)
@@ -113,15 +114,63 @@ def confirm_email(token):
     try:
         email = confirm_token(token)
     except:
-        flash('The confirmation link is invalid or has expired.', 'danger')
+        flash('O link de confirmação é inválido ou expirou.', 'danger')
     session = Session()
     user = session.query(User).filter(User.email==email).first()
     if user.is_active:
-        flash('Account already confirmed. Please login.', 'success')
+        flash('Email já confirmado. Por favor faça o login', 'success')
     else:
         user.is_active = True
         session.add(user)
         session.commit()
         session.close()
-        flash('You have confirmed your account. Thanks!', 'success')
+        flash('Email confirmado com sucesso.', 'success')
     return render_template("confirmation.html", current_user = current_user)
+
+@app.route('/forgot', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'GET':
+        return render_template('forgot_password.html', data={'return': '/forgot'})
+    elif request.method == 'POST':
+        dict_data = request.form.to_dict()
+        session = Session()
+        if(session.query(User).filter(User.email==dict_data['email']).first() == None):
+            flash("O Email não existe no nosso banco de dados.", "error")
+            return render_template('forgot_password.html', data={'return': '/forgot'})
+        else:
+            token = generate_confirmation_token(dict_data['email'])
+            url = url_for('new_password', token=token, _external=True)
+            msg = "Clique no link abaixo para redefinir sua senha:"
+            html = render_template('email/email_template.html', url=url, msg=msg)
+            subject = "Please confirm your email"
+            send_email(dict_data['email'], subject, html)
+            flash("Foi enviado um Email contendo um link para a redefinição da senha.", "success")
+            return render_template('forgot_password.html', data={'return': '/forgot'})
+
+
+
+@app.route('/password/<token>', methods=['GET'])
+def password(token):
+    try:
+        email = confirm_token(token)
+    except:
+        flash('The confirmation link is invalid or has expired.', 'danger')
+    if request.method == 'GET':
+        return render_template('new_password.html', data={'return': '/password', 'email': email})
+    
+@app.route('/password/new', methods=['POST'])
+def new_password():
+    if request.method == 'POST':
+        dict_data = request.form.to_dict()
+        if(dict_data['password'] != dict_data['confirm']):
+            flash("A senha e a confirmação não são identicas", "error")
+            return render_template('new_password.html', data={'return': '/password', 'email': dict_data['email']})
+        session = Session()
+        dict_data['password'] = bcrypt.generate_password_hash(password=dict_data['password']).decode('utf-8')
+        user = session.query(User).filter(User.email==dict_data['email']).first()
+        user.password = dict_data['password']
+        session.add(user)
+        session.commit()
+        session.close()
+        flash('Senha trocada com sucesso.', 'success')
+        return redirect('/')
