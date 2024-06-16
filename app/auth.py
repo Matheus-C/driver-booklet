@@ -99,7 +99,7 @@ def signup():
         login_user(user)
         session.close()
         flash('A confirmation email has been sent via email.', 'success')
-        return render_template('htmx/user/signup.html',data={'return':'/signup'}, current_user = current_user)
+        return render_template('notice_email.html', current_user = current_user)
 
 
 @app.route('/logout')
