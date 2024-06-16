@@ -43,5 +43,5 @@ scheduler.api_enabled = True
 scheduler.init_app(app)
 
 
-from app import auth, profile, pwa, timer, company, routing, vehicle, reports, jobs#, error
+from app import auth, profile, pwa, timer, company, routing, vehicle, reports, jobs, error
 scheduler.start()

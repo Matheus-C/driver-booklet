@@ -113,8 +113,11 @@ def logout():
 def confirm_email(token):
     try:
         email = confirm_token(token)
+        if not email:
+            raise Exception
     except:
-        flash('O link de confirmação é inválido ou expirou.', 'danger')
+        flash('O link de confirmação é inválido ou expirou.', 'error')
+        return render_template('index.html')
     session = Session()
     user = session.query(User).filter(User.email==email).first()
     if user.is_active:
@@ -153,8 +156,11 @@ def forgot_password():
 def password(token):
     try:
         email = confirm_token(token)
+        if not email:
+            raise Exception
     except:
-        flash('The confirmation link is invalid or has expired.', 'danger')
+        flash('O link de troca de senha é inválido ou expirou.', 'error')
+        return render_template('index.html')
     if request.method == 'GET':
         return render_template('new_password.html', data={'return': '/password', 'email': email})
     
