@@ -12,8 +12,17 @@
 
 </section>
 <div align="center">
-<a href="/resend/confirmation">Reenviar email de confirmação</a>
+<button class="button"  onclick="disable(this);">Reenviar email de confirmação</a>
 </div>
 </div>
 
+<script>
+    function disable(obj) {
+        window.location.href="/resend/confirmation";
+        obj.disabled = true;
+        setTimeout(function() {
+            obj.disabled = false;
+        }, 10000);
+    }
+</script>
 {% endblock %}
