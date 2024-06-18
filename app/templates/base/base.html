@@ -87,9 +87,18 @@
             {% if current_user.is_anonymous %}
            
             {% else %}
-            <a class="button is-primary" href="/profile">
-              <strong>{{current_user.name}}</strong>
-            </a>
+              {% if mail_verified is defined %}
+                {% if mail_verified == 'false' %}
+              <a class="button is-primary">
+                <strong>{{current_user.name}}</strong>
+              </a>
+                {% endif %}
+              {% else %}
+              <a class="button is-primary" href="/profile">
+                <strong>{{current_user.name}}</strong>
+              </a>
+              {% endif %}
+            
             <a class="button is-light" href="/logout">
               <p>
                 <i class="fa fa-right-from-bracket"></i>
