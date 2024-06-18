@@ -130,14 +130,14 @@ def signup_worker(id_company=None):
         # dict_data['is_active'] = 0 #Has to be enabled manually
         
         user = User(**dict_data)
-        
+        user._mail_verified = True
         session.add(user)
         session.commit()
         usercompany = UserCompany(idUser =user.id,idCompany=id_company, startWork = start_work)         
         session.add(usercompany)
         session.commit()
         session.close()
-        flash("Registered successfully.", "success")
+        flash("Registrado com sucesso.", "success")
         return redirect(f'/worker/list/{id_company}')
     
 @app.route('/company/list',methods=['GET'])

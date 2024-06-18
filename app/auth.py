@@ -102,10 +102,9 @@ def signup():
         session.add(user)
         session.commit()
         session.close()
-        if(dict_data['userTypeId'] != 2):
-            send_confirmation(dict_data['email'])            
-            flash('Uma confirmação foi enviada para o seu email.', 'success')
-            return render_template('notice_email.html', current_user = current_user)
+        send_confirmation(dict_data['email'])            
+        flash('Uma confirmação foi enviada para o seu email.', 'success')
+        return render_template('notice_email.html', current_user = current_user)
         return render_template('htmx/user/signup.html',data={'return':'/signup'}, current_user = current_user)
 
 
