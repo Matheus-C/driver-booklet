@@ -1,7 +1,7 @@
 
 {% with messages = get_flashed_messages(with_categories=true) %}
 {% if messages %}
-<div class="container">
+<div id="containerNotifications" class="container">
     {% for category, message in messages %}
     {% if category == "error" %}
     <div class="notification is-danger is-light">
@@ -13,5 +13,7 @@
     </div>
         {% endfor %}
 </div>
+    {% else %}
+    <div class="container" id="containerNotifications"></div>
     {% endif %}
     {% endwith %}

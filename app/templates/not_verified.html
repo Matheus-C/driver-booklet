@@ -11,18 +11,10 @@
     </div>
 
 </section>
-<div align="center">
-<button class="button"  onclick="disable(this);">Reenviar email de confirmação</a>
+<div align="center" id="divButton">
+<button class="button" hx-get="/resend/confirmation" hx-target="#containerNotifications" hx-swap="outerHTML">Reenviar email de confirmação</a>
 </div>
 </div>
 
-<script>
-    function disable(obj) {
-        window.location.href="/resend/confirmation";
-        obj.disabled = true;
-        setTimeout(function() {
-            obj.disabled = false;
-        }, 10000);
-    }
-</script>
+
 {% endblock %}

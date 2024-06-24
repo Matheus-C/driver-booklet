@@ -9,9 +9,10 @@
         <p>
             Se você ainda não possui um cadastro  <a hx-get="{{ url_for('signup') }}" hx-target="#login_form" hx-swap="innerHTML" data-loading-class="is-loading" class="tag is-dark is-small">Cadastre-se aqui!</a>
         </p>
+        {% include 'base/notifications.html' %}
         <hr>
         
-        <form hx-post="{{data.return}}" hx-target="#login_form" hx-swap="outerHTML">
+        <form hx-post="{{data.return}}" hx-target="#containerNotifications" hx-swap="outerHTML">
             <div class="field">
                 <div class="control">
                     <label class="label">Email:</label>
@@ -23,10 +24,11 @@
 
                     <input class="input" type="password" name='password' placeholder="Digite sua senha">
                 </div>
+                
+                <hr>
                 <p>
                     Esqueceu a senha?  <a hx-get="{{ url_for('forgot_password') }}" hx-target="#login_form" hx-swap="innerHTML" data-loading-class="is-loading" class="tag is-dark is-small">Clique aqui!</a>
                 </p>
-                <hr>
                 <div align="right">
                     <button class="button is-primary" data-loading-class="is-loading">Login</button>
                 </div>
