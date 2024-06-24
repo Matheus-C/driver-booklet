@@ -15,7 +15,7 @@ def vehicle_add(id_company=None):
         dict_data = request.form.to_dict()
         session = Session()
         if(session.query(Vehicle).filter(Vehicle.licensePlate==dict_data['licensePlate']).first() != None):
-            flash("License plate already registered.", "error")
+            flash("Placa já registrada.", "error")
             return render_template('htmx/vehicle/vehicle_add_form.html', data={'return':f'/vehicle/add/{id_company}'})
 
         
@@ -30,7 +30,7 @@ def vehicle_add(id_company=None):
         session.add(company_vehicle)
         session.commit()
         session.close()
-        flash("Registered successfully.", "success")
+        flash("Registrado com sucesso.", "success")
         return redirect(f'/vehicle/list/{id_company}')
         #return redirect(f'/company/{id_company}')
     

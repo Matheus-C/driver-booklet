@@ -79,7 +79,7 @@ def login(id=None):
             return response
         else:
             flash("Wrong email or password.", "error")
-            return render_template('base/notifications.html', data={'return':'/login'}, current_user = current_user)
+            return render_template('base/notifications.html')
 
 
 @app.route('/signup',methods=['GET','POST'])
@@ -93,7 +93,7 @@ def signup():
         if(session.query(User).filter(User.email==dict_data['email']).first() != None or\
             session.query(User).filter(User.userIdentification==dict_data['userIdentification']).first()):
             flash("Email ou NIF já registrado.", "error")
-            return render_template('base/notifications.html',data={'return':'/signup'}, current_user = current_user)
+            return render_template('base/notifications.html')
 
         dict_data['password'] = bcrypt.generate_password_hash(password=dict_data['password']).decode('utf-8')
         dict_data['userTypeId'] = 1 #Owner
@@ -143,7 +143,7 @@ def forgot_password():
         session = Session()
         if(session.query(User).filter(User.email==dict_data['email']).first() == None):
             flash("O Email não existe no nosso banco de dados.", "error")
-            return render_template('base/notifications.html', data={'return': '/forgot'})
+            return render_template('base/notifications.html')
         else:
             token = generate_confirmation_token(dict_data['email'])
             url = url_for('new_password', token=token, _external=True)
@@ -152,7 +152,7 @@ def forgot_password():
             subject = "Redefinição de senha"
             send_email(dict_data['email'], subject, html)
             flash("Foi enviado um Email contendo um link para a redefinição da senha.", "success")
-            return render_template('forgot_password.html', data={'return': '/forgot'})
+            return render_template('base/notifications.html')
 
 
 
@@ -171,7 +171,7 @@ def new_password(token):
         dict_data = request.form.to_dict()
         if(dict_data['password'] != dict_data['confirm']):
             flash("A senha e a confirmação não são idênticas", "error")
-            return render_template('base/notifications.html', data={'return': f'/password/{token}'})
+            return render_template('base/notifications.html')
         session = Session()
         dict_data['password'] = bcrypt.generate_password_hash(password=dict_data['password']).decode('utf-8')
         user = session.query(User).filter(User.email==email).first()
@@ -187,5 +187,5 @@ def resend_confirmation():
     if(current_user.is_authenticated):
         send_confirmation(current_user.email)
         flash('Uma confirmação foi enviada para o seu email.', 'success')
-        return render_template('base/notifications.html', current_user = current_user)
+        return render_template('base/notifications.html')
         

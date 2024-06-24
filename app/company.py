@@ -1,4 +1,4 @@
-from flask import render_template, request, url_for, redirect,jsonify, flash, abort
+from flask import render_template, request, url_for, redirect,jsonify, flash, abort, Response
 from app.models.models import *
 from app.models.database import *
 from app import app,bcrypt
@@ -30,8 +30,8 @@ def company():
             session = Session()
             #checks if exists another company with the same vatcode
             if(session.query(Company).filter(Company.vatcode==dict_data['vatcode']).first() != None):
-                flash("Vatcode already registered.", "error")
-                return redirect(url_for('profile'))
+                flash("Vatcode já registrado.", "error")
+                return render_template('base/notifications.html')
             # Add Company
             company = Company(**dict_data)
             session.add(company)
@@ -42,8 +42,10 @@ def company():
             session.add(user_company)
             session.commit()
             session.close()
-            flash("Registered successfully.", "success")
-            return redirect(url_for('profile'))
+            flash("Registrado com sucesso.", "success")
+            response = Response()
+            response.headers["hx-redirect"] = "/companies"
+            return response
         
 @app.route("/company/<id>", methods=["GET","POST"])
 @login_required
@@ -121,8 +123,8 @@ def signup_worker(id_company=None):
         session = Session()
         if(session.query(User).filter(User.userIdentification==dict_data['userIdentification']).first() != None or\
            session.query(User).filter(User.email==dict_data['email']).first() != None):
-            flash("User already registered.", "error")
-            return render_template('htmx/user/signup.html',data={'return':f'/signup_worker/{id_company}'})
+            flash("Usuário já registrado.", "error")
+            return render_template('base/notifications.html')
         dict_data['password'] = bcrypt.generate_password_hash(password=dict_data['password'])
         dict_data['userTypeId'] = 2 #Worker
         start_work = dict_data['startWorkDate']
