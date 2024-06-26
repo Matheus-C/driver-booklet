@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import jsonify, render_template, request, redirect,flash
+from flask import jsonify, render_template, request, redirect,flash, make_response
 from app.models.models import *
 from app.models.database import *
 from app import app
@@ -16,7 +16,9 @@ def vehicle_add(id_company=None):
         session = Session()
         if(session.query(Vehicle).filter(Vehicle.licensePlate==dict_data['licensePlate']).first() != None):
             flash("Placa já registrada.", "error")
-            return render_template('htmx/vehicle/vehicle_add_form.html', data={'return':f'/vehicle/add/{id_company}'})
+            response = make_response(render_template('base/notifications.html'))
+            response.headers["hx-Retarget"] = "#vehicle_form .containerNotifications"
+            return response
 
         
         vehicle = Vehicle(**dict_data)
@@ -32,7 +34,6 @@ def vehicle_add(id_company=None):
         session.close()
         flash("Registrado com sucesso.", "success")
         return redirect(f'/vehicle/list/{id_company}')
-        #return redirect(f'/company/{id_company}')
     
 @app.route('/vehicle/mileage',methods=['POST'])
 def mileage_add():

@@ -8,7 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@2"></script>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <div class="container">
-    {% include 'base/notifications.html' %}
+    
     <br>
     <div class="columns">
     <div class="column">
@@ -32,6 +32,7 @@
         <span class="tag"><a hx-target="#company_info" hx-swap="innerHTML" hx-get="/company/{{company.id}}">{{ company.name }} ({{company.vatcode}})</a></span>
         {% endfor %}
     </div>
+    {% include 'base/notifications.html' %}
     <div id="add_new_company"></div>
     <div id="company_info"></div>
     <br>

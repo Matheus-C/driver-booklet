@@ -8,7 +8,7 @@
             {% endif %}
         </div>
         {% include 'base/notifications.html' %}
-        <form hx-post="{{data.return}}" hx-target="#containerNotifications" hx-swap="outerHTML">
+        <form hx-post="{{data.return}}" hx-target="#signup_form" hx-swap="outerHTML">
             <div class="control">
                 <label class="label">Nome:</label>
                 <input class="input" type="text" name='name' placeholder="Digite seu nome">

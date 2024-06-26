@@ -1,11 +1,11 @@
-from flask import render_template, request, url_for, redirect,jsonify, flash, abort, Response
+from flask import render_template, request, url_for, redirect,jsonify, flash, abort, Response, make_response
 from app.models.models import *
 from app.models.database import *
 from app import app,bcrypt
 from flask_login import current_user,login_required
 from sqlalchemy.sql import text
 
-@app.route("/companies", methods=["GET","POST"])
+@app.route("/companies", methods=["GET"])
 @login_required
 def companies():
     if current_user:
@@ -124,7 +124,9 @@ def signup_worker(id_company=None):
         if(session.query(User).filter(User.userIdentification==dict_data['userIdentification']).first() != None or\
            session.query(User).filter(User.email==dict_data['email']).first() != None):
             flash("Usuário já registrado.", "error")
-            return render_template('base/notifications.html')
+            response = make_response(render_template('base/notifications.html'))
+            response.headers["hx-Retarget"] = "#signup_form .containerNotifications"
+            return response
         dict_data['password'] = bcrypt.generate_password_hash(password=dict_data['password'])
         dict_data['userTypeId'] = 2 #Worker
         start_work = dict_data['startWorkDate']
@@ -140,6 +142,7 @@ def signup_worker(id_company=None):
         session.commit()
         session.close()
         flash("Registrado com sucesso.", "success")
+        
         return redirect(f'/worker/list/{id_company}')
     
 @app.route('/company/list',methods=['GET'])

@@ -1,4 +1,4 @@
-from flask import render_template,url_for,request,jsonify,send_file,redirect,flash, Response
+from flask import render_template,url_for,request,jsonify,send_file,redirect,flash, Response, make_response
 from app.models.models import *
 from app.models.database import *
 from app import app,login_manager,bcrypt
@@ -93,7 +93,9 @@ def signup():
         if(session.query(User).filter(User.email==dict_data['email']).first() != None or\
             session.query(User).filter(User.userIdentification==dict_data['userIdentification']).first()):
             flash("Email ou NIF já registrado.", "error")
-            return render_template('base/notifications.html')
+            response = make_response(render_template('base/notifications.html'))
+            response.headers["hx-Retarget"] = "#signup_form .containerNotifications"
+            return response
 
         dict_data['password'] = bcrypt.generate_password_hash(password=dict_data['password']).decode('utf-8')
         dict_data['userTypeId'] = 1 #Owner
@@ -180,7 +182,9 @@ def new_password(token):
         session.commit()
         session.close()
         flash('Senha alterada com sucesso.', 'success')
-        return redirect('/')
+        response = Response()
+        response.headers["hx-redirect"] = "/"
+        return response
     
 @app.route('/resend/confirmation')
 def resend_confirmation():
