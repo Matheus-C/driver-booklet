@@ -1,4 +1,5 @@
 <!doctype html>
+<html>
 
 <head>
   <meta charset="UTF-8">
@@ -45,11 +46,11 @@
   <link rel="manifest" href="/static/manifest.json" />
   <!-- shepherd.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/shepherd.js/10.0.1/js/shepherd.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shepherd.js@10.0.1/dist/css/shepherd.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shepherd.js@10.0.1/dist/css/shepherd.css" />
   <!-- shepherd.js -->
 </head>
 
-<body hx-ext="loading-states">
+<body hx-ext="loading-states" style="padding-bottom: 65px;">
   <nav class="navbar is-dark is-hidden-mobile" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <a class="navbar-item" href="/">
@@ -85,20 +86,20 @@
           <div class="buttons">
 
             {% if current_user.is_anonymous %}
-           
+
             {% else %}
-              {% if mail_verified is defined %}
-                {% if mail_verified == 'false' %}
-              <a class="button is-primary">
-                <strong>{{current_user.name}}</strong>
-              </a>
-                {% endif %}
-              {% else %}
-              <a class="button is-primary" href="/profile">
-                <strong>{{current_user.name}}</strong>
-              </a>
-              {% endif %}
-            
+            {% if mail_verified is defined %}
+            {% if mail_verified == 'false' %}
+            <a class="button is-primary">
+              <strong>{{current_user.name}}</strong>
+            </a>
+            {% endif %}
+            {% else %}
+            <a class="button is-primary" href="/profile">
+              <strong>{{current_user.name}}</strong>
+            </a>
+            {% endif %}
+
             <a class="button is-light" href="/logout">
               <p>
                 <i class="fa fa-right-from-bracket"></i>
@@ -115,44 +116,44 @@
     <div class="navbar-brand">
       {% if current_user.is_anonymous or mail_verified is defined %}
       {% else %}
-        {% if current_user.userTypeId == 1%}
-        <a id="companies" class="navbar-item is-expanded is-block has-text-centered" href='/companies'>
-            <i class="fa fa-building"></i>
-            <p class="is-size-7">Empresas</p>
-        </a>
-        {% endif %}
-        <a id="timer" class="navbar-item is-expanded is-block has-text-centered" href='/timer'>
-            <i class="fa fa-clock"></i>
-            <p class="is-size-7">Timer</p>
-        </a>
-        <a id="reports" class="navbar-item is-expanded is-block has-text-centered" href='/reports'>
-            <i class="fa fa-file-excel"></i>
-            <p class="is-size-7">Relatórios</p>
-        </a>
-      
-        <a id="profile" class="navbar-item is-expanded is-block has-text-centered" href='/profile'>
-            <i class="fa fa-user"></i>
-            <p class="is-size-7">Perfil</p>
-        </a>
+      {% if current_user.userTypeId == 1%}
+      <a id="companies" class="navbar-item is-expanded is-block has-text-centered" href='/companies'>
+        <i class="fa fa-building"></i>
+        <p class="is-size-7">Empresas</p>
+      </a>
+      {% endif %}
+      <a id="timer" class="navbar-item is-expanded is-block has-text-centered" href='/timer'>
+        <i class="fa fa-clock"></i>
+        <p class="is-size-7">Timer</p>
+      </a>
+      <a id="reports" class="navbar-item is-expanded is-block has-text-centered" href='/reports'>
+        <i class="fa fa-file-excel"></i>
+        <p class="is-size-7">Relatórios</p>
+      </a>
+
+      <a id="profile" class="navbar-item is-expanded is-block has-text-centered" href='/profile'>
+        <i class="fa fa-user"></i>
+        <p class="is-size-7">Perfil</p>
+      </a>
       {% endif %}
       {% if not current_user.is_anonymous %}
-        <a class="navbar-item is-expanded is-block has-text-centered" href='/logout'>
-          <i class="fa fa-right-from-bracket"></i>
-          <p class="is-size-7">Logout</p>
+      <a class="navbar-item is-expanded is-block has-text-centered" href='/logout'>
+        <i class="fa fa-right-from-bracket"></i>
+        <p class="is-size-7">Logout</p>
       </a>
       {% endif %}
     </div>
-</nav>
-<script>
-  var elementName = window.location.pathname.replace('/','');
-  var element = document.getElementById(elementName);
-  element.classList.add('has-background-grey-dark');
-</script>
+  </nav>
+  <script>
+    var elementName = window.location.pathname.replace('/', '');
+    var element = document.getElementById(elementName);
+    element.classList.add('has-background-grey-dark');
+  </script>
   <!-- End bottom bar -->
-  <title>{% block title %}{% endblock %} - DBook  </title>
+  <title>{% block title %}{% endblock %} - DBook </title>
   {% block header %}
   {% endblock %}
-  
+
   {% block content %}{% endblock %}
   <script src="/static/tutorial.js"></script>
 </body>

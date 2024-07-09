@@ -56,7 +56,7 @@ def index():
             if current_user._mail_verified:
                 return redirect('/companies')
             else:
-                return render_template('not_verified.html', current_user = current_user, mail_verified="false")
+                return render_template('email/not_verified.html', current_user = current_user, mail_verified="false")
         else: #Other
             return redirect('/timer')
     else:
@@ -106,7 +106,7 @@ def signup():
         session.close()
         send_confirmation(dict_data['email'])            
         flash('Uma confirmação foi enviada para o seu email.', 'success')
-        return render_template('notice_email.html', current_user = current_user)
+        return render_template('email/notice_email.html', current_user = current_user)
 
 
 @app.route('/logout')

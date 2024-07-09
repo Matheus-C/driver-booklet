@@ -27,10 +27,13 @@
             <hr>
 
             <div align="right">
-                <button id="reportButton" hx-include="closest form"  class="button is-info" hx-target="#reportGenerated" hx-post="/reports" data-loading-class="is-loading"><p>Gerar relatório <i class="fa-solid fa-file-lines fa-lg"></i></p></button>
+                <button id="reportButton" hx-include="closest form" class="button is-info" hx-target="#reportGenerated"
+                    hx-post="/reports" data-loading-class="is-loading">
+                    <p>Gerar relatório <i class="fa-solid fa-file-lines fa-lg"></i></p>
+                </button>
             </div>
         </form>
-        
+
     </div>
     <div class="column">
         <h4 class="title is-4">Relatório para {{current_user.name}} ({{current_user.userIdentification}})</h4>
