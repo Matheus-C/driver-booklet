@@ -1,0 +1,24 @@
+{% extends 'base/base.html' %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container" align="center">
+    <section class="hero">
+        <div class="hero-body">
+            <p class="title is-4">{% block title %}Seu registro foi confirmado com sucesso <i
+                    class="fa-solid fa-square-check"></i> {% endblock %}</p>
+
+            <h3 class="subtitle is-5">Agora você pode fazer o login abaixo</h3>
+        </div>
+        <br>
+
+        <div lass="button is-light" hx-trigger='load' hx-get="{{ url_for('login') }}" hx-swap="innerHTML"
+            data-loading-class="is-loading"></div>
+    </section>
+</div>
+
+
+{% endblock %}

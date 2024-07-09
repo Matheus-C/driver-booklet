@@ -1,0 +1,20 @@
+{% extends 'base/base.html' %}
+{% block content %}
+{% include 'base/notifications.html' %}
+<div class="container">
+<section class="hero">
+    <div class="hero-body">
+        <p class="title is-4">{% block title %}Seu e-mail não foi confirmado. <i class="fa-solid fa-envelope"></i> {% endblock %}</p>
+        <p class="subtitle is-5">Verifique seu e-mail e caixa de spam.</p>
+        <p class="subtitle is-6">Caso queira enviar a confirmação novamente clique no botão abaixo. </p>
+    </div>
+    </div>
+
+</section>
+<div align="center" id="divButton">
+<button class="button" hx-get="/resend/confirmation" hx-target=".containerNotifications" hx-swap="outerHTML">Reenviar email de confirmação</a>
+</div>
+</div>
+
+
+{% endblock %}

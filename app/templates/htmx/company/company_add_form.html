@@ -1,6 +1,5 @@
 <div class="box">
-    {% include 'base/notifications.html' %}
-<form action="/company" method="post">
+<form hx-post="/company" hx-target=".containerNotifications">
     <div class="field">
         <label class="label">Registre sua empresa</label>
         <div class="control">
@@ -20,7 +19,7 @@
         </div>
         <hr>
         <div align="right">
-            <button class="button is-light" data-loading-class="is-loading"><p><i class="fa-solid fa-floppy-disk fa-lg"></i> Salvar</p></button>
+            <button class="button is-primary" data-loading-class="is-loading"><p><i class="fa-solid fa-floppy-disk fa-lg"></i> Salvar</p></button>
         </div>
         
     </div>
