@@ -18,7 +18,7 @@
 
       <div class="modal is-active" x-show="isModalVisible">
         <div class="modal-background"></div>
-        <div class="modal-card">
+        <div id="modal" class="modal-card">
           <header class="modal-card-head">
             <span class="icon has-text-info">
               <button class="fas fa-info-circle" onclick="tutorial('timer');"></button>
@@ -57,7 +57,7 @@
             <div class="buttons">
               <button hx-post='/vehicle/mileage' hx-swap="none" hx-include="select,[name='mileage']"
                 hx-vals="js:{eventTimestamp: new Date().toLocaleString('en-US', {hour12: false}),idType:7}"
-                @htmx:after-request="closeModal()" class="button is-success" x-show="idCompany && idVehicle"
+                @htmx:after-request="askAttachment()" class="button is-success" x-show="idCompany && idVehicle"
                 data-loading-class="is-loading"><p><i class="fa-solid fa-floppy-disk fa-lg"></i> Salvar</p></button>
             </div>
           </footer>

@@ -1,0 +1,32 @@
+<div class="container">
+    {% include 'base/notifications.html' %}
+    <header class="modal-card-head">
+        <p class="modal-card-title">Adicionar anexo</p>
+
+        <div align="right">
+            <button class="delete" onclick="window.location.href = '/profile'"></button>
+        </div>
+
+    </header>
+    <section class="modal-card-body">
+        <form hx-post="">
+            <div class="control">
+                <label class="label" for="type">Tipo de incidente:</label>
+                <input type="text" name="type" id="type" class='input'>
+            </div>
+            <div class="control">
+                <label class="label" for="description">Descrição: </label>
+                <textarea id="description" name="description" class="textarea" placeholder="Escreva aqui"></textarea>
+            </div>
+
+            <footer class="modal-card-foot is-justify-content-right">
+                <div class="buttons">
+                    <button id="a" class="button is-primary" data-loading-class="is-loading"
+                        @htmx:after-request="closeModal()">
+                        <p><i class="fa-solid fa-floppy-disk fa-lg"></i> Salvar</p>
+                    </button>
+                </div>
+            </footer>
+
+        </form>
+</div>
