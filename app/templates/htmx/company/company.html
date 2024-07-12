@@ -2,108 +2,78 @@
 {% endblock %}
 
 {% block content %}
-    <br>
+<br>
+<div class="column">
     <h3 class="title is-3">Dados da empresa</h3>
     <div class="box">
 
         <div class="fixed-grid has-1-cols">
             <div class="grid">
-                <div class="cell"><span class="tag is-medium">Nome: {{ company.name }}</span></div>
+                <div class="cell tag is-medium"><span class="tag is-medium">Nome: {{ company.name }}</span></div>
                 <div class="cell"><span class="tag is-medium">Descrição: {{company.description}}</span></div>
                 <div class="cell"><span class="tag is-medium">Endereço: {{ company.address }}</span></div>
-                <div class="cell"><span class="tag is-medium">VatCode(NIF): {{company.vatcode}}</span></div>
+                <div class="cell"><span class="tag is-medium">VatCode (NIF): {{company.vatcode}}</span></div>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="columns">
-        <div class="column">
-            <span class="title is-3">Colaboradores</span>
-            <span class="icon has-text-info">
-                <button class="fas fa-info-circle" onclick="tutorial('employees');"></button>
-            </span>
-        </div>
-        <div class="column">
-            <div align="right">
-                {% if current_user.userTypeId == 1 %}
-                <button id="addEmployee" class="button" hx-target="#addUser" hx-swap="innerHTML"
-                    hx-get="/signup_worker/{{company.id}}" data-loading-class="is-loading"><p><i class="fa-solid fa-plus fa-lg"></i> <i class="fa-solid fa-user fa-lg"></i></p></button>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-
-    <div id="workers" class="box">
-
-            {% for worker in users_company %}
-            <p>{{worker.name}} (Ident.(NIF) {{worker.userIdentification}})</p>
-            {% endfor %}
-    </div>
-    
-    <div id="addUser"></div>
-    <div class="columns">
-        <div class="column">
-            <span class="title is-3">Veículos</span>
-            <span class="icon has-text-info">
-                <button class="fas fa-info-circle" onclick="tutorial('vehicles');"></button>
-            </span>
-        </div>
-        <div class="column">
-            <div align="right">
-                {% if current_user.userTypeId == 1 %}
-                <button id="addVehicle" class="button" hx-target="#addCar" hx-swap="innerHTML"
-                    hx-get="/vehicle/add/{{company.id}}" data-loading-class="is-loading"><p><i class="fa-solid fa-plus fa-lg"></i> <i class="fa-solid fa-car fa-lg"></i></p></button>
-                
-                {% endif %}
-            </div>
-        </div>
-    </div>
-
-    <div class="box" id="vehicles">
-        {% for vehicle in vehicles_company %}
-        {% if vehicle %}
-        <p> {{vehicle.manufacturer}} {{vehicle.model}} {{vehicle.color}} ({{vehicle.licensePlate}})</p>
+<div class="column">
+    <span class="title is-3">Colaboradores</span>
+    <span class="icon has-text-info">
+        <button class="fas fa-info-circle" onclick="tutorial('employees');"></button>
+    </span>
+    <span style="float: right">
+        {% if current_user.userTypeId == 1 %}
+        <button id="addEmployee" class="button" hx-target="#addUser" hx-swap="innerHTML"
+            hx-get="/signup_worker/{{company.id}}" data-loading-class="is-loading">
+            <p><i class="fa-solid fa-plus fa-lg"></i> <i class="fa-solid fa-user fa-lg"></i></p>
+        </button>
         {% endif %}
-        {% endfor %}
+    </span>
+</div>
+
+<div id="workers" class="box">
+    <div class="fixed-grid has-1-cols-mobile">
+        <div class="grid">
+            {% for worker in users_company %}
+            <span class="cell tag is-medium">{{worker.name}}</span>
+            {% endfor %}
+        </div>
     </div>
-    <div id="addCar"></div>
-    
-    <h3 class="title is-3">Mapa</h3>
+</div>
 
-    <div id="map" x-data="mapData()" x-init="initMap" style="height: 400px;"></div>
-    <script>
-        function mapData() {
-            return {
-                map: null,
-                markers: [],
+<div id="addUser"></div>
+<div class="column">
+    <span class="title is-3">Veículos</span>
+    <span class="icon has-text-info">
+        <button class="fas fa-info-circle" onclick="tutorial('vehicles');"></button>
+    </span>
+    <span style="float: right">
+        {% if current_user.userTypeId == 1 %}
+        <button id="addVehicle" class="button" hx-target="#addCar" hx-swap="innerHTML"
+            hx-get="/vehicle/add/{{company.id}}" data-loading-class="is-loading">
+            <p><i class="fa-solid fa-plus fa-lg"></i> <i class="fa-solid fa-car fa-lg"></i></p>
+        </button>
 
-                async initMap() {
-                    // Initialize Leaflet map
-                    this.map = L.map('map');
+        {% endif %}
+    </span>
+</div>
 
-                    // Add Tile layer to the map
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        maxZoom: 16,
-                    }).addTo(this.map);
+<div class="box" id="vehicles">
+    <div class="fixed-grid has-1-cols-mobile">
+        <div class="grid">
+            {% for vehicle in vehicles_company %}
+            {% if vehicle %}
+            <span class="cell tag is-medium"> {{vehicle.manufacturer}} {{vehicle.model}} {{vehicle.color}}
+                ({{vehicle.licensePlate}})</span>
+            {% endif %}
+            {% endfor %}
+        </div>
+        <div id="addCar"></div>
 
-                    // Fetch marker data from API
-                    try {
-                        const response = await fetch('/geolocation/list/{{company.id}}');
-                        const data = await response.json();
-                        this.markers = data;
-                        // Add markers to the map
-                        this.markers.forEach(marker => {
-                            L.marker([marker.latitude, marker.longitude]).addTo(this.map)
-                                .bindPopup(marker.userName+' ['+marker.model+'] ['+marker.eventCategory+']')
-                                .openPopup();
-                        });
-                        const bounds = this.markers.map(marker => [marker.latitude, marker.longitude]);
-                        this.map.fitBounds(bounds);
-                    } catch (error) {
-                        console.error('Error fetching marker data:', error);
-                    }
-                }
-            };
-        }
-    </script>
-{% endblock %}
+        <h3 class="title is-3">Mapa</h3>
+        <div class="box">
+            <div id="map" x-data="mapData()" x-init="initMap({{company.id}})" style="height: 400px; z-index: 2;"></div>
+        </div>
+        {% endblock %}
