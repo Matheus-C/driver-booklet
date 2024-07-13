@@ -12,14 +12,8 @@ from sqlalchemy.sql import text
 def attachments():
     if current_user:
         if request.method == 'GET':
-            query = f""" SELECT attachment.id, attachment."createdAt", "eventType".name 
-                        FROM attachment join "eventType" ON "eventType".id = attachment."idType"
-                        WHERE attachment."idUser" = {int(current_user.id)} 
-                        ORDER BY attachment."createdAt" DESC 
-                    """
-            query = text(query)
             session = Session()
-            attachments = session.execute(query).all()
+            attachments = session.query(Attachment).filter(Attachment.idUser == current_user.id).order_by(Attachment.createdAt.desc()).all()
             return render_template("attachments.html", attachments = attachments, current_user = current_user)
 
 @app.route("/attachment/new", methods=['GET', 'POST'])
@@ -30,15 +24,15 @@ def new_attachment():
             return render_template('htmx/attachment/new_attachment.html', current_user=current_user)
         elif request.method == 'POST':
             json_data = request.form.to_dict()
-            if not json_data["type"]:
-                flash("O campo tipo de incidente é obrigatório", "error")
-                response = make_response(render_template('htmx/attachment/new_attachment.html', current_user=current_user))
-                response.headers["hx-Retarget"] = "#modal .containerNotifications"
+            if not "type" in json_data or not "idVehicle" in json_data or not "idCompany" in json_data or not "subject" in json_data:
+                flash("Os campos tipo de incidente, veículo, assunto e empresa são obrigatórios", "error")
+                response = make_response(render_template('base/notifications.html'))
+                response.headers["hx-Retarget"] = "#attachment_form .containerNotifications"
                 return response
             session = Session()
             attachment = Attachment(idUser = current_user.id, idCompany = json_data["idCompany"], 
                                     idType = json_data["type"], description = json_data["description"],
-                                    idVehicle = json_data["idVehicle"])
+                                    idVehicle = json_data["idVehicle"], subject = json_data["subject"])
             session.add(attachment)
             session.commit()
             session.close()
@@ -50,12 +44,6 @@ def new_attachment():
 def attachments_list():
     if current_user:
         if request.method == 'GET':
-            query = f""" SELECT attachment.id, attachment."createdAt", "eventType".name 
-                        FROM attachment join "eventType" ON "eventType".id = attachment."idType"
-                        WHERE attachment."idUser" = {int(current_user.id)} 
-                        ORDER BY attachment."createdAt" DESC 
-                    """
-            query = text(query)
             session = Session()
-            attachments = session.execute(query).all()
+            attachments = session.query(Attachment).filter(Attachment.idUser == current_user.id).order_by(Attachment.createdAt.desc()).all()
             return render_template("htmx/attachment/attachments_list.html", attachments = attachments, current_user = current_user)

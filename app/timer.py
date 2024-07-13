@@ -41,7 +41,7 @@ def timer_update(id):
                         END as "dateEnd",
                         e."idVehicle",
                         e."idCompany",
-                        e.geolocation,
+                        e.geolocation
                 FROM event e
                 INNER JOIN "eventType" et ON et.id = e."idType"
                 WHERE idUser = {id}
@@ -82,7 +82,7 @@ def timer_progress(id):
                         END as "dateEnd",
                         e."idVehicle",
                         e."idCompany",
-                        e.geolocation,
+                        e.geolocation
                 FROM event e
                 INNER JOIN "eventType" et ON et.id = e."idType"
                 WHERE e."idUser" = 6

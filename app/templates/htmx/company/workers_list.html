@@ -1,5 +1,8 @@
 <div class="fixed-grid has-1-cols-mobile">
+    {% include 'base/notifications.html' %}
+        <br>
     <div class="grid">
+        
         {% for worker in users_company %}
         <span class="cell tag is-medium has-text-dark has-background-info-light"
             style="display: flex; justify-content: space-between;"><i class="fa-solid fa-id-card"></i>

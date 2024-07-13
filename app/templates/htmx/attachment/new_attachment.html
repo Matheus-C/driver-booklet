@@ -1,25 +1,29 @@
-<div class="container">
-    {% include 'base/notifications.html' %}
+<div x-data="{ isVisible: true }" id="attachment_form">
+    <div x-show="isVisible" class="box container">
+        <div align="right">
+            <button class="delete" @click="isVisible = !isVisible"></button>
+        </div>
+        {% include 'base/notifications.html' %}
+        <h3 class="title is-4">Adicionar nota</h3>
+        <hr>
         <form hx-post="/attachment/new" hx-target="#attachments">
-            <div hx-get="/company/list" hx-trigger="load" hx-target="#idCompany"
-              hx-swap="innerHTML"></div>
-
+            <div hx-get="/company/list" hx-trigger="load" hx-target="#idCompany" hx-swap="innerHTML"></div>
             <label class="label" for="idCompany">Empresa: </label>
             <div class="select">
-              <select id="idCompany" name="idCompany" x-model="idCompany" hx-target="#selectCar"
-                hx-post="/vehicle/select/" hx-swap="innerHTML">
-              </select>
+                <select id="idCompany" name="idCompany" x-model="idCompany" hx-target="#selectCar"
+                    hx-post="/vehicle/select/" hx-swap="innerHTML">
+                </select>
             </div>
             <label class="label" for="selectCar">Veículo: </label>
             <div class="select">
-              <select id="selectCar" name="idVehicle" x-model="idVehicle" hx-target="#mileage"
-                hx-post="/vehicle/current_mileage" hx-swap="outerHTML">
-              </select>
+                <select id="selectCar" name="idVehicle" x-model="idVehicle" hx-target="#mileage"
+                    hx-post="/vehicle/current_mileage" hx-swap="outerHTML">
+                </select>
             </div>
             <div class="control">
                 <p class="label">Tipo de incidente:</p>
                 <label class="radio">
-                    <input type="radio" name="type" id="accident" class='radio' value="10" required>
+                    <input type="radio" name="type" id="accident" class='radio' value="10">
                     Acidente
                 </label>
                 <label class="radio">
@@ -44,18 +48,20 @@
                 </label>
             </div>
             <div class="control">
+                <label class="label" for="subject">Assunto</label>
+                <input class="input" type="text" name="subject" id="subject" required>
+            </div>
+            <div class="control">
                 <label class="label" for="description">Descrição: </label>
                 <textarea id="description" name="description" class="textarea" placeholder="Escreva aqui"></textarea>
             </div>
-
-            <footer class="modal-card-foot is-justify-content-right">
-                <div class="buttons">
-                    <button id="a" class="button is-primary" data-loading-class="is-loading"
-                        @htmx:after-request="closeModal()">
-                        <p><i class="fa-solid fa-floppy-disk fa-lg"></i> Salvar</p>
-                    </button>
-                </div>
-            </footer>
+            <hr>
+            <div align="right">
+                <button id="a" class="button is-primary" data-loading-class="is-loading" @htmx:after-request="">
+                    <p><i class="fa-solid fa-floppy-disk fa-lg"></i> Salvar</p>
+                </button>
+            </div>
 
         </form>
+    </div>
 </div>

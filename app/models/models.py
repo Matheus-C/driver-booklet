@@ -83,7 +83,6 @@ class Event(Base):
   idVehicle = Column(Integer, ForeignKey('vehicle.id'))
   idCompany = Column(Integer, ForeignKey('company.id'))
   geolocation = Column('geolocation', String(512))
-  idAttachment = Column(Integer, ForeignKey('attachment.id'))
   createdAt = Column(TIMESTAMP, server_default=text('CURRENT_TIMESTAMP'))
 
 class Attachment(Base):
@@ -93,6 +92,7 @@ class Attachment(Base):
   idCompany = Column(Integer, ForeignKey('company.id'))
   idVehicle = Column(Integer, ForeignKey('vehicle.id'))
   idType = Column(Integer, ForeignKey('eventType.id'))
+  subject = Column('subject', String(255))
   description = Column('description', String(512))
   createdAt = Column(TIMESTAMP, server_default=text('CURRENT_TIMESTAMP'))
 
@@ -140,7 +140,6 @@ class VehicleEvent(Base):
   idVehicle = Column(Integer, ForeignKey('vehicle.id'))
   idCompany = Column(Integer, ForeignKey('company.id'))
   mileage = Column('mileage', Float)
-  idAttachment = Column('idAttachment', ForeignKey('attachment.id'))
 
 
 

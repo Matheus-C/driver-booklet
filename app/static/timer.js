@@ -147,18 +147,18 @@ function stopwatch() {
       }
     },
 
-    askAttachment(){
-      if(!this.isEnd){
-        this.closeModal();
-      }else{
-        const newAttachment = confirm("Gostaria de adicionar uma observação?");
-        if(newAttachment){
-          htmx.ajax('GET', '/attachment/new', '#modal')
-        }else{
-          this.closeModal();
-        }
-      }
-    },
+    // askAttachment(){
+    //   if(!this.isEnd){
+    //     this.closeModal();
+    //   }else{
+    //     const newAttachment = confirm("Gostaria de adicionar uma observação?");
+    //     if(newAttachment){
+    //       htmx.ajax('GET', '/attachment/new', '#modal')
+    //     }else{
+    //       this.closeModal();
+    //     }
+    //   }
+    // },
 
     getLocationText() {
       this.stringCoords = this.coords.lat + ',' + this.coords.lon;
