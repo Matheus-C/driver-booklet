@@ -32,7 +32,6 @@ def reports():
                         case when et.name like '%_end' then null
                         ELSE LEAD(e.geolocation, 1, null) OVER (ORDER BY "eventTime" ASC)
                         END as "locEnd",
-                        e."idAttachment"
                 FROM event e
                 INNER JOIN "eventType" et ON et.id = e."idType"
                 WHERE "idUser" = {current_user.id}

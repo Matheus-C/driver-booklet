@@ -1,0 +1,61 @@
+<div class="container">
+    {% include 'base/notifications.html' %}
+        <form hx-post="/attachment/new" hx-target="#attachments">
+            <div hx-get="/company/list" hx-trigger="load" hx-target="#idCompany"
+              hx-swap="innerHTML"></div>
+
+            <label class="label" for="idCompany">Empresa: </label>
+            <div class="select">
+              <select id="idCompany" name="idCompany" x-model="idCompany" hx-target="#selectCar"
+                hx-post="/vehicle/select/" hx-swap="innerHTML">
+              </select>
+            </div>
+            <label class="label" for="selectCar">Veículo: </label>
+            <div class="select">
+              <select id="selectCar" name="idVehicle" x-model="idVehicle" hx-target="#mileage"
+                hx-post="/vehicle/current_mileage" hx-swap="outerHTML">
+              </select>
+            </div>
+            <div class="control">
+                <p class="label">Tipo de incidente:</p>
+                <label class="radio">
+                    <input type="radio" name="type" id="accident" class='radio' value="10" required>
+                    Acidente
+                </label>
+                <label class="radio">
+                    <input type="radio" name="type" id="time_excess" class='radio' value="11">
+                    Excesso de horas
+                </label>
+                <label class="radio">
+                    <input type="radio" name="type" id="vehicle_problem" class='radio' value="12">
+                    Problema no veículo
+                </label>
+                <label class="radio">
+                    <input type="radio" name="type" id="absence" class='radio' value="14">
+                    Falta
+                </label>
+                <label class="radio">
+                    <input type="radio" name="type" id="vacation" class='radio' value="15">
+                    Férias
+                </label>
+                <label class="radio">
+                    <input type="radio" name="type" id="other" class='radio' value="13">
+                    Outro
+                </label>
+            </div>
+            <div class="control">
+                <label class="label" for="description">Descrição: </label>
+                <textarea id="description" name="description" class="textarea" placeholder="Escreva aqui"></textarea>
+            </div>
+
+            <footer class="modal-card-foot is-justify-content-right">
+                <div class="buttons">
+                    <button id="a" class="button is-primary" data-loading-class="is-loading"
+                        @htmx:after-request="closeModal()">
+                        <p><i class="fa-solid fa-floppy-disk fa-lg"></i> Salvar</p>
+                    </button>
+                </div>
+            </footer>
+
+        </form>
+</div>

@@ -90,8 +90,11 @@ class Attachment(Base):
   __tablename__ = 'attachment'
   id = Column('id', Integer, primary_key=True)
   idUser = Column(Integer, ForeignKey('users.id'))
+  idCompany = Column(Integer, ForeignKey('company.id'))
+  idVehicle = Column(Integer, ForeignKey('vehicle.id'))
   idType = Column(Integer, ForeignKey('eventType.id'))
-  description = Column('description', String(255))
+  description = Column('description', String(512))
+  createdAt = Column(TIMESTAMP, server_default=text('CURRENT_TIMESTAMP'))
 
 class Company(Base):
   __tablename__ = 'company'

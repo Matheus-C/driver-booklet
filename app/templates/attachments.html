@@ -1,0 +1,33 @@
+{% extends 'base/base.html' %}
+
+{% block header %}
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+{% endblock %}
+
+{% block content %}
+{% include 'base/notifications.html' %}
+<div class="column">
+    <span class="title is-3">Seus anexos</span>
+    <span class="icon has-text-info">
+        <!-- <button class="fas fa-info-circle" onclick="tutorial('employees');"></button> -->
+    </span>
+    <span style="float: right">
+        <button id="addAttachmentButton" class="button" hx-target="#addAttachment" hx-swap="innerHTML"
+            hx-get="/attachment/new" data-loading-class="is-loading">
+            <p><i class="fa-solid fa-plus fa-lg"></i> <i class="fa-solid fa-paperclip fa-lg"></i></p>
+        </button>
+    </span>
+</div>
+
+<div id="attachments" class="box">
+    <div class="fixed-grid has-1-cols-mobile">
+        <div class="grid">
+            {% for attachment in attachments %}
+            <span class="cell tag is-medium has-text-dark has-background-warning-light" style="display: flex; justify-content: space-between;"><i class="fa-solid fa-paperclip"></i> <p>{{attachment.name}}</p><p></p></span>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div id="addAttachment"></div>
+{% endblock %}

@@ -1,0 +1,7 @@
+<div class="fixed-grid has-1-cols-mobile">
+    <div class="grid">
+        {% for attachment in attachments %}
+        <span class="cell tag is-medium has-text-dark has-background-warning-light" style="display: flex; justify-content: space-between;"><i class="fa-solid fa-paperclip"></i> <p>{{attachment.name}}</p><p></p></span>
+        {% endfor %}
+    </div>
+</div>

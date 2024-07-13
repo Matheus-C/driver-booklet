@@ -42,7 +42,6 @@ def timer_update(id):
                         e."idVehicle",
                         e."idCompany",
                         e.geolocation,
-                        e."idAttachment"
                 FROM event e
                 INNER JOIN "eventType" et ON et.id = e."idType"
                 WHERE idUser = {id}
@@ -84,7 +83,6 @@ def timer_progress(id):
                         e."idVehicle",
                         e."idCompany",
                         e.geolocation,
-                        e."idAttachment"
                 FROM event e
                 INNER JOIN "eventType" et ON et.id = e."idType"
                 WHERE e."idUser" = 6
