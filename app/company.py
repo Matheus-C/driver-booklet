@@ -221,15 +221,15 @@ def worker_list(id):
         session.close()
         return render_template('htmx/company/workers.html', workers = results)
 
-@app.route('/vehicle/list/<id>',methods=['GET'])
-@login_required
-def vehicle_list(id):
-    if current_user:
-        session = Session()
-        results = session.query(Vehicle)\
-        .join(CompanyVehicle, CompanyVehicle.idVehicle == Vehicle.id,isouter=True)\
-        .filter(CompanyVehicle.idCompany == id,
-                CompanyVehicle.validUntil == None).all()
+# @app.route('/vehicle/list/<id>',methods=['GET'])
+# @login_required
+# def vehicle_list(id):
+#     if current_user:
+#         session = Session()
+#         results = session.query(Vehicle)\
+#         .join(CompanyVehicle, CompanyVehicle.idVehicle == Vehicle.id,isouter=True)\
+#         .filter(CompanyVehicle.idCompany == id,
+#                 CompanyVehicle.validUntil == None).all()
         
-        session.close()
-        return render_template('htmx/vehicle/vehicles.html', vehicles = results)
+#         session.close()
+#         return render_template('htmx/vehicle/vehicles.html', vehicles = results)

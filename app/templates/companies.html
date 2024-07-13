@@ -78,12 +78,12 @@
             {% endif %}
     </div>
     <div class="box" id="companiesBox">
-        <div class="fixed-grid has-1-cols">
+        <div class="fixed-grid has-2-cols has-1-cols-mobile">
             <div class="grid">
                 {% for company in companies %}
-                <div class="cell"><a class="button" hx-target="#company_info" hx-swap="innerHTML"
-                        hx-get="/company/{{company.id}}">{{
-                        company.name }} ({{company.vatcode}})</a></div>
+                <div class="cell"><button class="button" hx-target="#company_info" hx-swap="innerHTML"
+                        hx-get="/company/{{company.id}}"><p><i class="fa-solid fa-building-circle-arrow-right"></i> {{
+                        company.name }} ({{company.vatcode}})</p></button></div>
                 {% endfor %}
             </div>
         </div>
