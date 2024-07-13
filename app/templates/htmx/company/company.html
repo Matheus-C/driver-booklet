@@ -64,9 +64,21 @@
     </span>
 </div>
 
-<div class="box" id="vehicles" hx-get="/vehicle/list/{{company.id}}" hx-trigger="load" hx-target="this"
-hx-swap="innerHTML">
-    
+<div class="box" id="vehicles">
+    <div class="fixed-grid has-1-cols-mobile">
+        <div class="grid">
+            {% for vehicle in vehicles_company %}
+            {% if vehicle %}
+            <span class="cell tag is-medium has-text-dark has-background-warning-light"
+                style="display: flex; justify-content: space-between;"><i class="fa-solid fa-car-side"></i>
+                <p>{{vehicle.manufacturer}} {{vehicle.model}} {{vehicle.color}}
+                    ({{vehicle.licensePlate}})</p>
+                <a class="has-text-dark" hx-delete="/vehicle/delete/{{vehicle.id}}" hx-target="#vehicles" hx-swap="innerHTML" hx-confirm="Tem certeza que deseja remover este carro?"><i class="fa-solid fa-trash fa-lg"></i></a>
+            </span>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
 </div>
 <div id="addCar"></div>
 
