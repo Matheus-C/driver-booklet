@@ -219,17 +219,23 @@ def worker_list(id):
                 UserCompany.validUntil == None).all()
         
         session.close()
-        return render_template('htmx/company/workers.html', workers = results)
+        return render_template('htmx/company/workers_list.html', users_company = results)
 
-# @app.route('/vehicle/list/<id>',methods=['GET'])
-# @login_required
-# def vehicle_list(id):
-#     if current_user:
-#         session = Session()
-#         results = session.query(Vehicle)\
-#         .join(CompanyVehicle, CompanyVehicle.idVehicle == Vehicle.id,isouter=True)\
-#         .filter(CompanyVehicle.idCompany == id,
-#                 CompanyVehicle.validUntil == None).all()
+@app.route('/worker/delete/<id>',methods=['DELETE'])
+@login_required
+def worker_delete(id):
+    if current_user and request.method == "DELETE":
+        session = Session()
+        userCompany = session.query(UserCompany)\
+        .filter(UserCompany.idUser == id,
+                UserCompany.validUntil == None).first()
         
-#         session.close()
-#         return render_template('htmx/vehicle/vehicles.html', vehicles = results)
+        userCompany.validUntil = datetime.now().strftime("%Y-%m-%d")
+        session.commit()
+        results = session.query(User)\
+        .join(UserCompany, UserCompany.idUser == User.id,isouter=True)\
+        .filter(UserCompany.idCompany == userCompany.idCompany,
+                UserCompany.validUntil == None).all()
+        
+        session.close()
+        return render_template('htmx/company/workers_list.html', users_company = results)
