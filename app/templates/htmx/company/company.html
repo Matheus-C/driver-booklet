@@ -40,7 +40,11 @@
             <span class="cell tag is-medium has-text-dark has-background-info-light"
                 style="display: flex; justify-content: space-between;"><i class="fa-solid fa-id-card"></i>
                 <p>{{worker.name}}</p>
+                {% if worker.id == company.idUser %}
+                <p></p>
+                {% else %}
                 <a class="has-text-dark" hx-delete="/worker/delete/{{worker.id}}" hx-target="#workers" hx-swap="innerHTML" hx-confirm="Tem certeza que deseja remover este colaborador?"><i class="fa-solid fa-trash fa-lg"></i></a>
+                {% endif %}
             </span>
             {% endfor %}
         </div>
@@ -83,7 +87,10 @@
 <div id="addCar"></div>
 
 <h3 class="title is-3">Mapa</h3>
-<div class="box">
-    <div id="map" x-data="mapData()" x-init="initMap({{company.id}})" style="height: 400px; z-index: 2;"></div>
+<div class="box" x-data="mapData()" x-init="initMap({{company.id}})">
+    <div id="map"  style="height: 400px; z-index: 2;" x-show="show"></div>
+    <div id="mapError" x-show="! show">
+        <h4 class="title is-5" align="center">Não há dados suficientes para o mapa.</h4>
+    </div>
 </div>
 {% endblock %}

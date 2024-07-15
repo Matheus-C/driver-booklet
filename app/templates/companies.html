@@ -8,6 +8,7 @@
 <script>
     function mapData() {
         return {
+            show: true,
             map: null,
             markers: [],
             extractMarkers(map) {
@@ -49,6 +50,7 @@
                     } else {
                         this.map.remove();
                         this.map = null;
+                        this.show = false;
                     }
 
                 } catch (error) {

@@ -217,9 +217,9 @@ def worker_list(id):
         .join(UserCompany, UserCompany.idUser == User.id,isouter=True)\
         .filter(UserCompany.idCompany == id,
                 UserCompany.validUntil == None).all()
-        
+        company = session.query(Company).filter(Company.id == id).first()
         session.close()
-        return render_template('htmx/company/workers_list.html', users_company = results)
+        return render_template('htmx/company/workers_list.html', users_company = results, company = company)
 
 @app.route('/worker/delete/<id>',methods=['DELETE'])
 @login_required
@@ -236,6 +236,6 @@ def worker_delete(id):
         .join(UserCompany, UserCompany.idUser == User.id,isouter=True)\
         .filter(UserCompany.idCompany == userCompany.idCompany,
                 UserCompany.validUntil == None).all()
-        
+        company = session.query(Company).filter(Company.id == userCompany.idCompany).first()
         session.close()
-        return render_template('htmx/company/workers_list.html', users_company = results)
+        return render_template('htmx/company/workers_list.html', users_company = results, company = company)

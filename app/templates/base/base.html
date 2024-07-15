@@ -92,7 +92,7 @@
           Relatórios
         </a>
         <a href='/attachment' class="navbar-item">
-          Notas
+          Incidentes
         </a>
         {% endif %}
 
@@ -157,9 +157,9 @@
         <i class="fa fa-user"></i>
         <p class="is-size-7">Perfil</p>
       </a>
-      <a class="navbar-item is-expanded is-block has-text-centered" href='/attachment'>
+      <a id="attachment" class="navbar-item is-expanded is-block has-text-centered" href='/attachment'>
         <i class="fa-solid fa-note-sticky"></i>
-        <p class="is-size-7">Notas</p>
+        <p class="is-size-7">Incidentes</p>
       </a>
       {% endif %}
       {% if not current_user.is_anonymous %}

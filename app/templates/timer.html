@@ -24,18 +24,17 @@
               <button class="fas fa-info-circle" onclick="tutorial('timer');"></button>
             </span>
             <p class="modal-card-title">Registre os Quilômetros </p>
-            
-            
-            
+
+
+
             <div align="right">
-              <button class="delete" onclick="window.location.href = '/profile'" ></button>
+              <button class="delete" onclick="window.location.href = '/profile'"></button>
             </div>
 
           </header>
           <section class="modal-card-body">
 
-            <div hx-get="/company/list" hx-trigger="load" hx-target="#idCompany"
-              hx-swap="innerHTML"></div>
+            <div hx-get="/company/list" hx-trigger="load" hx-target="#idCompany" hx-swap="innerHTML"></div>
 
             <label class="label" for="idCompany">Empresa: </label>
             <div class="select">
@@ -58,7 +57,9 @@
               <button hx-post='/vehicle/mileage' hx-swap="none" hx-include="select,[name='mileage']"
                 hx-vals="js:{eventTimestamp: new Date().toLocaleString('en-US', {hour12: false}),idType:7}"
                 @htmx:after-request="closeModal()" class="button is-success" x-show="idCompany && idVehicle"
-                data-loading-class="is-loading"><p><i class="fa-solid fa-floppy-disk fa-lg"></i> Salvar</p></button>
+                data-loading-class="is-loading">
+                <p><i class="fa-solid fa-floppy-disk fa-lg"></i> Salvar</p>
+              </button>
             </div>
           </footer>
         </div>
