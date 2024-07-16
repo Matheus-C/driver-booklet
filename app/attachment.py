@@ -22,12 +22,12 @@ def attachments():
             attachments = session.execute(query).all()
             return render_template("attachments.html", attachments = attachments, current_user = current_user)
 
-@app.route("/attachment/add", methods=['GET', 'POST'])
+@app.route("/attachment/add/<page>", methods=['GET', 'POST'])
 @login_required
-def new_attachment():
+def new_attachment(page):
     if current_user:
         if request.method == 'GET':
-            return render_template('htmx/attachment/new_attachment.html', current_user=current_user)
+            return render_template('htmx/attachment/new_attachment.html', current_user=current_user, page = page)
         elif request.method == 'POST':
             json_data = request.form.to_dict()
             if not "type" in json_data or not "idVehicle" in json_data or not "idCompany" in json_data or not "start_date" in json_data or not "end_date" in json_data:
@@ -48,7 +48,11 @@ def new_attachment():
             session.add(attachment)
             session.commit()
             session.close()
-            flash("Registrado com sucesso.", "success")
+            flash("Incidente registrado com sucesso.", "success")
+            if page == "timer":
+                response = make_response(render_template('base/notifications.html'))
+                response.headers["hx-Retarget"] = "#timer .containerNotifications"
+                return response
             return redirect("/attachment/list")
         
 @app.route("/attachment/list", methods=['GET'])

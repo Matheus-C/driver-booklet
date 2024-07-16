@@ -13,7 +13,11 @@
     </header>
     <section class="modal-card-body" id="modalSection">
         {% include 'base/notifications.html' %}
-        <form hx-post="/attachment/add" hx-target="#attachments" @close.window="closeModal()">
+        {% if page == "attachment" %}
+        <form hx-post="/attachment/add/{{page}}" hx-target="#attachments" @close.window="closeModal()">
+        {% else %}
+        <form hx-post="/attachment/add/{{page}}" @close.window="closeModal()">
+        {% endif %}
             <div hx-get="/company/list" hx-trigger="load" hx-target="#idCompany" hx-swap="innerHTML"></div>
             <label class="label" for="idCompany">Empresa: </label>
             <div class="select">

@@ -112,6 +112,7 @@ function stopwatch() {
         else if (mode === 'day_end') {
           this.Timer();
           this.isModalVisible = true;
+          htmx.trigger("#triggerModal", "mileage")
           this.seconds = 0;
           this.minutes = 0;
           this.hours = 0;
@@ -133,10 +134,14 @@ function stopwatch() {
       this.currentActivityName = config[mode];
     },
 
-    openModal() {
+    openModal(mode) {
+      if(mode === "mileage"){
+        htmx.trigger("#triggerModal", "mileage")
+        this.isEnd = false;
+        this.currentActivityName = 'Atividade Atual';
+      }
       this.isModalVisible = true;
-      this.isEnd = false;
-      this.currentActivityName = 'Atividade Atual';
+      
     },
 
     closeModal() {

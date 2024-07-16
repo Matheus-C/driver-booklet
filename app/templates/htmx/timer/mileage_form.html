@@ -1,0 +1,40 @@
+<div class="modal-background"></div>
+<div id="modal" class="modal-card">
+    <header class="modal-card-head">
+        <span class="icon has-text-info">
+            <button class="fas fa-info-circle" onclick="tutorial('timer');"></button>
+        </span>
+        <p class="modal-card-title">Registre os Quilômetros </p>
+        <div align="right">
+            <button class="delete" onclick="window.location.href = '/profile'"></button>
+        </div>
+    </header>
+    <section class="modal-card-body">
+        <div hx-get="/company/list" hx-trigger="load" hx-target="#idCompany" hx-swap="innerHTML"></div>
+        <label class="label" for="idCompany">Empresa: </label>
+        <div class="select">
+            <select id="idCompany" name="idCompany" x-model="idCompany" hx-target="#selectCar"
+                hx-post="/vehicle/select/" hx-swap="innerHTML">
+            </select>
+        </div>
+        <label class="label" for="selectCar">Veículo: </label>
+        <div class="select">
+            <select id="selectCar" name="idVehicle" x-model="idVehicle" hx-target="#mileage"
+                hx-post="/vehicle/current_mileage" hx-swap="outerHTML">
+            </select>
+        </div>
+        <label class="label" for="mileage">Quilômetros: </label>
+        <input id="mileage" name='mileage' class='input' type="number" step="0.01" required />
+    </section>
+    <input type="hidden" name="geolocation" x-model="stringCoords">
+    <footer class="modal-card-foot is-justify-content-right">
+        <div class="buttons">
+            <button hx-post='/vehicle/mileage' hx-swap="none" hx-include="select,[name='mileage']"
+                hx-vals="js:{eventTimestamp: new Date().toLocaleString('en-US', {hour12: false}),idType:7}"
+                @htmx:after-request="closeModal()" class="button is-success" x-show="idCompany && idVehicle"
+                data-loading-class="is-loading">
+                <p><i class="fa-solid fa-floppy-disk fa-lg"></i> Salvar</p>
+            </button>
+        </div>
+    </footer>
+</div>
