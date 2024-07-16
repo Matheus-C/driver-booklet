@@ -4,7 +4,7 @@
         <span class="icon has-text-info">
             <button class="fas fa-info-circle" onclick="tutorial('');"></button>
         </span>
-        <p class="modal-card-title">Adicionar incidente</p>
+        <p class="modal-card-title">Editar incidente</p>
 
         <div align="right">
             <button class="delete" x-on:click="closeModal()"></button>
@@ -13,7 +13,7 @@
     </header>
     <section class="modal-card-body" id="modalSection">
         {% include 'base/notifications.html' %}
-        <form hx-post="/attachment/add" hx-target="#attachments" @close.window="closeModal()">
+        <form hx-post="{{data.return}}" hx-target="#attachments" @close.window="closeModal()">
             <div hx-get="/company/list" hx-trigger="load" hx-target="#idCompany" hx-swap="innerHTML"></div>
             <label class="label" for="idCompany">Empresa: </label>
             <div class="select">
@@ -23,48 +23,51 @@
             </div>
             <label class="label" for="selectCar">Veículo: </label>
             <div class="select">
-                <select id="selectCar" name="idVehicle">
+                <select id="selectCar" name="idVehicle" hx-target="this" hx-post="/vehicle/select/"
+                hx-swap="innerHTML" hx-trigger="companySelected from:body">
                 </select>
             </div>
             <br><br>
             <div class="control">
                 <label class="label" for="start_date">Data início</label>
-                <input class="input" id="start_date" name="start_date" type="date" required>
+                <input class="input" id="start_date" name="start_date" type="date" value="{{attachment.start_date}}"
+                    required>
                 <label class="label" for="end_date">Data fim</label>
-                <input class="input" id="end_date" name="end_date" type="date" required>
+                <input class="input" id="end_date" name="end_date" type="date" value="{{attachment.end_date}}" required>
             </div>
             <br>
             <div class="control">
                 <p class="label">Tipo de incidente:</p>
                 <label class="radio">
-                    <input type="radio" name="type" id="accident" class='radio' value="10">
+                    <input type="radio" name="type" id="10" class='radio' value="10">
                     Acidente
                 </label>
                 <label class="radio">
-                    <input type="radio" name="type" id="time_excess" class='radio' value="11">
+                    <input type="radio" name="type" id="11" class='radio' value="11">
                     Excesso de horas
                 </label>
                 <label class="radio">
-                    <input type="radio" name="type" id="vehicle_problem" class='radio' value="12">
+                    <input type="radio" name="type" id="12" class='radio' value="12">
                     Problema no veículo
                 </label>
                 <label class="radio">
-                    <input type="radio" name="type" id="absence" class='radio' value="14">
+                    <input type="radio" name="type" id="14" class='radio' value="14">
                     Falta
                 </label>
                 <label class="radio">
-                    <input type="radio" name="type" id="vacation" class='radio' value="15">
+                    <input type="radio" name="type" id="15" class='radio' value="15">
                     Férias
                 </label>
                 <label class="radio">
-                    <input type="radio" name="type" id="other" class='radio' value="13">
+                    <input type="radio" name="type" id="13" class='radio' value="13">
                     Outro
                 </label>
             </div>
 
             <div class="control">
                 <label class="label" for="description">Descrição: </label>
-                <textarea id="description" name="description" class="textarea" placeholder="Escreva aqui"></textarea>
+                <textarea id="description" name="description" class="textarea"
+                    placeholder="Escreva aqui">{{attachment.description}}</textarea>
             </div>
             <hr>
             <div class="buttons is-justify-content-right">
@@ -76,3 +79,19 @@
 
     </section>
 </div>
+<script>
+    let executed = false;
+    document.getElementById("{{attachment.idType}}").checked = true;
+    document.body.addEventListener('htmx:afterSwap', function (evt) {
+        if (evt.detail.elt.getAttribute("id") === "idCompany") {
+            document.getElementById("idCompany").value = '{{attachment.idCompany}}';
+            htmx.trigger("#selectCar", 'companySelected');
+        }
+        if(!executed){
+            if (evt.detail.elt.getAttribute("id") === "selectCar") {
+                document.getElementById("selectCar").value = '{{attachment.idVehicle}}';
+                executed = true;
+            }
+        }
+    });
+</script>

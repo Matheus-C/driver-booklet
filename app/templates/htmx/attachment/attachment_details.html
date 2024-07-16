@@ -1,0 +1,34 @@
+<div x-data="{ isVisible: true }" id="attachment_form">
+    <div x-show="isVisible" class="box container">
+        <div align="right">
+            <button class="delete" @click="isVisible = !isVisible"></button>
+        </div>
+        <div class="column">
+            <span class="title is-5">Detalhes do incidente</span>
+            <span style="float: right;">
+                <button id="editAttachment" class="button" hx-target="#modalAttachment" x-on:click="openModal()" hx-swap="innerHTML"
+                    hx-get="/attachment/edit/{{attachment.id}}" data-loading-class="is-loading">
+                    <p><i class="fa-solid fa-pen-to-square fa-lg"></i></p>
+                </button>
+            </span>
+        </div>
+        <br>
+        <div class="container">
+            <div class="cell"><span class="tag is-medium">
+                    <p><b>Criado em:</b> {{ attachment.createdAt }}</p>
+                </span></div>
+            <div class="cell"><span class="tag is-medium">
+                    <p><b>Tipo de incidente:</b> {{ attachment.name_pt }}</p>
+                </span></div>
+            <div class="cell"><span class="tag is-medium">
+                    <p><b>Data início do incidente:</b> {{ attachment.start_date }}</p>
+                </span></div>
+            <div class="cell"><span class="tag is-medium">
+                    <p><b>Data fim do incidente:</b> {{ attachment.end_date }}</p>
+                </span></div>
+            <div class="cell"><span class="tag is-medium">
+                    <p><b>Descrição:</b> {{ attachment.description }}</p>
+                </span></div>
+        </div>
+    </div>
+</div>

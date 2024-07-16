@@ -92,7 +92,8 @@ class Attachment(Base):
   idCompany = Column(Integer, ForeignKey('company.id'))
   idVehicle = Column(Integer, ForeignKey('vehicle.id'))
   idType = Column(Integer, ForeignKey('eventType.id'))
-  subject = Column('subject', String(255))
+  start_date = Column('start_date', Date)
+  end_date = Column('end_date', Date)
   description = Column('description', String(512))
   createdAt = Column(TIMESTAMP, server_default=text('CURRENT_TIMESTAMP'))
 
