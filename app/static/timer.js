@@ -4,6 +4,7 @@ function stopwatch() {
     // States Functionality
     locationEnabled: false,
     isModalVisible: true,
+    isModalAttachmentVisible: false,
     coords: { lat: 0, lon: 0 },
     stringCoords: null,
     timerRunning: false,
@@ -112,7 +113,6 @@ function stopwatch() {
         else if (mode === 'day_end') {
           this.Timer();
           this.isModalVisible = true;
-          htmx.trigger("#triggerModal", "mileage")
           this.seconds = 0;
           this.minutes = 0;
           this.hours = 0;
@@ -134,14 +134,10 @@ function stopwatch() {
       this.currentActivityName = config[mode];
     },
 
-    openModal(mode) {
-      if(mode === "mileage"){
-        htmx.trigger("#triggerModal", "mileage")
-        this.isEnd = false;
-        this.currentActivityName = 'Atividade Atual';
-      }
+    openModal() {
+      this.isEnd = false;
+      this.currentActivityName = 'Atividade Atual';
       this.isModalVisible = true;
-      
     },
 
     closeModal() {
@@ -152,18 +148,13 @@ function stopwatch() {
       }
     },
 
-    // askAttachment(){
-    //   if(!this.isEnd){
-    //     this.closeModal();
-    //   }else{
-    //     const newAttachment = confirm("Gostaria de adicionar uma observação?");
-    //     if(newAttachment){
-    //       htmx.ajax('GET', '/attachment/new', '#modal')
-    //     }else{
-    //       this.closeModal();
-    //     }
-    //   }
-    // },
+    openAttachmentForm(){
+      this.isModalAttachmentVisible = true;
+    },
+
+    closeAttachmentForm(){
+      this.isModalAttachmentVisible = false;
+    },
 
     getLocationText() {
       this.stringCoords = this.coords.lat + ',' + this.coords.lon;

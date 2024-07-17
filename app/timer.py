@@ -110,9 +110,3 @@ def timer_progress(id):
         return render_template('htmx/timer/timer_progress.html',data=data)
     else:
         return redirect('/')
-    
-
-@app.route('/timer/mileage', methods=["GET"])
-def mileage_form():
-    if(request.method == "GET"):
-        return render_template("htmx/timer/mileage_form.html")

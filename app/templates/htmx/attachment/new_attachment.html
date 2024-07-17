@@ -5,18 +5,22 @@
             <button class="fas fa-info-circle" onclick="tutorial('');"></button>
         </span>
         <p class="modal-card-title">Adicionar incidente</p>
-
+        {% if page == "attachment" %}
         <div align="right">
             <button class="delete" x-on:click="closeModal()"></button>
         </div>
-
+        {% else %}
+        <div align="right">
+            <button class="delete" x-on:click="closeAttachmentForm()"></button>
+        </div>
+        {% endif %}
     </header>
     <section class="modal-card-body" id="modalSection">
         {% include 'base/notifications.html' %}
         {% if page == "attachment" %}
         <form hx-post="/attachment/add/{{page}}" hx-target="#attachments" @close.window="closeModal()">
         {% else %}
-        <form hx-post="/attachment/add/{{page}}" @close.window="closeModal()">
+        <form hx-post="/attachment/add/{{page}}" @close.window="closeAttachmentForm()">
         {% endif %}
             <div hx-get="/company/list" hx-trigger="load" hx-target="#idCompany" hx-swap="innerHTML"></div>
             <label class="label" for="idCompany">Empresa: </label>
