@@ -5,13 +5,24 @@ from app.models.database import *
 from app import app
 from flask_login import current_user,login_required
 from sqlalchemy.sql import text
-        
+
+
+@app.route('/vehicle/list/<id_company>',methods=['GET'])
+def vehicle_list(id_company=None):
+    vehicles_company = session.query(Vehicle)\
+            .join(CompanyVehicle,CompanyVehicle.idVehicle == Vehicle.id,isouter=True)\
+            .filter(CompanyVehicle.idCompany == id_company,
+                    CompanyVehicle.validUntil == None).all()
+    session.close()
+    return render_template("htmx/vehicle/vehicle_list.html", vehicles_company = vehicles_company)
+    
+
 @app.route('/vehicle/add/<id_company>',methods=['GET','POST'])
 def vehicle_add(id_company=None):
-    if request.method == 'GET':
+    if request.method == 'GET' and current_user.userTypeId == 1:
         return render_template('htmx/vehicle/vehicle_add_form.html',data={'return':f'/vehicle/add/{id_company}'})
     
-    elif request.method == 'POST' and request.form:
+    elif request.method == 'POST' and request.form and current_user.userTypeId == 1:
         dict_data = request.form.to_dict()
         session = Session()
         if(session.query(Vehicle).filter(Vehicle.licensePlate==dict_data['licensePlate']).first() != None):
@@ -81,7 +92,7 @@ def vehicle_select():
         session = Session()
         results = session.execute(query).all()
         session.close()
-        return render_template('htmx/vehicle/vehicle_list.html',vehicle_list = results)
+        return render_template('htmx/vehicle/vehicle_select.html',vehicle_list = results)
 
 @app.route('/vehicle/current_mileage',methods=['POST'])
 @login_required
@@ -128,3 +139,18 @@ def last_state_vehicle(id):
         else: 
              data={}
         return jsonify(data)
+    
+@app.route('/vehicle/delete/<id>',methods=['DELETE'])
+@login_required
+def delete_vehicle(id):
+    if request.method == 'DELETE' and current_user.userTypeId == 1:
+        session = Session()
+        vehicle = session.query(CompanyVehicle).filter(CompanyVehicle.idVehicle == id).first()
+        vehicle.validUntil = datetime.now().strftime("%Y-%m-%d")
+        session.commit()
+        vehicles_company = session.query(Vehicle)\
+            .join(CompanyVehicle,CompanyVehicle.idVehicle == Vehicle.id,isouter=True)\
+            .filter(CompanyVehicle.idCompany == vehicle.idCompany,
+                    CompanyVehicle.validUntil == None).all()
+        session.close()
+        return render_template("htmx/vehicle/vehicle_list.html", vehicles_company = vehicles_company)

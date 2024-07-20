@@ -4,36 +4,91 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@2"></script>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+    function mapData() {
+        return {
+            show: true,
+            map: null,
+            markers: [],
+            extractMarkers(map) {
+                var markers = [];
+                map.eachLayer(function (layer) {
+                    if (layer instanceof L.Marker) {
+                        markers.push(layer);
+                    }
+                });
+                return markers;
+            },
+            async initMap(companyId) {
+                // Initialize Leaflet map
+                this.map = L.map('map');
+
+                // Add Tile layer to the map
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 16,
+                }).addTo(this.map);
+
+                // Fetch marker data from API
+                try {
+                    const response = await fetch('/geolocation/list/' + companyId);
+                    const data = await response.json();
+                    this.markers = data;
+                    // Add markers to the map
+                    this.markers.forEach(marker => {
+
+                        if (marker.latitude !== "0" && marker.longitude !== "0") {
+                            L.marker([marker.latitude, marker.longitude]).addTo(this.map)
+                                .bindPopup(marker.userName + ' [' + marker.model + '] [' + marker.eventCategory + ']')
+                                .openPopup();
+                        }
+                    });
+                    markersOnMap = this.extractMarkers(this.map).length;
+                    if (markersOnMap > 0) {
+                        const bounds = this.markers.map(marker => [marker.latitude, marker.longitude]);
+                        this.map.fitBounds(bounds);
+                    } else {
+                        this.map.remove();
+                        this.map = null;
+                        this.show = false;
+                    }
+
+                } catch (error) {
+                    console.error('Error fetching marker data:', error);
+                }
+            }
+        };
+    }
+</script>
 {% endblock %}
 
 {% block content %}
 <div class="container">
     <br>
-    <div class="columns">
         <div class="column">
             <span class="title is-3">Empresas</span>
             <span class="icon has-text-info">
                 <button class="fas fa-info-circle" onclick="tutorial('companies');"></button>
             </span>
-        </div>
-        {% if current_user.userTypeId == 1 %}
-        <div class="column">
-            <div align="right">
+            {% if current_user.userTypeId == 1 %}
+            <span style="float: right;">
                 <button class="button" id="add_new_company_button" hx-target="#add_new_company" hx-swap="innerHTML"
                     hx-get="/company" data-loading-class="is-loading">
                     <p><i class="fa-solid fa-plus fa-lg"></i> <i class="fa fa-building fa-xl"></i></p>
                 </button>
-            </div>
-        </div>
-
-        {% endif %}
+            </span>
+            {% endif %}
     </div>
     <div class="box" id="companiesBox">
-
-        {% for company in companies %}
-        <span class="tag"><a hx-target="#company_info" hx-swap="innerHTML" hx-get="/company/{{company.id}}">{{
-                company.name }} ({{company.vatcode}})</a></span>
-        {% endfor %}
+        <div class="fixed-grid has-2-cols has-1-cols-mobile">
+            <div class="grid">
+                {% for company in companies %}
+                <div class="cell"><button class="button" hx-target="#company_info" hx-swap="innerHTML"
+                        hx-get="/company/{{company.id}}"><p><i class="fa-solid fa-building-circle-arrow-right"></i> {{
+                        company.name }} ({{company.vatcode}})</p></button></div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
     {% include 'base/notifications.html' %}
     <div id="add_new_company"></div>

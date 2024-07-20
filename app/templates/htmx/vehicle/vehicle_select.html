@@ -1,0 +1,8 @@
+<option hidden>Selecione uma opção</option>
+{% for vehicle in vehicle_list %}
+    {% if vehicle.last_state in ['no_event','day_end'] %}
+    <option value="{{vehicle.id}}">{{vehicle.licensePlate}} {{vehicle.manufacturer}} {{vehicle.model}} {{vehicle.color}}</option>
+    {% else %}
+    <option value="{{vehicle.id}}" >{{vehicle.licensePlate}} {{vehicle.manufacturer}} {{vehicle.model}} {{vehicle.color}} (em uso)</option>
+    {% endif %}
+{% endfor %}

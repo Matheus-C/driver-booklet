@@ -1,6 +1,6 @@
 <!-- Alpine Plugins -->
 <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
- 
+
 <!-- Alpine Core -->
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
@@ -11,26 +11,32 @@
         </div>
         {% include 'base/notifications.html' %}
         <div>
-
-            <form hx-post="{{data.return}}" hx-target="#vehicle_form" hx-swap="outerHTML">
+            <h3 class="title is-4">Adicionar veículo</h3>
+            <hr>
+            <form hx-post="{{data.return}}" hx-target="#vehicles" hx-swap="innerHTML">
                 <div class="field">
-                    <label class="label">Registre seu veículo</label>
                     <div class="control">
-                        Modelo: <input class="input" type="text" name='model' placeholder="Digite o modelo do veículo">
+                        <label class="label" for="model">Modelo: </label><input class="input" id="model" type="text"
+                            name='model' placeholder="Digite o modelo do veículo">
                     </div>
                     <div class="control">
-                        Fabricante: <input class="input" type="text" name='manufacturer' placeholder="Digite o fabricante do veículo">
+                        <label class="label" for="manufacturer">Fabricante: </label> <input class="input" type="text"
+                            id="manufacturer" name='manufacturer' placeholder="Digite o fabricante do veículo">
                     </div>
                     <div class="control">
-                        Cor: <input class="input" type="text" name='color' placeholder="Digite a cor do carro">
+                        <label class="label" for="color">Cor: </label><input class="input" type="text" name='color'
+                            id="color" placeholder="Digite a cor do carro">
                     </div>
                     <div class="control">
-                        Placa: <input class="input" type="text" id="licensePlate" name='licensePlate'
-                            placeholder="XX-XX-XX" x-mask="**-**-**" oninput="this.value = this.value.toUpperCase()">
+                        <label class="label" for="licensePlate">Placa: </label><input class="input" type="text"
+                            id="licensePlate" name='licensePlate' placeholder="XX-XX-XX" x-mask="**-**-**"
+                            oninput="this.value = this.value.toUpperCase()">
                     </div>
                     <hr>
                     <div align="right">
-                        <button class="button is-primary" data-loading-class="is-loading"><p><i class="fa-solid fa-floppy-disk fa-lg"></i> Salvar</p></button>
+                        <button class="button is-primary" data-loading-class="is-loading">
+                            <p><i class="fa-solid fa-floppy-disk fa-lg"></i> Salvar</p>
+                        </button>
                     </div>
                 </div>
             </form>

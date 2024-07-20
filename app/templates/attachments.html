@@ -1,0 +1,63 @@
+{% extends 'base/base.html' %}
+
+{% block header %}
+<!-- Alpine Plugins -->
+<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
+
+<!-- Alpine Core -->
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+{% endblock %}
+
+{% block content %}
+{% include 'base/notifications.html' %}
+<div x-data="modal()">
+    <div class="column container">
+        <span class="title is-3">Seus Incidentes</span>
+        <span class="icon has-text-info">
+            <!-- <button class="fas fa-info-circle" onclick="tutorial('employees');"></button> -->
+        </span>
+        <span style="float: right">
+            <button id="addAttachmentButton" class="button" hx-swap="innerHTML" x-on:click="openModal()"
+                data-loading-class="is-loading" hx-get="/attachment/add/attachment" hx-target="#modalAttachment">
+                <p><i class="fa-solid fa-plus fa-lg"></i> <i class="fa-solid fa-paperclip fa-lg"></i></p>
+            </button>
+        </span>
+    </div>
+
+    <div id="attachments" class="container box">
+        <div class="fixed-grid has-1-cols-mobile">
+            <div class="grid">
+                {% for attachment in attachments %}
+                <span hx-get="/attachment/detail/{{attachment.id}}" hx-target="#attachmentDetails"
+                    class="cell button tag is-medium has-text-dark has-background-success-95"
+                    style="display: flex; justify-content: space-between;"><i class="fa-solid fa-paperclip"></i>
+                    <p>{{attachment.name_pt}}</p>
+                    <p></p>
+                </span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div id="attachmentDetails"></div>
+    <div class="modal is-active" x-show="isModalVisible" id="modalAttachment"></div>
+</div>
+<script>
+    const modal = () => {
+        return {
+            isModalVisible: false,
+            openModal() {
+                this.isModalVisible = true;
+            },
+            closeModal() {
+                this.isModalVisible = false;
+            }
+        }
+    }
+    document.body.addEventListener('htmx:afterSwap', function (evt) {
+        if (evt.detail.elt.getAttribute("id") === "attachments") {
+            window.dispatchEvent(new Event('close'));
+        }
+    });
+</script>
+{% endblock %}
