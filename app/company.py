@@ -23,7 +23,7 @@ def company():
         if request.method == 'GET':
             return render_template('htmx/company/company_add_form.html',current_user=current_user)
         
-        elif request.method == 'POST' and request.form:
+        elif request.method == 'POST' and request.form and current_user.userTypeId == 1:
             dict_data = request.form.to_dict()
             dict_data['idUser'] = current_user.id
             
@@ -50,7 +50,7 @@ def company():
 @app.route("/company/<id>", methods=["GET","POST"])
 @login_required
 def company_info(id):
-    if current_user:
+    if current_user.userTypeId == 1:
         session = Session()
         # try:
         if request.method == 'GET':
@@ -102,7 +102,7 @@ def company_info(id):
             session.close()
             return render_template('htmx/company/company.html',company = company,users_company = users_company, vehicles_company = vehicles_company,geolocation=geolocation,current_user=current_user)
         
-        elif request.method == 'POST' and request.form:
+        elif request.method == 'POST' and request.form and current_user.userTypeId == 1:
             dict_data = request.form.to_dict()
             dict_data['idUser'] = current_user.id
             company = Company(**dict_data)
@@ -115,10 +115,10 @@ def company_info(id):
         
 @app.route('/signup_worker/<id_company>',methods=['GET','POST'])
 def signup_worker(id_company=None):
-    if request.method == 'GET':
-        return render_template('htmx/user/signup.html',data={'return':f'/signup_worker/{id_company}'})
+    if request.method == 'GET' and current_user.userTypeId == 1:
+        return render_template('htmx/user/signup.html',data={'return':f'/signup_worker/{id_company}', 'target':'#workers'})
     
-    elif request.method == 'POST' and request.form:
+    elif request.method == 'POST' and request.form and current_user.userTypeId == 1:
         dict_data = request.form.to_dict()
         session = Session()
         if(session.query(User).filter(User.userIdentification==dict_data['userIdentification']).first() != None or\
@@ -127,7 +127,7 @@ def signup_worker(id_company=None):
             response = make_response(render_template('base/notifications.html'))
             response.headers["hx-Retarget"] = "#signup_form .containerNotifications"
             return response
-        dict_data['password'] = bcrypt.generate_password_hash(password=dict_data['password'])
+        dict_data['password'] = bcrypt.generate_password_hash(password=dict_data['password']).decode('utf-8')
         dict_data['userTypeId'] = 2 #Worker
         start_work = dict_data['startWorkDate']
         dict_data.pop('startWorkDate')
@@ -224,7 +224,7 @@ def worker_list(id):
 @app.route('/worker/delete/<id>',methods=['DELETE'])
 @login_required
 def worker_delete(id):
-    if current_user and request.method == "DELETE":
+    if current_user and request.method == "DELETE" and current_user.userTypeId == 1:
         session = Session()
         userCompany = session.query(UserCompany)\
         .filter(UserCompany.idUser == id,

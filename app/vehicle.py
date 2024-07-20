@@ -19,10 +19,10 @@ def vehicle_list(id_company=None):
 
 @app.route('/vehicle/add/<id_company>',methods=['GET','POST'])
 def vehicle_add(id_company=None):
-    if request.method == 'GET':
+    if request.method == 'GET' and current_user.userTypeId == 1:
         return render_template('htmx/vehicle/vehicle_add_form.html',data={'return':f'/vehicle/add/{id_company}'})
     
-    elif request.method == 'POST' and request.form:
+    elif request.method == 'POST' and request.form and current_user.userTypeId == 1:
         dict_data = request.form.to_dict()
         session = Session()
         if(session.query(Vehicle).filter(Vehicle.licensePlate==dict_data['licensePlate']).first() != None):
@@ -143,7 +143,7 @@ def last_state_vehicle(id):
 @app.route('/vehicle/delete/<id>',methods=['DELETE'])
 @login_required
 def delete_vehicle(id):
-    if current_user and request.method == 'DELETE':
+    if request.method == 'DELETE' and current_user.userTypeId == 1:
         session = Session()
         vehicle = session.query(CompanyVehicle).filter(CompanyVehicle.idVehicle == id).first()
         vehicle.validUntil = datetime.now().strftime("%Y-%m-%d")

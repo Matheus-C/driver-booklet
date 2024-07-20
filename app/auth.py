@@ -85,7 +85,7 @@ def login(id=None):
 @app.route('/signup',methods=['GET','POST'])
 def signup():
     if request.method == 'GET':
-        return render_template('htmx/user/signup.html',data={'return':'/signup'}, current_user = current_user)
+        return render_template('htmx/user/signup.html',data={'return':'/signup', 'target':'#signup_form'}, current_user = current_user)
     
     elif request.method == 'POST' and request.form:
         dict_data = request.form.to_dict()

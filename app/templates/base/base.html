@@ -5,11 +5,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.1/css/bulma.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <script src="https://unpkg.com/htmx.org@1.9.11"
-    integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0"
-    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/htmx.org@2.0.1" integrity="sha384-QWGpdj554B4ETpJJC9z+ZHJcA/i59TyjxEPXiiUgN2WmTyV5OEZWCD6gQhgkdpB/" crossorigin="anonymous">
+  </script>
   <script type="text/javascript" src="/static/register_service_worker.js">
   </script>
   <script src="https://unpkg.com/htmx.org/dist/ext/loading-states.js"></script>
@@ -45,8 +44,14 @@
   </script>
   <link rel="manifest" href="/static/manifest.json" />
   <!-- shepherd.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/shepherd.js/10.0.1/js/shepherd.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shepherd.js@10.0.1/dist/css/shepherd.css" />
+  <script
+  type="module"
+  src="https://cdn.jsdelivr.net/npm/shepherd.js@13.0.0/dist/esm/shepherd.mjs"
+></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/shepherd.js@13.0.0/dist/css/shepherd.css"
+/>
   <!-- shepherd.js -->
   <script>
     function toggleTheme() {
@@ -81,10 +86,12 @@
 
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
-        {% if not current_user.is_anonymous and not mail_verified is defined %}
+        {% if  not current_user.is_anonymous and not mail_verified is defined %}
+        {% if current_user.userTypeId == 1 %}
         <a href='/companies' class="navbar-item">
           Empresas
         </a>
+        {% endif %}
         <a href='/timer' class="navbar-item">
           Timer
         </a>
