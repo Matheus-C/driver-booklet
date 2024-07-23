@@ -1,10 +1,11 @@
-from flask import render_template,url_for,request,jsonify,send_file,redirect,flash, Response, make_response
-from app.models.models import *
-from app.models.database import *
-from app import app,login_manager,bcrypt
-from flask_login import login_user,logout_user,current_user,login_required
-from itsdangerous import URLSafeTimedSerializer
+from flask import render_template, url_for, request, redirect, flash, Response, make_response
+from flask_login import login_user, logout_user, current_user
 from flask_mail import Mail, Message
+from itsdangerous import URLSafeTimedSerializer
+
+from app import app, login_manager, bcrypt
+from app.models.models import *
+
 
 def generate_confirmation_token(email):
     serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
@@ -34,6 +35,7 @@ def send_email(to, subject, template):
     mail = Mail(app)
     mail.send(msg)
 
+
 def send_confirmation(email):
     token = generate_confirmation_token(email)
     url = url_for('confirm_email', token=token, _external=True)
@@ -42,40 +44,43 @@ def send_confirmation(email):
     subject = "Confirme seu email"
     send_email(email, subject, html)
 
+
 @login_manager.user_loader
 def load_user(id):
     session = Session()
-    user = session.query(User).filter(User.id==id).first()
+    user = session.query(User).filter(User.id == id).first()
     session.close()
     return user
+
 
 @app.route('/')
 def index():
     if current_user.is_authenticated:
-        if current_user.userTypeId == 1: # Company Owner
+        if current_user.userTypeId == 1:  # Company Owner
             if current_user._mail_verified:
                 return redirect('/companies')
             else:
-                return render_template('email/not_verified.html', current_user = current_user, mail_verified="false")
-        elif current_user.userTypeId == 2: #worker
+                return render_template('email/not_verified.html', current_user=current_user, mail_verified="false")
+        elif current_user.userTypeId == 2:  #worker
             return redirect('/timer')
-        else:#admin
-             return redirect('/admin')
+        elif current_user.userTypeId == 3:  #admin
+            return redirect('/admin')
     else:
         return render_template('index.html')
 
-@app.route('/login',methods=['GET','POST'])
+
+@app.route('/login', methods=['GET', 'POST'])
 def login(id=None):
     if request.method == 'GET':
-        return render_template('htmx/user/login.html', data={'return':'/login'})
+        return render_template('htmx/user/login.html', data={'return': '/login'})
     elif request.method == 'POST' and request.form:
         session = Session()
         email = request.form.get('email')
         password = request.form.get('password')
         user = session.query(User).filter_by(email=email).first()
         session.close()
-        if user and bcrypt.check_password_hash(user.password,password):
-            login_user(user,remember=True)
+        if user and bcrypt.check_password_hash(user.password, password):
+            login_user(user, remember=True)
             response = Response()
             response.headers["hx-redirect"] = "/"
             return response
@@ -84,31 +89,33 @@ def login(id=None):
             return render_template('base/notifications.html')
 
 
-@app.route('/signup',methods=['GET','POST'])
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'GET':
-        return render_template('htmx/user/signup.html',data={'return':'/signup', 'target':'#signup_form'}, current_user = current_user)
-    
+        return render_template('htmx/user/signup.html', data={'return': '/signup', 'target': '#signup_form'},
+                               current_user=current_user)
+
     elif request.method == 'POST' and request.form:
         dict_data = request.form.to_dict()
         session = Session()
-        if(session.query(User).filter(User.email==dict_data['email']).first() != None or\
-            session.query(User).filter(User.userIdentification==dict_data['userIdentification']).first()):
+        if (session.query(User).filter(User.email == dict_data['email']).first() is not None or
+                session.query(User).filter(User.userIdentification == dict_data['userIdentification']).first()):
             flash("Email ou NIF já registrado.", "error")
             response = make_response(render_template('base/notifications.html'))
             response.headers["hx-Retarget"] = "#signup_form .containerNotifications"
             return response
 
         dict_data['password'] = bcrypt.generate_password_hash(password=dict_data['password']).decode('utf-8')
-        dict_data['userTypeId'] = 1 #Owner
+        dict_data['userTypeId'] = "1"  #Owner
+        # noinspection PyArgumentList
         user = User(**dict_data)
-        
+
         session.add(user)
         session.commit()
         session.close()
-        send_confirmation(dict_data['email'])            
+        send_confirmation(dict_data['email'])
         flash('Uma confirmação foi enviada para o seu email.', 'success')
-        return render_template('email/notice_email.html', current_user = current_user)
+        return render_template('email/notice_email.html', current_user=current_user)
 
 
 @app.route('/logout')
@@ -127,7 +134,7 @@ def confirm_email(token):
         flash('O link de confirmação é inválido ou expirou.', 'error')
         return render_template('index.html')
     session = Session()
-    user = session.query(User).filter(User.email==email).first()
+    user = session.query(User).filter(User.email == email).first()
     if user._mail_verified:
         flash('Email já confirmado. Por favor faça o login', 'success')
     else:
@@ -136,7 +143,8 @@ def confirm_email(token):
         session.commit()
         session.close()
         flash('Email confirmado com sucesso.', 'success')
-    return render_template("confirmation.html", current_user = current_user)
+    return render_template("confirmation.html", current_user=current_user)
+
 
 @app.route('/forgot', methods=['GET', 'POST'])
 def forgot_password():
@@ -145,7 +153,7 @@ def forgot_password():
     elif request.method == 'POST':
         dict_data = request.form.to_dict()
         session = Session()
-        if(session.query(User).filter(User.email==dict_data['email']).first() == None):
+        if session.query(User).filter(User.email == dict_data['email']).first() is None:
             flash("O Email não existe no nosso banco de dados.", "error")
             return render_template('base/notifications.html')
         else:
@@ -157,7 +165,6 @@ def forgot_password():
             send_email(dict_data['email'], subject, html)
             flash("Foi enviado um Email contendo um link para a redefinição da senha.", "success")
             return render_template('base/notifications.html')
-
 
 
 @app.route('/password/<token>', methods=['GET', 'POST'])
@@ -173,12 +180,12 @@ def new_password(token):
         return render_template('new_password.html', data={'return': f'/password/{token}'})
     elif request.method == 'POST':
         dict_data = request.form.to_dict()
-        if(dict_data['password'] != dict_data['confirm']):
+        if dict_data['password'] != dict_data['confirm']:
             flash("A senha e a confirmação não são idênticas", "error")
             return render_template('base/notifications.html')
         session = Session()
         dict_data['password'] = bcrypt.generate_password_hash(password=dict_data['password']).decode('utf-8')
-        user = session.query(User).filter(User.email==email).first()
+        user = session.query(User).filter(User.email == email).first()
         user.password = dict_data['password']
         session.add(user)
         session.commit()
@@ -187,11 +194,11 @@ def new_password(token):
         response = Response()
         response.headers["hx-redirect"] = "/"
         return response
-    
+
+
 @app.route('/resend/confirmation')
 def resend_confirmation():
-    if(current_user.is_authenticated):
+    if current_user.is_authenticated:
         send_confirmation(current_user.email)
         flash('Uma confirmação foi enviada para o seu email.', 'success')
         return render_template('base/notifications.html')
-        

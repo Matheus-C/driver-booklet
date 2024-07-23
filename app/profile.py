@@ -1,9 +1,8 @@
-from flask import render_template, request, jsonify,send_file, url_for
-from app.models.models import *
-from app.models.database import *
-from app import app
-from flask_login import current_user,login_required
+from flask import render_template
+from flask_login import current_user, login_required
 
+from app import app
+from app.models.models import *
 
 
 @app.route("/profile", methods=["GET"])
@@ -11,12 +10,12 @@ from flask_login import current_user,login_required
 def profile():
     if current_user:
         session = Session()
-        results = session.query(Company)\
-        .join(UserCompany, UserCompany.idCompany == Company.id,isouter=True)\
-        .filter(UserCompany.idUser == current_user.id,
-                UserCompany.validUntil == None).all()
+        results = session.query(Company) \
+            .join(UserCompany, UserCompany.idCompany == Company.id, isouter=True) \
+            .filter(UserCompany.idUser == current_user.id,
+                    UserCompany.validUntil is None).all()
         session.close()
-        return render_template('profile.html',current_user = current_user ,companies=results)
-    
-## Implement CRUD 
-## Edit fields and change password
+        return render_template('profile.html', current_user=current_user, companies=results)
+
+# Implement CRUD
+# Edit fields and change password

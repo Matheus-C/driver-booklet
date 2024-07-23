@@ -26,6 +26,7 @@ class User(Base,UserMixin):
   _password = Column('password', TEXT(255))
   _mail_verified = Column('mail_verified', Boolean, default=False)
   is_active = Column(Boolean, default=False)
+  valid_until = Column('valid_until', Date)
 
   def __repr__(self):
     return f'<User: {self.id},{self.name},{self.email}>'
