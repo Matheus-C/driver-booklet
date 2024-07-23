@@ -57,8 +57,10 @@ def index():
                 return redirect('/companies')
             else:
                 return render_template('email/not_verified.html', current_user = current_user, mail_verified="false")
-        else: #Other
+        elif current_user.userTypeId == 2: #worker
             return redirect('/timer')
+        else:#admin
+             return redirect('/admin')
     else:
         return render_template('index.html')
 

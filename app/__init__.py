@@ -1,10 +1,18 @@
-from flask import Flask
-from flask_login import LoginManager
+from app.models.models import *
+from flask import Flask, redirect
+from flask_login import LoginManager, current_user
 from flask_bcrypt import Bcrypt
 from app.models import * # importing db + models
 from flask_apscheduler import APScheduler
+import flask_admin
+from flask_admin.contrib.sqla import ModelView
+from flask_babel import Babel # necessary to flask_admin
+
+
 
 app = Flask(__name__)
+
+babel = Babel(app) # necessary to flask_admin
 app.secret_key = 'ousadiaealegria'
 
 app.config['VAPID_PUBLIC_KEY'] = "BIQgErEfMAg3DSMCy85_kHVgE9uS3NSb5Rl4pmXPknmbrd4CvdvTMUwZ8K2RUxE2_6KkKh3VYG1tLaFRXiGURxA"
@@ -42,6 +50,17 @@ scheduler = APScheduler()
 scheduler.api_enabled = True
 scheduler.init_app(app)
 
+class MyAdminIndexView(flask_admin.AdminIndexView):
+    @flask_admin.expose('/')
+    def index(self):
+        if not(current_user.is_authenticated and current_user.userTypeId == 3):
+            return redirect('/')
+        return super(MyAdminIndexView, self).index()
 
-from app import auth, profile, pwa, timer, company, routing, vehicle, reports, jobs, attachment, error
+
+# Create admin
+adm = flask_admin.Admin(app, index_view=MyAdminIndexView())
+
+from app import auth, profile, pwa, timer, company, routing, vehicle, reports, jobs, attachment, admin#, error
 scheduler.start()
+
