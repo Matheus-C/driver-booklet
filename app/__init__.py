@@ -43,7 +43,7 @@ bcrypt = Bcrypt(app)
 
 # initialize scheduler
 scheduler = APScheduler()
-# if you don't wanna use a config, you can set options here:
+# if you don't want to use a config, you can set options here:
 scheduler.api_enabled = True
 scheduler.init_app(app)
 
@@ -57,8 +57,8 @@ class MyAdminIndexView(flask_admin.AdminIndexView):
 
 
 # Create admin
-adm = flask_admin.Admin(app, index_view=MyAdminIndexView())
+adm = flask_admin.Admin(app, index_view=MyAdminIndexView(name='Home', template='admin/index.html', url='/admin'))
 
-from app import auth, profile, pwa, timer, company, routing, vehicle, reports, jobs, attachment, admin  #, error
+from app import auth, profile, pwa, timer, company, routing, vehicle, reports, jobs, attachment, admin, error
 
 scheduler.start()
