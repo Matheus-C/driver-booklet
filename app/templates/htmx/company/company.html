@@ -24,7 +24,7 @@
         <button class="fas fa-info-circle" onclick="tutorial('employees');"></button>
     </span>
     <span style="float: right">
-        {% if current_user.userTypeId == 1 %}
+        {% if current_user.userTypeId == 1 or (current_user.userTypeId == 4 and is_valid(current_user.valid_until)) %}
         <button id="addEmployee" class="button" hx-target="#addUser" hx-swap="innerHTML"
             hx-get="/signup_worker/{{company.id}}" data-loading-class="is-loading">
             <p><i class="fa-solid fa-plus fa-lg"></i> <i class="fa-solid fa-user fa-lg"></i></p>
@@ -58,7 +58,7 @@
         <button class="fas fa-info-circle" onclick="tutorial('vehicles');"></button>
     </span>
     <span style="float: right">
-        {% if current_user.userTypeId == 1 %}
+        {% if current_user.userTypeId == 1 or (current_user.userTypeId == 4 and is_valid(current_user.valid_until)) %}
         <button id="addVehicle" class="button" hx-target="#addCar" hx-swap="innerHTML"
             hx-get="/vehicle/add/{{company.id}}" data-loading-class="is-loading">
             <p><i class="fa-solid fa-plus fa-lg"></i> <i class="fa-solid fa-car fa-lg"></i></p>

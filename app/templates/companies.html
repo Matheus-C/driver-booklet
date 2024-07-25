@@ -70,7 +70,7 @@
             <span class="icon has-text-info">
                 <button class="fas fa-info-circle" onclick="tutorial('companies');"></button>
             </span>
-            {% if current_user.userTypeId == 1 %}
+            {% if current_user.userTypeId == 1 or (current_user.userTypeId == 4 and is_valid(current_user.valid_until)) %}
             <span style="float: right;">
                 <button class="button" id="add_new_company_button" hx-target="#add_new_company" hx-swap="innerHTML"
                     hx-get="/company" data-loading-class="is-loading">

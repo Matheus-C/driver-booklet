@@ -1,21 +1,23 @@
 from flask import Flask
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
-from app.models import * # importing db + models
+from app.models import *  # importing db + models
 from flask_apscheduler import APScheduler
+import datetime
 
 app = Flask(__name__)
 app.secret_key = 'ousadiaealegria'
 
-app.config['VAPID_PUBLIC_KEY'] = "BIQgErEfMAg3DSMCy85_kHVgE9uS3NSb5Rl4pmXPknmbrd4CvdvTMUwZ8K2RUxE2_6KkKh3VYG1tLaFRXiGURxA"
+app.config[
+    'VAPID_PUBLIC_KEY'] = "BIQgErEfMAg3DSMCy85_kHVgE9uS3NSb5Rl4pmXPknmbrd4CvdvTMUwZ8K2RUxE2_6KkKh3VYG1tLaFRXiGURxA"
 
 app.config['VAPID_PRIVATE_KEY'] = "LXemf14HHkxNVXhsZOnn1nCcCUpI68pFSjtNRPKUIc4"
 
 app.config['VAPID_CLAIM_EMAIL'] = "a@a.com"
 
-app.config['TRAP_HTTP_EXCEPTIONS']=True
+app.config['TRAP_HTTP_EXCEPTIONS'] = True
 
-app.config['SECURITY_PASSWORD_SALT']="temperro"
+app.config['SECURITY_PASSWORD_SALT'] = "temperro"
 
 # mail settings
 app.config["MAIL_SERVER"] = 'smtp.mailersend.net'
@@ -33,7 +35,6 @@ app.config["MAIL_DEFAULT_SENDER"] = 'MS_joirAu@trial-yzkq340o0yk4d796.mlsender.n
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-
 bcrypt = Bcrypt(app)
 
 # initialize scheduler
@@ -43,5 +44,13 @@ scheduler.api_enabled = True
 scheduler.init_app(app)
 
 
+@app.context_processor
+def utility_processor():
+    def is_valid(validUntil):
+        return validUntil > datetime.date.today()
+    return dict(is_valid=is_valid)
+
+
 from app import auth, profile, pwa, timer, company, routing, vehicle, reports, jobs, attachment, error
+
 scheduler.start()
