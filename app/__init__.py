@@ -30,11 +30,11 @@ app.config["MAIL_USE_TLS"] = True
 app.config["MAIL_USE_SSL"] = False
 
 # gmail authentication
-app.config["MAIL_USERNAME"] = "MS_joirAu@trial-yzkq340o0yk4d796.mlsender.net"
-app.config["MAIL_PASSWORD"] = "sY8yvn9DR6suWYBk"
+app.config["MAIL_USERNAME"] = "MS_aQ1BS4@trial-yzkq340o0yk4d796.mlsender.net"
+app.config["MAIL_PASSWORD"] = "esrTpO2Zum9e6aYp"
 
 # mail accounts
-app.config["MAIL_DEFAULT_SENDER"] = 'MS_joirAu@trial-yzkq340o0yk4d796.mlsender.net'
+app.config["MAIL_DEFAULT_SENDER"] = 'MS_aQ1BS4@trial-yzkq340o0yk4d796.mlsender.net'
 
 login_manager = LoginManager()
 login_manager.init_app(app)

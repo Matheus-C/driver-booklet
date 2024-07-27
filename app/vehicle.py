@@ -4,6 +4,7 @@ from app.models.database import *
 from app import app
 from flask_login import current_user, login_required
 from sqlalchemy.sql import text
+from datetime import datetime
 
 
 @app.route('/vehicle/list/<id_company>', methods=['GET'])

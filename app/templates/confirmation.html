@@ -10,13 +10,14 @@
         <div class="hero-body">
             <p class="title is-4">{% block title %}Seu registro foi confirmado com sucesso <i
                     class="fa-solid fa-square-check"></i> {% endblock %}</p>
-
+        {% if current_user.is_anonymous %}
             <h3 class="subtitle is-5">Agora você pode fazer o login abaixo</h3>
         </div>
         <br>
 
-        <div class="button is-light" hx-trigger='load' hx-get="{{ url_for('login') }}" hx-swap="innerHTML"
+        <div hx-trigger='load' hx-get="{{ url_for('login') }}" hx-swap="innerHTML"
             data-loading-class="is-loading"></div>
+        {% endif %}
     </section>
 </div>
 
