@@ -7,3 +7,5 @@ pywebpush
 Flask-APScheduler
 psycopg2-binary
 Flask-Mail
+flask-admin
+flask-babel

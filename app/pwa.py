@@ -1,10 +1,12 @@
-from flask import render_template, request, jsonify,send_file, current_app
-from app.models.models import *
-from app.models.database import *
-from app import app
-from pywebpush import webpush, WebPushException
 import json
-from flask_login import current_user,login_required
+
+from flask import request, jsonify, send_file, current_app
+from flask_login import current_user, login_required
+from pywebpush import webpush, WebPushException
+
+from app import app
+from app.models.models import *
+
 
 @app.route("/api/push-subscriptions", methods=["POST"])
 @login_required
@@ -20,7 +22,7 @@ def create_push_subscription():
         if subscription is None:
             subscription = PushSubscription(
                 subscription_json=json_data['subscription_json'],
-                userId = current_user.id
+                userId=current_user.id
             )
             session.add(subscription)
             session.commit()
@@ -28,7 +30,8 @@ def create_push_subscription():
         return jsonify({"status": "success"})
     else:
         return jsonify({"status": "failure"})
-    
+
+
 @app.route("/api/update-subscription", methods=["POST"])
 @login_required
 def update_push_subscription():
@@ -39,7 +42,7 @@ def update_push_subscription():
             PushSubscription.subscription_json == json_data['old_endpoint']
         ).first()
         if subscription:
-            subscription.subscription_json=json_data['new_endpoint']
+            subscription.subscription_json = json_data['new_endpoint']
             session.commit()
             session.close()
         return jsonify({"status": "success"})
@@ -52,7 +55,7 @@ def update_push_subscription():
 def trigger_push_notifications():
     json_data = request.get_json()
     session = Session()
-    subscriptions = session.query(PushSubscription).filter(PushSubscription.userId==current_user.id).all()
+    subscriptions = session.query(PushSubscription).filter(PushSubscription.userId == current_user.id).all()
     results = trigger_push_notifications_for_subscriptions(
         subscriptions,
         json_data.get('title'),
@@ -62,15 +65,19 @@ def trigger_push_notifications():
         "status": "success",
         "result": results
     })
+
+
 # default function to trigger notifications without routing
 def trigger_notifications(subscriptions, title, body):
     results = []
     for subscription in subscriptions:
         results.append(trigger_push_notification(subscription, title, body))
 
+
 def trigger_push_notifications_for_subscriptions(subscriptions, title, body):
     return [trigger_push_notification(subscription, title, body)
             for subscription in subscriptions]
+
 
 def trigger_push_notification(push_subscription, title, body):
     try:
@@ -96,15 +103,15 @@ def trigger_push_notification(push_subscription, title, body):
         return False
 
 
-
-
 @app.route('/manifest.json')
 def serve_manifest():
     return send_file('static/manifest.json', mimetype='application/manifest+json')
 
+
 @app.route('/sw.js')
 def service_worker():
     return send_file('static/sw.js', mimetype='application/javascript')
+
 
 @app.route('/.well-known/assetlinks.json')
 def serve_assetlinks():
