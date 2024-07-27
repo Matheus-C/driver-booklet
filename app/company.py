@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, jsonify, flash, Response, make_response
 from flask_login import current_user, login_required
-
+from datetime import datetime
 from app import app, bcrypt
 from app.models.models import *
 
@@ -60,13 +60,13 @@ def company_info(id):
             users_company = session.query(User) \
                 .join(UserCompany, UserCompany.idUser == User.id, isouter=True) \
                 .filter(UserCompany.idCompany == id,
-                        UserCompany.validUntil is None
+                        UserCompany.validUntil == None
                         ).all()
 
             vehicles_company = session.query(Vehicle) \
                 .join(CompanyVehicle, CompanyVehicle.idVehicle == Vehicle.id, isouter=True) \
                 .filter(CompanyVehicle.idCompany == id,
-                        CompanyVehicle.validUntil is None).all()
+                        CompanyVehicle.validUntil == None).all()
 
             company = session.query(Company) \
                 .filter(Company.idUser == current_user.id,
@@ -160,8 +160,9 @@ def company_list():
         session = Session()
         results = session.query(Company) \
             .join(UserCompany, UserCompany.idCompany == Company.id, isouter=True) \
-            .filter(UserCompany.idUser == current_user.id, UserCompany.validUntil is None).all()
+            .filter(UserCompany.idUser == current_user.id, UserCompany.validUntil == None).all()
         session.close()
+        print(results)
         return render_template('htmx/company/company_list.html', company_list=results)
 
 
@@ -225,7 +226,7 @@ def worker_list(id):
         results = session.query(User) \
             .join(UserCompany, UserCompany.idUser == User.id, isouter=True) \
             .filter(UserCompany.idCompany == id,
-                    UserCompany.validUntil is None).all()
+                    UserCompany.validUntil == None).all()
         company = session.query(Company).filter(Company.id == id).first()
         session.close()
         return render_template('htmx/company/workers_list.html', users_company=results, company=company)
@@ -238,14 +239,14 @@ def worker_delete(id):
         session = Session()
         userCompany = session.query(UserCompany) \
             .filter(UserCompany.idUser == id,
-                    UserCompany.validUntil is None).first()
+                    UserCompany.validUntil == None).first()
 
         userCompany.validUntil = datetime.now().strftime("%Y-%m-%d")
         session.commit()
         results = session.query(User) \
             .join(UserCompany, UserCompany.idUser == User.id, isouter=True) \
             .filter(UserCompany.idCompany == userCompany.idCompany,
-                    UserCompany.validUntil is None).all()
+                    UserCompany.validUntil == None).all()
         company = session.query(Company).filter(Company.id == userCompany.idCompany).first()
         session.close()
         return render_template('htmx/company/workers_list.html', users_company=results, company=company)

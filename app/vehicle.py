@@ -11,7 +11,7 @@ def vehicle_list(id_company=None):
     vehicles_company = session.query(Vehicle) \
         .join(CompanyVehicle, CompanyVehicle.idVehicle == Vehicle.id, isouter=True) \
         .filter(CompanyVehicle.idCompany == id_company,
-                CompanyVehicle.validUntil is None).all()
+                CompanyVehicle.validUntil == None).all()
     session.close()
     return render_template("htmx/vehicle/vehicle_list.html", vehicles_company=vehicles_company)
 
@@ -148,6 +148,6 @@ def delete_vehicle(id):
         vehicles_company = session.query(Vehicle) \
             .join(CompanyVehicle, CompanyVehicle.idVehicle == Vehicle.id, isouter=True) \
             .filter(CompanyVehicle.idCompany == vehicle.idCompany,
-                    CompanyVehicle.validUntil is None).all()
+                    CompanyVehicle.validUntil == None).all()
         session.close()
         return render_template("htmx/vehicle/vehicle_list.html", vehicles_company=vehicles_company)
