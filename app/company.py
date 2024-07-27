@@ -162,7 +162,6 @@ def company_list():
             .join(UserCompany, UserCompany.idCompany == Company.id, isouter=True) \
             .filter(UserCompany.idUser == current_user.id, UserCompany.validUntil == None).all()
         session.close()
-        print(results)
         return render_template('htmx/company/company_list.html', company_list=results)
 
 
