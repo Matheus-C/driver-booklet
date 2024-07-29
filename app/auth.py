@@ -70,7 +70,7 @@ def index():
 
 
 @app.route('/login', methods=['GET', 'POST'])
-def login(id=None):
+def login():
     if request.method == 'GET':
         return render_template('htmx/user/login.html', data={'return': '/login'})
     elif request.method == 'POST' and request.form:

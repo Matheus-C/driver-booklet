@@ -31,7 +31,12 @@ def new_attachment(page):
             json_data = request.form.to_dict()
             if "type" not in json_data or "idVehicle" not in json_data or "idCompany" not in json_data or "start_date" \
                     not in json_data or "end_date" not in json_data:
-                flash("Os campos tipo de incidente, data de inicio e fim, veículo e empresa são obrigatórios", "error")
+                flash("Os campos marcados com * são obrigatórios", "error")
+                response = make_response(render_template('base/notifications.html'))
+                response.headers["hx-Retarget"] = "#modalSection .containerNotifications"
+                return response
+            elif json_data["idVehicle"] == "None" or json_data["idCompany"] == "None":
+                flash("Os campos marcados com * são obrigatórios", "error")
                 response = make_response(render_template('base/notifications.html'))
                 response.headers["hx-Retarget"] = "#modalSection .containerNotifications"
                 return response

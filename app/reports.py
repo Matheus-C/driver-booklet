@@ -1,4 +1,4 @@
-from flask import render_template, request
+from flask import render_template, request, make_response, flash
 from flask_login import current_user, login_required
 from sqlalchemy.sql import text
 
@@ -18,7 +18,15 @@ def reports():
             if request.form:
                 # needs validation before querying
                 dict_data = request.form.to_dict()
-
+                if "idUser" in dict_data:
+                    id_user = dict_data["idUser"]
+                else:
+                    id_user = current_user.id
+                if dict_data["idUser"] == "None":
+                    flash("Selecione um colaborador.", "error")
+                    response = make_response(render_template('base/notifications.html'))
+                    response.headers["hx-Retarget"] = "#form-box .containerNotifications"
+                    return response
                 query = f"""
                 WITH event_query as 
                 (SELECT e."eventTime" "dateStart",
@@ -34,7 +42,7 @@ def reports():
                         END as "locEnd"
                 FROM event e
                 INNER JOIN "eventType" et ON et.id = e."idType"
-                WHERE "idUser" = {current_user.id}
+                WHERE "idUser" = {id_user}
                 and e."idCompany" = {dict_data['idCompany']}
                 and e."eventTime" between (date('{dict_data['dateStart']}') - 1) 
                 and (date('{dict_data['dateEnd']}') + 1)
