@@ -1,0 +1,32 @@
+<div class="table-container">
+<table class="table is-striped">
+    <thead>
+    <tr>
+        <th>Empresa</th>
+        <th>Categoria</th>
+        <th>Data de início</th>
+        <th>Data de fim</th>
+        <th>Tempo despendido</th>
+        <th>Modelo do carro</th>
+        <th>Placa do carro</th>
+        <th>Localização início</th>
+        <th>Localização fim</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% for item in data %}
+        <tr>
+            <td>{{ item.companyName }}</td>
+            <td>{{ item.categoryName }}</td>
+            <td>{{ item.dateStart }}</td>
+            <td>{{ item.dateEnd }}</td>
+            <td>{{ item.timeSpent }}</td>
+            <td>{{ item.model }}</td>
+            <td>{{ item.licensePlate }}</td>
+            <td>{{ item.locStart }}</td>
+            <td>{{ item.locEnd }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>

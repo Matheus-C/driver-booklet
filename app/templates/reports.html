@@ -15,7 +15,7 @@
     </div>
     <div class="box" id="form-box">
         {% include 'base/notifications.html' %}
-        <form hx-target="#reportGenerated" hx-post="/reports" hx-include="closest form">
+        <form action="/reports/pdf" method="post">
             {% if current_user.userTypeId != 1 %}
             <label class="label req" for="selectCompany">Empresa: </label>
             <div hx-target="#selectCompany" class="select" hx-get="/company/list" hx-trigger="load" hx-swap="innerHTML">
@@ -43,7 +43,10 @@
             <hr>
 
             <div align="right">
-                <button id="reportButton" class="button is-info" data-loading-class="is-loading">
+                <button id="reportPdf" class="button is-warning" data-loading-class="is-loading">
+                    <p>Download pdf do relatório <i class="fa-solid fa-file-arrow-down fa-lg"></i></p>
+                </button>
+                <button hx-target="#reportGenerated" hx-post="/reports" hx-include="closest form" id="reportButton" class="button is-info" data-loading-class="is-loading">
                     <p>Gerar relatório <i class="fa-solid fa-file-lines fa-lg"></i></p>
                 </button>
             </div>
