@@ -4,6 +4,61 @@ from sqlalchemy.sql import text
 from app import app
 from app.models.database import *
 from pdfkit import from_string
+from .email import send_email
+
+
+def get_report(id_user, dict_data):
+    query = f"""
+                    WITH event_query as 
+                    (SELECT e."eventTime" "dateStart",
+                            et.category,
+                            case when et.name like '%_end' then null
+                            ELSE LEAD("eventTime", 1, null) OVER (ORDER BY "eventTime" ASC)
+                            END as "dateEnd",
+                            e."idVehicle",
+                            e."idCompany",
+                            e.geolocation as "locStart",
+                            case when et.name like '%_end' then null
+                            ELSE LEAD(e.geolocation, 1, null) OVER (ORDER BY "eventTime" ASC)
+                            END as "locEnd"
+                    FROM event e
+                    INNER JOIN "eventType" et ON et.id = e."idType"
+                    WHERE "idUser" = {id_user}
+                    and e."idCompany" = {dict_data['idCompany']}
+                    and e."eventTime" between (date('{dict_data['dateStart']}') - 1) 
+                    and (date('{dict_data['dateEnd']}') + 1)
+                    )
+
+                select 
+                    c.name "companyName"
+                    ,e."dateStart"
+                    ,e.category "categoryName"
+                    ,"dateEnd"      
+                    ,sec_to_time(SUM(EXTRACT(EPOCH FROM ("dateEnd" -"dateStart")))) AS "timeSpent"
+                    ,v.model
+                    ,v."licensePlate"
+                    ,e."locStart"
+                    ,e."locEnd"
+                from event_query e
+                    left join vehicle v on v.id = e."idVehicle"
+                    left join company c on c.id = e."idCompany"
+                where "dateEnd" is not null
+                group by c.name
+                    ,e."dateStart"
+                    ,e.category
+                    ,"dateEnd"
+                    ,v.model
+                    ,v."licensePlate"
+                    ,e."locStart"
+                    ,e."locEnd"
+                order by "dateStart" asc
+                    """
+
+    query = text(query)
+    session = Session()
+    data = session.execute(query).all()
+    session.close()
+    return data
 
 
 @app.route("/reports", methods=["GET", "POST"])
@@ -32,58 +87,13 @@ def reports():
                         return response
                 else:
                     id_user = current_user.id
-                query = f"""
-                WITH event_query as 
-                (SELECT e."eventTime" "dateStart",
-                        et.category,
-                        case when et.name like '%_end' then null
-                        ELSE LEAD("eventTime", 1, null) OVER (ORDER BY "eventTime" ASC)
-                        END as "dateEnd",
-                        e."idVehicle",
-                        e."idCompany",
-                        e.geolocation as "locStart",
-                        case when et.name like '%_end' then null
-                        ELSE LEAD(e.geolocation, 1, null) OVER (ORDER BY "eventTime" ASC)
-                        END as "locEnd"
-                FROM event e
-                INNER JOIN "eventType" et ON et.id = e."idType"
-                WHERE "idUser" = {id_user}
-                and e."idCompany" = {dict_data['idCompany']}
-                and e."eventTime" between (date('{dict_data['dateStart']}') - 1) 
-                and (date('{dict_data['dateEnd']}') + 1)
-                )
-            
-            select 
-                c.name "companyName"
-                ,e."dateStart"
-                ,e.category "categoryName"
-                ,"dateEnd"      
-                ,sec_to_time(SUM(EXTRACT(EPOCH FROM ("dateEnd" -"dateStart")))) AS "timeSpent"
-                ,v.model
-                ,v."licensePlate"
-                ,e."locStart"
-                ,e."locEnd"
-            from event_query e
-                left join vehicle v on v.id = e."idVehicle"
-                left join company c on c.id = e."idCompany"
-            where "dateEnd" is not null
-            group by c.name
-                ,e."dateStart"
-                ,e.category
-                ,"dateEnd"
-                ,v.model
-                ,v."licensePlate"
-                ,e."locStart"
-                ,e."locEnd"
-            order by "dateStart" asc
-                """
-
-            query = text(query)
-            session = Session()
-            data = session.execute(query).all()
-            session.close()
-
-            return render_template('htmx/report/report.html', data=data)
+                data = get_report(id_user, dict_data)
+                return render_template('htmx/report/report.html', data=data)
+            else:
+                flash("Ocorreu um erro, tente novamente", "error")
+                response = make_response(render_template('base/notifications.html'))
+                response.headers["hx-Retarget"] = "#form-box .containerNotifications"
+                return response
 
 
 @app.route("/reports/pdf", methods=["POST"])
@@ -102,61 +112,52 @@ def pdf_report():
                 response = make_response(render_template('base/notifications.html'))
                 response.headers["hx-Retarget"] = "#form-box .containerNotifications"
                 return response
-            query = f"""
-            WITH event_query as 
-            (SELECT e."eventTime" "dateStart",
-                    et.category,
-                    case when et.name like '%_end' then null
-                    ELSE LEAD("eventTime", 1, null) OVER (ORDER BY "eventTime" ASC)
-                    END as "dateEnd",
-                    e."idVehicle",
-                    e."idCompany",
-                    e.geolocation as "locStart",
-                    case when et.name like '%_end' then null
-                    ELSE LEAD(e.geolocation, 1, null) OVER (ORDER BY "eventTime" ASC)
-                    END as "locEnd"
-            FROM event e
-            INNER JOIN "eventType" et ON et.id = e."idType"
-            WHERE "idUser" = {id_user}
-            and e."idCompany" = {dict_data['idCompany']}
-            and e."eventTime" between (date('{dict_data['dateStart']}') - 1) 
-            and (date('{dict_data['dateEnd']}') + 1)
-            )
+            data = get_report(id_user, dict_data)
+            html = render_template("htmx/report/report_template.html", data=data)
+            pdf = from_string(html, False)
+            headers = {
+                "Content-Type": "application/pdf",
+                "Content-Disposition": "attachment;filename=report.pdf"
+            }
+            response = Response(pdf, headers=headers)
+            return response
+        else:
+            flash("Ocorreu um erro, tente novamente", "error")
+            response = make_response(render_template('base/notifications.html'))
+            response.headers["hx-Retarget"] = "#form-box .containerNotifications"
+            return response
 
-        select 
-            c.name "companyName"
-            ,e."dateStart"
-            ,e.category "categoryName"
-            ,"dateEnd"      
-            ,sec_to_time(SUM(EXTRACT(EPOCH FROM ("dateEnd" -"dateStart")))) AS "timeSpent"
-            ,v.model
-            ,v."licensePlate"
-            ,e."locStart"
-            ,e."locEnd"
-        from event_query e
-            left join vehicle v on v.id = e."idVehicle"
-            left join company c on c.id = e."idCompany"
-        where "dateEnd" is not null
-        group by c.name
-            ,e."dateStart"
-            ,e.category
-            ,"dateEnd"
-            ,v.model
-            ,v."licensePlate"
-            ,e."locStart"
-            ,e."locEnd"
-        order by "dateStart" asc
-            """
 
-        query = text(query)
-        session = Session()
-        data = session.execute(query).all()
-        session.close()
-        html = render_template("htmx/report/report_template.html", data=data)
-        pdf = from_string(html, False)
-        headers = {
-            "Content-Type": "application/pdf",
-            "Content-Disposition": "attachment;filename=report.pdf"
-        }
-        response = Response(pdf, headers=headers)
-        return response
+@app.route("/reports/mail", methods=["POST"])
+def email_report():
+    if request.method == 'POST':
+        # get companies, that you worked for and cars ?
+        if request.form:
+            # needs validation before querying
+            dict_data = request.form.to_dict()
+            if "idUser" in dict_data:
+                id_user = dict_data["idUser"]
+            else:
+                id_user = current_user.id
+            if dict_data["idUser"] == "None":
+                flash("Selecione um colaborador.", "error")
+                response = make_response(render_template('base/notifications.html'))
+                response.headers["hx-Retarget"] = "#form-box .containerNotifications"
+                return response
+            data = get_report(id_user, dict_data)
+            html = render_template("htmx/report/report_template.html", data=data)
+            pdf = from_string(html, False)
+            html = render_template('email/email_template.html', url="",
+                                   msg="Segue em anexo o relatório requisitado")
+            send_email(current_user.email,
+                       "Relatório DriverBooklet",
+                       html, pdf, "application/pdf", "Relatório.pdf")
+            flash("O email foi enviado para o endereço cadastrado.", "success")
+            response = make_response(render_template('base/notifications.html'))
+            response.headers["hx-Retarget"] = "#form-box .containerNotifications"
+            return response
+        else:
+            flash("Ocorreu um erro, tente novamente", "error")
+            response = make_response(render_template('base/notifications.html'))
+            response.headers["hx-Retarget"] = "#form-box .containerNotifications"
+            return response

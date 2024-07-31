@@ -20,13 +20,15 @@ def confirm_token(token, expiration=43200):
     return email
 
 
-def send_email(to, subject, template):
+def send_email(to, subject, template, attachment=None, content_type=None, filename=None):
     msg = Message(
         subject,
         recipients=[to],
         html=template,
         sender=app.config['MAIL_DEFAULT_SENDER']
     )
+    if attachment is not None:
+        msg.attach(filename, content_type, attachment)
     mail = Mail(app)
     mail.send(msg)
 

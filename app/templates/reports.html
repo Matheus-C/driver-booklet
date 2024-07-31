@@ -43,11 +43,14 @@
             <hr>
 
             <div align="right">
-                <button id="reportPdf" class="button is-warning" data-loading-class="is-loading">
+                <button id="reportPdf" class="button is-success" data-loading-class="is-loading">
                     <p>Download pdf do relatório <i class="fa-solid fa-file-arrow-down fa-lg"></i></p>
                 </button>
+                <button id="reportEmail" class="button is-primary" data-loading-class="is-loading" hx-post="/reports/mail" hx-include="closest form">
+                    <p>Enviar pdf do relatório por email <i class="fa-solid fa-envelope fa-lg"></i></p>
+                </button>
                 <button hx-target="#reportGenerated" hx-post="/reports" hx-include="closest form" id="reportButton" class="button is-info" data-loading-class="is-loading">
-                    <p>Gerar relatório <i class="fa-solid fa-file-lines fa-lg"></i></p>
+                    <p>Visualizar relatório <i class="fa-solid fa-file-lines fa-lg"></i></p>
                 </button>
             </div>
         </form>
