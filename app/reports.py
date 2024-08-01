@@ -73,8 +73,10 @@ def get_report(id_user, dict_data):
     """
     query = text(query)
     attachment_data = session.execute(query).all()
+    user = session.query(User).filter(User.id == id_user).first()
+    company = session.query(Company).filter(Company.id == dict_data["idCompany"]).first()
     session.close()
-    return {"event_data": event_data, "attachment_data": attachment_data}
+    return {"event_data": event_data, "attachment_data": attachment_data, "user": user, "company": company}
 
 
 @app.route("/reports", methods=["GET", "POST"])
@@ -105,7 +107,8 @@ def reports():
                     id_user = current_user.id
                 data = get_report(id_user, dict_data)
                 return render_template('htmx/report/report.html', event_data=data["event_data"],
-                                       attachment_data=data["attachment_data"])
+                                       attachment_data=data["attachment_data"],
+                                       user=data["user"], company=data["company"])
             else:
                 flash("Ocorreu um erro, tente novamente", "error")
                 response = make_response(render_template('base/notifications.html'))
@@ -130,8 +133,14 @@ def pdf_report():
                 response.headers["hx-Retarget"] = "#form-box .containerNotifications"
                 return response
             data = get_report(id_user, dict_data)
-            html = render_template("htmx/report/report_pdf_template.html", data=data)
-            pdf = from_string(html, False)
+            html = render_template("htmx/report/report_pdf_template.html", event_data=data["event_data"],
+                                   attachment_data=data["attachment_data"],
+                                   user=data["user"], company=data["company"])
+            options = {
+                'margin-bottom': '1.5cm',
+                'footer-right': '[page] de [topage]'
+            }
+            pdf = from_string(html, False, options=options)
             headers = {
                 "Content-Type": "application/pdf",
                 "Content-Disposition": "attachment;filename=report.pdf"
@@ -162,8 +171,14 @@ def email_report():
                 response.headers["hx-Retarget"] = "#form-box .containerNotifications"
                 return response
             data = get_report(id_user, dict_data)
-            html = render_template("htmx/report/report_pdf_template.html", data=data)
-            pdf = from_string(html, False)
+            html = render_template("htmx/report/report_pdf_template.html", event_data=data["event_data"],
+                                   attachment_data=data["attachment_data"],
+                                   user=data["user"], company=data["company"])
+            options = {
+                'margin-bottom': '1.5cm',
+                'footer-right': '[page] de [topage]'
+            }
+            pdf = from_string(html, False, options=options)
             html = render_template('email/email_template.html', url="",
                                    msg="Segue em anexo o relatório requisitado")
             send_email(current_user.email,
