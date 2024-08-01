@@ -14,7 +14,7 @@
     </tr>
     </thead>
     <tbody>
-        {% for item in data %}
+        {% for item in event_data %}
         <tr>
             <td>{{ item.companyName }}</td>
             <td>{{ item.categoryName }}</td>
@@ -25,6 +25,30 @@
             <td>{{ item.licensePlate }}</td>
             <td>{{ item.locStart }}</td>
             <td>{{ item.locEnd }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+<div class="table-container">
+<table class="table is-striped">
+    <thead>
+    <tr>
+        <th>Tipo de incidante</th>
+        <th>Descrição</th>
+        <th>Data de início</th>
+        <th>Data de fim</th>
+        <th>Placa do veículo</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% for item in attachment_data %}
+        <tr>
+            <td>{{ item.categoryName }}</td>
+            <td>{{ item.description }}</td>
+            <td>{{ item.start_date }}</td>
+            <td>{{ item.end_date }}</td>
+            <td>{{ item.licensePlate }}</td>
         </tr>
         {% endfor %}
     </tbody>

@@ -1,5 +1,6 @@
 from flask import render_template, request, make_response, flash, Response
 from flask_login import current_user, login_required
+from .models.models import *
 from sqlalchemy.sql import text
 from app import app
 from app.models.database import *
@@ -11,7 +12,7 @@ def get_report(id_user, dict_data):
     query = f"""
                     WITH event_query as 
                     (SELECT e."eventTime" "dateStart",
-                            et.category,
+                            et.category, et.name_pt,
                             case when et.name like '%_end' then null
                             ELSE LEAD("eventTime", 1, null) OVER (ORDER BY "eventTime" ASC)
                             END as "dateEnd",
@@ -32,7 +33,7 @@ def get_report(id_user, dict_data):
                 select 
                     c.name "companyName"
                     ,e."dateStart"
-                    ,e.category "categoryName"
+                    ,e.name_pt "categoryName"
                     ,"dateEnd"      
                     ,sec_to_time(SUM(EXTRACT(EPOCH FROM ("dateEnd" -"dateStart")))) AS "timeSpent"
                     ,v.model
@@ -51,14 +52,29 @@ def get_report(id_user, dict_data):
                     ,v."licensePlate"
                     ,e."locStart"
                     ,e."locEnd"
+                    ,e.name_pt
                 order by "dateStart" asc
                     """
 
     query = text(query)
     session = Session()
-    data = session.execute(query).all()
+    event_data = session.execute(query).all()
+
+    query = f"""
+        select et.name_pt "categoryName", v."licensePlate",
+         a.description, a.start_date, a.end_date
+        from attachment a 
+            inner join "eventType" et on et.id = a."idType"
+            inner join vehicle v on v.id = a."idVehicle"
+        where a."idUser" = {id_user} and 
+            a."idCompany" = {dict_data['idCompany']} and
+            a.start_date between date('{dict_data['dateStart']}') and date('{dict_data['dateEnd']}') and
+            a.end_date between date('{dict_data['dateStart']}') and date('{dict_data['dateEnd']}')
+    """
+    query = text(query)
+    attachment_data = session.execute(query).all()
     session.close()
-    return data
+    return {"event_data": event_data, "attachment_data": attachment_data}
 
 
 @app.route("/reports", methods=["GET", "POST"])
@@ -88,7 +104,8 @@ def reports():
                 else:
                     id_user = current_user.id
                 data = get_report(id_user, dict_data)
-                return render_template('htmx/report/report.html', data=data)
+                return render_template('htmx/report/report.html', event_data=data["event_data"],
+                                       attachment_data=data["attachment_data"])
             else:
                 flash("Ocorreu um erro, tente novamente", "error")
                 response = make_response(render_template('base/notifications.html'))
@@ -113,7 +130,7 @@ def pdf_report():
                 response.headers["hx-Retarget"] = "#form-box .containerNotifications"
                 return response
             data = get_report(id_user, dict_data)
-            html = render_template("htmx/report/report_template.html", data=data)
+            html = render_template("htmx/report/report_pdf_template.html", data=data)
             pdf = from_string(html, False)
             headers = {
                 "Content-Type": "application/pdf",
@@ -145,7 +162,7 @@ def email_report():
                 response.headers["hx-Retarget"] = "#form-box .containerNotifications"
                 return response
             data = get_report(id_user, dict_data)
-            html = render_template("htmx/report/report_template.html", data=data)
+            html = render_template("htmx/report/report_pdf_template.html", data=data)
             pdf = from_string(html, False)
             html = render_template('email/email_template.html', url="",
                                    msg="Segue em anexo o relatório requisitado")
