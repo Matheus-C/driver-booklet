@@ -1,6 +1,6 @@
 <div class="box">
 <h3 class="title is-3">Relatório de atividades</h3>
-<h4 class="subtitle is-4">{{user.name}} - {{company.name}}</h4>
+<h4 class="subtitle is-4">{{user.name}} - {{company.name}} - de {{date_start}} à {{date_end}}</h4>
 <div class="container">
 <div class="table-container">
 <table class="table is-striped" style="width: 100%;">
@@ -32,8 +32,33 @@
     </tbody>
 </table>
 </div>
+    <br>
+    <div>
+<h3 class="title is-3">Resumo de horas:</h3>
+        <h4 class="subtitle is-4">{{user.name}} - {{company.name}} - de {{date_start}} à {{date_end}}</h4>
+</div>
+    <br>
+    <div class="table-container">
+    <table class="table is-striped">
+    <thead>
+    <tr>
+        <th>Categoria</th>
+        <th>Tempo despendido</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% for item in time_data %}
+        <tr>
+            <td>{{ item.name_pt }}</td>
+            <td>{{ item.timeSpent }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+    </div>
+<br>
     <h3 class="title is-3">Relatório de incidentes registrados</h3>
-    <h4 class="subtitle is-4">{{user.name}} - {{company.name}}</h4>
+    <h4 class="subtitle is-4">{{user.name}} - {{company.name}} - de {{date_start}} à {{date_end}}</h4>
 <div class="table-container" >
 <table class="table is-striped" style="width: 100%;">
     <thead>

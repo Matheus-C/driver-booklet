@@ -42,7 +42,7 @@
 <div>
 <div>
 <h2>Relatório de atividades</h2>
-    <h3>{{user.name}} - {{company.name}}</h3>
+    <h3>{{user.name}} - {{company.name}} - de {{date_start}} à {{date_end}}</h3>
 </div>
 <table style="width: 100%;">
     <thead>
@@ -72,9 +72,30 @@
         {% endfor %}
     </tbody>
 </table>
+    <br>
+    <div>
+<h2>Resumo de horas:</h2>
+        <h3>{{user.name}} - {{company.name}} - de {{date_start}} à {{date_end}}</h3>
+</div>
+    <table>
+    <thead>
+    <tr>
+        <th>Categoria</th>
+        <th>Tempo despendido</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% for item in time_data %}
+        <tr>
+            <td>{{ item.name_pt }}</td>
+            <td>{{ item.timeSpent }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 <br>
 <h2>Relatório de incidentes registrados</h2>
-<h3>{{user.name}} - {{company.name}}</h3>
+    <h3>{{user.name}} - {{company.name}} - de {{date_start}} à {{date_end}}</h3>
 <div>
 <table style="width: 100%;">
     <thead>

@@ -19,6 +19,7 @@ def render_pdf(html):
 
 
 def get_report(id_user, dict_data):
+    #event query
     query = f"""
                     WITH event_query as 
                     (SELECT e."eventTime" "dateStart",
@@ -70,6 +71,7 @@ def get_report(id_user, dict_data):
     session = Session()
     event_data = session.execute(query).all()
 
+    #attachment query
     query = f"""
         select et.name_pt "categoryName", v."licensePlate",
          a.description, a.start_date, a.end_date
@@ -83,10 +85,41 @@ def get_report(id_user, dict_data):
     """
     query = text(query)
     attachment_data = session.execute(query).all()
+
+    #
+    query = f"""
+                    WITH event_query as 
+                    (SELECT e."eventTime" "dateStart",
+                            et.category,
+                            et.name_pt,
+                            case when et.name like '%_end' then null
+                            ELSE LEAD(e."eventTime", 1, null) OVER (ORDER BY e."eventTime" ASC)
+                            END as "dateEnd",
+                            e."idVehicle",
+                            e."idCompany",
+                            e.geolocation
+                    FROM event e
+                    INNER JOIN "eventType" et ON et.id = e."idType"
+                    WHERE e."idUser" = {id_user}
+                    and date(e."eventTime") between date('{dict_data['dateStart']}') and date('{dict_data['dateEnd']}')
+                    )
+
+                select 
+                    e.category "categoryName"
+                    ,e.name_pt
+                    ,sec_to_time(SUM(EXTRACT(EPOCH FROM ("dateEnd" -"dateStart")))) AS "timeSpent"
+                from event_query e
+                where "dateEnd" is not null
+                group by e.category, e.name_pt
+                order by e.category desc
+                """
+    query = text(query)
+    time_data = session.execute(query).all()
     user = session.query(User).filter(User.id == id_user).first()
     company = session.query(Company).filter(Company.id == dict_data["idCompany"]).first()
     session.close()
-    return {"event_data": event_data, "attachment_data": attachment_data, "user": user, "company": company}
+    return {"event_data": event_data, "attachment_data": attachment_data,
+            "user": user, "company": company, "time_data": time_data}
 
 
 @app.route("/reports", methods=["GET", "POST"])
@@ -118,7 +151,8 @@ def reports():
                 data = get_report(id_user, dict_data)
                 return render_template('htmx/report/report.html', event_data=data["event_data"],
                                        attachment_data=data["attachment_data"],
-                                       user=data["user"], company=data["company"])
+                                       user=data["user"], company=data["company"], time_data=data["time_data"],
+                                       date_start=dict_data["dateStart"], date_end=dict_data["dateEnd"])
             else:
                 flash("Ocorreu um erro, tente novamente", "error")
                 response = make_response(render_template('base/notifications.html'))
@@ -145,7 +179,8 @@ def pdf_report():
             data = get_report(id_user, dict_data)
             html = render_template("htmx/report/report_pdf_template.html", event_data=data["event_data"],
                                    attachment_data=data["attachment_data"],
-                                   user=data["user"], company=data["company"])
+                                   user=data["user"], company=data["company"], time_data=data["time_data"],
+                                   date_start=dict_data["dateStart"], date_end=dict_data["dateEnd"])
             pdf = render_pdf(html)
             headers = {
                 "Content-Type": "application/pdf",
@@ -179,7 +214,8 @@ def email_report():
             data = get_report(id_user, dict_data)
             html = render_template("htmx/report/report_pdf_template.html", event_data=data["event_data"],
                                    attachment_data=data["attachment_data"],
-                                   user=data["user"], company=data["company"])
+                                   user=data["user"], company=data["company"], time_data=data["time_data"],
+                                   date_start=dict_data["dateStart"], date_end=dict_data["dateEnd"])
             pdf = render_pdf(html)
             html = render_template('email/email_template.html', url="",
                                    msg="Segue em anexo o relatório requisitado")
