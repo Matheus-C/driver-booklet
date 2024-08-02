@@ -3,19 +3,47 @@
 <head>
     <meta charset="utf-8">
     <style>
+        @page {
+            size: a4 portrait;
+            @frame header_frame {           /* Static Frame */
+               -pdf-frame-content: header_content;
+               left: 50pt; width: 512pt; top: 50pt; height: 40pt;
+            }
+            @frame content_frame {          /* Content Frame */
+                left: 50pt; width: 512pt; top: 90pt; height: 632pt;
+            }
+            @frame footer_frame {           /* Another static Frame */
+                -pdf-frame-content: footer_content;
+                left: 50pt; width: 512pt; top: 772pt; height: 20pt;
+            }
+      }
         table, th, td {
           border: 1px solid black;
-          border-collapse: collapse;
+          text-align: center;
+          padding-top: 3px;
+        }
+        h1 {
+          font-size: 35px;
+        }
+
+        h2 {
+          font-size: 25px;
+        }
+        h3 {
+          font-size: 15px;
         }
     </style>
 </head>
 <body>
-<h1>Driver Booklet</h1>
-<br>
+<!-- Content for Static Frame 'header_frame' -->
+<div id="header_content">
+    <h1>Driver Booklet</h1>
+</div>
+<div>
 <div>
 <h2>Relatório de atividades</h2>
     <h3>{{user.name}} - {{company.name}}</h3>
-
+</div>
 <table style="width: 100%;">
     <thead>
     <tr>
@@ -32,19 +60,18 @@
     <tbody>
         {% for item in event_data %}
         <tr>
-            <td style="text-align: center;">{{ item.companyName }}</td>
-            <td style="text-align: center;">{{ item.categoryName }}</td>
-            <td style="text-align: center;">{{ item.dateStart }}</td>
-            <td style="text-align: center;">{{ item.dateEnd }}</td>
-            <td style="text-align: center;">{{ item.timeSpent }}</td>
-            <td style="text-align: center;">{{ item.licensePlate }}</td>
-            <td style="text-align: center;">{{ item.locStart }}</td>
-            <td style="text-align: center;">{{ item.locEnd }}</td>
+            <td>{{ item.companyName }}</td>
+            <td>{{ item.categoryName }}</td>
+            <td>{{ item.dateStart }}</td>
+            <td>{{ item.dateEnd }}</td>
+            <td>{{ item.timeSpent }}</td>
+            <td>{{ item.licensePlate }}</td>
+            <td>{{ item.locStart }}</td>
+            <td>{{ item.locEnd }}</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
-</div>
 <br>
 <h2>Relatório de incidentes registrados</h2>
 <h3>{{user.name}} - {{company.name}}</h3>
@@ -62,15 +89,20 @@
     <tbody>
         {% for item in attachment_data %}
         <tr>
-            <td style="text-align: center;">{{ item.categoryName }}</td>
-            <td style="text-align: center;">{{ item.description }}</td>
-            <td style="text-align: center;">{{ item.start_date }}</td>
-            <td style="text-align: center;">{{ item.end_date }}</td>
-            <td style="text-align: center;">{{ item.licensePlate }}</td>
+            <td>{{ item.categoryName }}</td>
+            <td>{{ item.description }}</td>
+            <td>{{ item.start_date }}</td>
+            <td>{{ item.end_date }}</td>
+            <td>{{ item.licensePlate }}</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+</div>
+</div>
+<!-- Content for Static Frame 'footer_frame' -->
+<div id="footer_content" align="right"> Página <pdf:pagenumber/>
+    de <pdf:pagecount/>
 </div>
 </body>
 </html>

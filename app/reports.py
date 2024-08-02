@@ -4,8 +4,18 @@ from .models.models import *
 from sqlalchemy.sql import text
 from app import app
 from app.models.database import *
-from pdfkit import from_string
 from .email import send_email
+
+
+def render_pdf(html):
+    from xhtml2pdf import pisa
+    from io import BytesIO
+
+    pdf = BytesIO()
+
+    pisa.CreatePDF(html, pdf)
+
+    return pdf.getvalue()
 
 
 def get_report(id_user, dict_data):
@@ -136,11 +146,7 @@ def pdf_report():
             html = render_template("htmx/report/report_pdf_template.html", event_data=data["event_data"],
                                    attachment_data=data["attachment_data"],
                                    user=data["user"], company=data["company"])
-            options = {
-                'margin-bottom': '1.5cm',
-                'footer-right': '[page] de [topage]'
-            }
-            pdf = from_string(html, False, options=options)
+            pdf = render_pdf(html)
             headers = {
                 "Content-Type": "application/pdf",
                 "Content-Disposition": "attachment;filename=report.pdf"
@@ -174,11 +180,7 @@ def email_report():
             html = render_template("htmx/report/report_pdf_template.html", event_data=data["event_data"],
                                    attachment_data=data["attachment_data"],
                                    user=data["user"], company=data["company"])
-            options = {
-                'margin-bottom': '1.5cm',
-                'footer-right': '[page] de [topage]'
-            }
-            pdf = from_string(html, False, options=options)
+            pdf = render_pdf(html)
             html = render_template('email/email_template.html', url="",
                                    msg="Segue em anexo o relatório requisitado")
             send_email(current_user.email,
