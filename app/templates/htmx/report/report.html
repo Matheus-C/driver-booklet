@@ -1,7 +1,16 @@
+<style>
+    .accordion {
+        display: flex;
+        justify-content: space-between;
+    }
+</style>
+
 <div class="box">
-<h3 class="title is-3">Relatório de atividades</h3>
-<h4 class="subtitle is-4">{{user.name}} - {{company.name}} - de {{date_start}} à {{date_end}}</h4>
-<div class="container">
+    <h4 class="title is-4">{{user.name}} - {{company.name}} - de {{date_start}} à {{date_end}}</h4>
+    <div x-data="{ isExpanded: false }">
+        <span @click="isExpanded = ! isExpanded" class="button is-fullwidth accordion"><p></p><p>Relatório de atividades</p><i class="fa-solid fa-chevron-down fa-lg"></i></span>
+        <div x-show="isExpanded">
+
 <div class="table-container">
 <table class="table is-striped" style="width: 100%;">
     <thead>
@@ -32,11 +41,12 @@
     </tbody>
 </table>
 </div>
+    </div>
+        </div>
     <br>
-    <div>
-<h3 class="title is-3">Resumo de horas:</h3>
-        <h4 class="subtitle is-4">{{user.name}} - {{company.name}} - de {{date_start}} à {{date_end}}</h4>
-</div>
+        <div x-data="{ isExpanded: false }">
+        <span @click="isExpanded = ! isExpanded" class="button is-fullwidth accordion"><p></p><p>Resumo de horas:</p><i class="fa-solid fa-chevron-down fa-lg"></i></span>
+        <div x-show="isExpanded">
     <br>
     <div class="table-container">
     <table class="table is-striped">
@@ -56,9 +66,12 @@
     </tbody>
 </table>
     </div>
+        </div>
+        </div>
 <br>
-    <h3 class="title is-3">Relatório de incidentes registrados</h3>
-    <h4 class="subtitle is-4">{{user.name}} - {{company.name}} - de {{date_start}} à {{date_end}}</h4>
+     <div x-data="{ isExpanded: false }">
+        <span @click="isExpanded = ! isExpanded" class="button is-fullwidth accordion"><p></p><p>Relatório de incidentes registrados</p><i class="fa-solid fa-chevron-down fa-lg"></i></span>
+        <div x-show="isExpanded">
 <div class="table-container" >
 <table class="table is-striped" style="width: 100%;">
     <thead>
@@ -83,5 +96,6 @@
     </tbody>
 </table>
 </div>
-</div>
     </div>
+     </div>
+</div>
