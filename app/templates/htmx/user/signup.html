@@ -1,5 +1,4 @@
 
-
 <div x-data="{ isVisible: true }" id="signup_form">
     <div x-show="isVisible" class="box container">
         <div align="right">
@@ -14,25 +13,25 @@
         {% include 'base/notifications.html' %}
         <form hx-post="{{data.return}}" hx-target="{{data.target}}" hx-swap="outerHTML">
             <div class="control">
-                <label class="label">Nome:</label>
-                <input class="input" type="text" name='name' placeholder="Digite seu nome">
+                <label class="label req">Nome:</label>
+                <input class="input" type="text" name='name' placeholder="Digite seu nome" required>
             </div>
             <div class="control">
-                <label class="label">Identificação (NIF):</label><input class="input" type="number"
-                    name='userIdentification' placeholder="Digite seu NIF">
+                <label class="label req">Identificação (NIF):</label><input class="input" type="number"
+                    name='userIdentification' placeholder="Digite seu NIF" required>
             </div>
             <div class="control">
-                <label class="label">Email:</label><input class="input" type="email" name='email'
-                    placeholder="Digite seu email">
+                <label class="label req">Email:</label><input class="input" type="email" name='email'
+                    placeholder="Digite seu email" required>
             </div>
             <div class="control">
-                <label class="label">Senha:</label><input class="input" type="password" name='password'
-                    placeholder="Digite sua senha">
+                <label class="label req">Senha:</label><input class="input" type="password" name='password'
+                    placeholder="Digite sua senha" required>
             </div>
 
             <div class="control">
-                <label class="label">Telefone:</label><input class="input" type="tel" name='phone'
-                    placeholder="Digite seu telefone">
+                <label class="label req">Telefone:</label><input class="input" type="tel" name='phone'
+                    placeholder="Digite seu telefone" required>
             </div>
             <div class="control">
                 <label class="label">Endereço:</label><input class="input" type="text" name='address'
@@ -40,13 +39,13 @@
             </div>
 
             <div class="control">
-                <label class="label">Data de nascimento:</label><input class="input" type="date" name='birthDate'
-                    placeholder="Digite sua data de nascimento">
+                <label class="label req">Data de nascimento:</label><input class="input" type="date" name='birthDate'
+                    placeholder="Digite sua data de nascimento" required>
             </div>
             {% if current_user.is_anonymous is false %}
-            <div class="control">
+            <div class="control req">
                 <label class="label">Trabalha desde:</label><input class="input" type="date" name='startWorkDate'
-                    placeholder="Digite desde quando esta pessoa trabalha nesta empresa">
+                    placeholder="Digite desde quando esta pessoa trabalha nesta empresa" required>
             </div>
             {% endif %}
             <hr>

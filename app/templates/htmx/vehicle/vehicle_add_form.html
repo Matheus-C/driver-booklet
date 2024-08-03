@@ -11,19 +11,19 @@
             <form hx-post="{{data.return}}" hx-target="#vehicles" hx-swap="innerHTML">
                 <div class="field">
                     <div class="control">
-                        <label class="label" for="model">Modelo: </label><input class="input" id="model" type="text"
+                        <label class="label req" for="model">Modelo: </label><input class="input" id="model" type="text"
                             name='model' placeholder="Digite o modelo do veículo">
                     </div>
                     <div class="control">
-                        <label class="label" for="manufacturer">Fabricante: </label> <input class="input" type="text"
+                        <label class="label req" for="manufacturer">Fabricante: </label> <input class="input" type="text"
                             id="manufacturer" name='manufacturer' placeholder="Digite o fabricante do veículo">
                     </div>
                     <div class="control">
-                        <label class="label" for="color">Cor: </label><input class="input" type="text" name='color'
+                        <label class="label req" for="color">Cor: </label><input class="input" type="text" name='color'
                             id="color" placeholder="Digite a cor do carro">
                     </div>
                     <div class="control">
-                        <label class="label" for="licensePlate">Placa: </label><input class="input" type="text"
+                        <label class="label req" for="licensePlate">Placa: </label><input class="input" type="text"
                             id="licensePlate" name='licensePlate' placeholder="XX-XX-XX" x-mask="**-**-**"
                             oninput="this.value = this.value.toUpperCase()">
                     </div>

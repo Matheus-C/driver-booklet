@@ -4,16 +4,16 @@
 <div id="notification" class="container containerNotifications">
     {% for category, message in messages %}
     {% if category == "error" %}
-    <div class="notification is-danger is-light"></div>
+    <div class="notification is-danger is-light">
     {% elif category == "success" %}
     <div class="notification is-primary is-light">
         {% endif %}
         <!-- <button class="delete"></button> -->
         <p>{{message}}</p>
     </div>
-        {% endfor %}
+    {% endfor %}
 </div>
-    {% else %}
-    <div id="notification" class="container containerNotifications"></div>
-    {% endif %}
-    {% endwith %}
+{% else %}
+<div id="notification" class="container containerNotifications"></div>
+{% endif %}
+{% endwith %}

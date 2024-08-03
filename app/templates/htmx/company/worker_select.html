@@ -1,0 +1,4 @@
+<option value="None" hidden>Selecione uma opção</option>
+{% for worker in workers %}
+    <option value="{{worker.id}}">{{worker.name}}</option>
+{% endfor %}

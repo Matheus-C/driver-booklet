@@ -249,3 +249,13 @@ def worker_delete(id):
         company = session.query(Company).filter(Company.id == userCompany.idCompany).first()
         session.close()
         return render_template('htmx/company/workers_list.html', users_company=results, company=company)
+
+
+@app.route('/worker/select', methods=['POST'])
+def worker_select():
+    id_company = int(request.form.get("idCompany"))
+    session = Session()
+    workers = (session.query(User).join(UserCompany, UserCompany.idUser == User.id)
+               .filter(UserCompany.idCompany == id_company, UserCompany.validUntil == None).all())
+    session.close()
+    return render_template('htmx/company/worker_select.html', workers=workers)

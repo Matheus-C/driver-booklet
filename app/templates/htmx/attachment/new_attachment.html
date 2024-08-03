@@ -23,29 +23,29 @@
         <form hx-post="/attachment/add/{{page}}" @close.window="closeAttachmentForm()">
         {% endif %}
             <div hx-get="/company/list" hx-trigger="load" hx-target="#idCompany" hx-swap="innerHTML"></div>
-            <label class="label" for="idCompany">Empresa: </label>
+            <label class="label req" for="idCompany">Empresa: </label>
             <div class="select">
                 <select id="idCompany" name="idCompany" hx-target="#selectCar" hx-post="/vehicle/select/"
-                    hx-swap="innerHTML">
+                    hx-swap="innerHTML" required>
                 </select>
             </div>
-            <label class="label" for="selectCar">Veículo: </label>
+            <label class="label req" for="selectCar">Veículo: </label>
             <div class="select">
-                <select id="selectCar" name="idVehicle">
+                <select id="selectCar" name="idVehicle" required>
                 </select>
             </div>
             <br><br>
             <div class="control">
-                <label class="label" for="start_date">Data início</label>
+                <label class="label req" for="start_date">Data início</label>
                 <input class="input" id="start_date" name="start_date" type="date" required>
-                <label class="label" for="end_date">Data fim</label>
+                <label class="label req" for="end_date">Data fim</label>
                 <input class="input" id="end_date" name="end_date" type="date" required>
             </div>
             <br>
             <div class="control">
-                <p class="label">Tipo de incidente:</p>
+                <p class="label req">Tipo de incidente:</p>
                 <label class="radio">
-                    <input type="radio" name="type" id="accident" class='radio' value="10">
+                    <input type="radio" name="type" id="accident" class='radio' value="10" required>
                     Acidente
                 </label>
                 <label class="radio">

@@ -87,6 +87,7 @@ def timer_progress(id):
                 FROM event e
                 INNER JOIN "eventType" et ON et.id = e."idType"
                 WHERE e."idUser" = {id}
+                and date(e."eventTime") between CURRENT_DATE and CURRENT_DATE
                 )
             
             select 

@@ -4,7 +4,12 @@
     <div class="grid">
         
         {% for attachment in attachments %}
-        <span class="cell tag is-medium has-text-dark has-background-success-95" style="display: flex; justify-content: space-between;"><i class="fa-solid fa-paperclip"></i> <p>{{attachment.name_pt}}</p><p></p></span>
+            <span hx-get="/attachment/detail/{{attachment.id}}" hx-target="#attachmentDetails"
+                    class="cell button tag is-medium has-text-dark has-background-success-95"
+                    style="display: flex; justify-content: space-between;"><i class="fa-solid fa-paperclip"></i>
+                    <p>{{attachment.name_pt}}</p>
+                    <p></p>
+                </span>
         {% endfor %}
     </div>
 </div>

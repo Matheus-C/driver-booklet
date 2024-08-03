@@ -1,32 +1,101 @@
+<style>
+    .accordion {
+        display: flex;
+        justify-content: space-between;
+    }
+</style>
+
+<div class="box">
+    <h4 class="title is-4">{{user.name}} - {{company.name}} - de {{date_start}} à {{date_end}}</h4>
+    <div x-data="{ isExpanded: false }">
+        <span @click="isExpanded = ! isExpanded" class="button is-fullwidth accordion"><p></p><p>Relatório de atividades</p><i class="fa-solid fa-chevron-down fa-lg"></i></span>
+        <div x-show="isExpanded">
+
 <div class="table-container">
-<table class="table is-striped">
+<table class="table is-striped" style="width: 100%;">
     <thead>
     <tr>
-        <th>Empresa</th>
-        <th>Categoria</th>
-        <th>Data de início</th>
-        <th>Data de fim</th>
-        <th>Tempo despendido</th>
-        <th>Modelo do carro</th>
-        <th>Placa do carro</th>
-        <th>Localização início</th>
-        <th>Localização fim</th>
+        <th style="width: 20%; text-align: center;">Empresa</th>
+        <th style="width: 10%; text-align: center;">Categoria</th>
+        <th style="width: 15%; text-align: center;">Data de início</th>
+        <th style="width: 15%; text-align: center;">Data de fim</th>
+        <th style="width: 10%; text-align: center;">Tempo despendido</th>
+        <th style="width: 10%; text-align: center;">Placa do carro</th>
+        <th style="width: 10%; text-align: center;">Localização início</th>
+        <th style="width: 10%; text-align: center;">Localização fim</th>
     </tr>
     </thead>
     <tbody>
-        {% for item in data %}
+        {% for item in event_data %}
         <tr>
-            <td>{{ item.companyName }}</td>
-            <td>{{ item.categoryName }}</td>
-            <td>{{ item.dateStart }}</td>
-            <td>{{ item.dateEnd }}</td>
-            <td>{{ item.timeSpent }}</td>
-            <td>{{ item.model }}</td>
-            <td>{{ item.licensePlate }}</td>
-            <td>{{ item.locStart }}</td>
-            <td>{{ item.locEnd }}</td>
+            <td style="text-align: center;">{{ item.companyName }}</td>
+            <td style="text-align: center;">{{ item.categoryName }}</td>
+            <td style="text-align: center;">{{ item.dateStart }}</td>
+            <td style="text-align: center;">{{ item.dateEnd }}</td>
+            <td style="text-align: center;">{{ item.timeSpent }}</td>
+            <td style="text-align: center;">{{ item.licensePlate }}</td>
+            <td style="text-align: center;">{{ item.locStart }}</td>
+            <td style="text-align: center;">{{ item.locEnd }}</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+</div>
+    </div>
+        </div>
+    <br>
+        <div x-data="{ isExpanded: false }">
+        <span @click="isExpanded = ! isExpanded" class="button is-fullwidth accordion"><p></p><p>Resumo de horas:</p><i class="fa-solid fa-chevron-down fa-lg"></i></span>
+        <div x-show="isExpanded">
+    <br>
+    <div class="table-container">
+    <table class="table is-striped">
+    <thead>
+    <tr>
+        <th>Categoria</th>
+        <th>Tempo despendido</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% for item in time_data %}
+        <tr>
+            <td>{{ item.name_pt }}</td>
+            <td>{{ item.timeSpent }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+    </div>
+        </div>
+        </div>
+<br>
+     <div x-data="{ isExpanded: false }">
+        <span @click="isExpanded = ! isExpanded" class="button is-fullwidth accordion"><p></p><p>Relatório de incidentes registrados</p><i class="fa-solid fa-chevron-down fa-lg"></i></span>
+        <div x-show="isExpanded">
+<div class="table-container" >
+<table class="table is-striped" style="width: 100%;">
+    <thead>
+    <tr>
+        <th style="width: 20%; text-align: center;">Tipo de incidente</th>
+        <th style="width: 40%; text-align: center;">Descrição</th>
+        <th style="width: 15%; text-align: center;">Data de início</th>
+        <th style="width: 15%; text-align: center;">Data de fim</th>
+        <th style="width: 10%; text-align: center;">Placa do veículo</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% for item in attachment_data %}
+        <tr>
+            <td style="text-align: center;">{{ item.categoryName }}</td>
+            <td style="text-align: center;">{{ item.description }}</td>
+            <td style="text-align: center;">{{ item.start_date }}</td>
+            <td style="text-align: center;">{{ item.end_date }}</td>
+            <td style="text-align: center;">{{ item.licensePlate }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+    </div>
+     </div>
 </div>
