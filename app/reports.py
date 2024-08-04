@@ -167,12 +167,15 @@ def pdf_report():
         if request.form:
             # needs validation before querying
             dict_data = request.form.to_dict()
-            if "idUser" in dict_data:
-                id_user = dict_data["idUser"]
+            if current_user.userTypeId == 1:
+                if "idUser" in dict_data:
+                    id_user = dict_data["idUser"]
+                else:
+                    id_user = "None"
             else:
                 id_user = current_user.id
             if dict_data["idUser"] == "None":
-                flash("Selecione um colaborador.", "error")
+                flash("Os campos com * são obrigatórios.", "error")
                 response = make_response(render_template('base/notifications.html'))
                 response.headers["hx-Retarget"] = "#form-box .containerNotifications"
                 return response
@@ -202,12 +205,15 @@ def email_report():
         if request.form:
             # needs validation before querying
             dict_data = request.form.to_dict()
-            if "idUser" in dict_data:
-                id_user = dict_data["idUser"]
+            if current_user.userTypeId == 1:
+                if "idUser" in dict_data:
+                    id_user = dict_data["idUser"]
+                else:
+                    id_user = "None"
             else:
                 id_user = current_user.id
-            if dict_data["idUser"] == "None":
-                flash("Selecione um colaborador.", "error")
+            if id_user == "None" or "email" in dict_data:
+                flash("Os campos com * são obrigatórios.", "error")
                 response = make_response(render_template('base/notifications.html'))
                 response.headers["hx-Retarget"] = "#form-box .containerNotifications"
                 return response
@@ -219,7 +225,7 @@ def email_report():
             pdf = render_pdf(html)
             html = render_template('email/email_template.html', url="",
                                    msg="Segue em anexo o relatório requisitado")
-            send_email(current_user.email,
+            send_email(dict_data["email"],
                        "Relatório DriverBooklet",
                        html, pdf, "application/pdf", "Relatório.pdf")
             flash("O email foi enviado para o endereço cadastrado.", "success")
