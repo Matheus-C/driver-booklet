@@ -144,36 +144,31 @@
   <!-- Bottom bar -->
   <nav class="navbar is-dark is-fixed-bottom is-hidden-tablet" role="navigation">
     <div class="navbar-brand">
+      <a id="home" class="navbar-item is-expanded is-block has-text-centered" href='/'>
+        <i class="fa-solid fa-house fa-lg"></i>
+        <p class="is-size-6">Home</p>
+      </a>
       {% if current_user.is_anonymous or mail_verified is defined %}
       {% else %}
-      {% if current_user.userTypeId == 1%}
-      <a id="companies" class="navbar-item is-expanded is-block has-text-centered" href='/companies'>
-        <i class="fa fa-building"></i>
-        <p class="is-size-7">Empresas</p>
-      </a>
-      {% endif %}
+<!--      {% if current_user.userTypeId == 1%}-->
+<!--      <a id="companies" class="navbar-item is-expanded is-block has-text-centered" href='/companies'>-->
+<!--        <i class="fa fa-building"></i>-->
+<!--        <p class="is-size-6">Empresas</p>-->
+<!--      </a>-->
+<!--      {% endif %}-->
       <a id="timer" class="navbar-item is-expanded is-block has-text-centered" href='/timer'>
-        <i class="fa fa-clock"></i>
-        <p class="is-size-7">Timer</p>
+        <i class="fa fa-clock fa-lg"></i>
+        <p class="is-size-6">Timer</p>
       </a>
       <a id="reports" class="navbar-item is-expanded is-block has-text-centered" href='/reports'>
-        <i class="fa fa-file-excel"></i>
-        <p class="is-size-7">Relatórios</p>
-      </a>
-
-      <a id="profile" class="navbar-item is-expanded is-block has-text-centered" href='/profile'>
-        <i class="fa fa-user"></i>
-        <p class="is-size-7">Perfil</p>
-      </a>
-      <a id="attachment" class="navbar-item is-expanded is-block has-text-centered" href='/attachment'>
-        <i class="fa-solid fa-note-sticky"></i>
-        <p class="is-size-7">Incidentes</p>
+        <i class="fa fa-file-excel fa-lg"></i>
+        <p class="is-size-6">Relatórios</p>
       </a>
       {% endif %}
       {% if not current_user.is_anonymous %}
       <a class="navbar-item is-expanded is-block has-text-centered" href='/logout'>
-        <i class="fa fa-right-from-bracket"></i>
-        <p class="is-size-7">Logout</p>
+        <i class="fa fa-right-from-bracket fa-lg"></i>
+        <p class="is-size-6">Logout</p>
       </a>
       
       {% endif %}

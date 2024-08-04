@@ -18,11 +18,9 @@ def index():
     if current_user.is_authenticated:
         if current_user.userTypeId == 1:  # Company Owner
             if current_user._mail_verified:
-                return redirect('/companies')
+                return render_template('index.html')
             else:
                 return render_template('email/not_verified.html', current_user=current_user, mail_verified="false")
-        elif current_user.userTypeId == 2:  #worker
-            return redirect('/timer')
         elif current_user.userTypeId == 3:  #admin
             return redirect('/admin')
     else:

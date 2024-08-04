@@ -2,12 +2,6 @@
 
 {% block header %}
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
-<style>
-    .content-button{
-        margin-bottom: 10px;
-        margin-right: 10px;
-    }
-</style>
 {% endblock %}
 
 {% block content %}
@@ -48,15 +42,15 @@
             <input class="input" id="dateEnd" name="dateEnd" type="date" required>
             <hr>
 
-            <div align="right">
+            <div class="fixed-grid has-auto-count" align="center">
                 <button id="reportPdf" class="button is-success content-button" data-loading-class="is-loading">
-                    <p>Download pdf do relatório <i class="fa-solid fa-file-arrow-down fa-lg"></i></p>
+                    <p><i class="fa-solid fa-file-arrow-down fa-lg"></i> Baixar relatório</p>
                 </button>
                 <button id="reportEmail" class="button is-primary content-button" data-loading-class="is-loading" hx-post="/reports/mail" hx-include="closest form">
-                    <p>Enviar pdf do relatório por email <i class="fa-solid fa-envelope fa-lg"></i></p>
+                    <p><i class="fa-solid fa-envelope fa-lg"></i> Enviar por email</p>
                 </button>
                 <button hx-target="#reportGenerated" hx-post="/reports" hx-include="closest form" id="reportButton" class="button is-info content-button" data-loading-class="is-loading">
-                    <p>Visualizar relatório <i class="fa-solid fa-file-lines fa-lg"></i></p>
+                    <p><i class="fa-solid fa-file-lines fa-lg"></i> Visualizar relatório</p>
                 </button>
             </div>
         </form>
