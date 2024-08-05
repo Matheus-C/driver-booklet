@@ -10,3 +10,4 @@ Flask-Mail
 flask-admin
 flask-babel
 xhtml2pdf
+geopy

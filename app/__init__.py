@@ -5,6 +5,7 @@ from flask_bcrypt import Bcrypt
 from app.models import *  # importing db + models
 from flask_apscheduler import APScheduler
 import flask_admin
+from geopy.geocoders import Nominatim
 from flask_babel import Babel  # necessary to flask_admin
 
 app = Flask(__name__)
@@ -54,6 +55,21 @@ class MyAdminIndexView(flask_admin.AdminIndexView):
         if not (current_user.is_authenticated and current_user.userTypeId == 3):
             return redirect('/')
         return super(MyAdminIndexView, self).index()
+
+
+geolocator = Nominatim(user_agent="driver_booklet")
+
+
+@app.context_processor
+def utility_processor():
+    def geo_to_address(geolocation):
+        loc = geolocator.reverse(geolocation)
+        if loc is not None:
+            return loc.address
+        else:
+            return "Não foi possível encontrar o endereço"
+
+    return dict(geo_to_address=geo_to_address)
 
 
 # Create admin

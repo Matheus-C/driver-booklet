@@ -80,8 +80,8 @@ def get_report(id_user, dict_data):
             inner join vehicle v on v.id = a."idVehicle"
         where a."idUser" = {id_user} and 
             a."idCompany" = {dict_data['idCompany']} and
-            a.start_date between date('{dict_data['dateStart']}') and date('{dict_data['dateEnd']}') and
-            a.end_date between date('{dict_data['dateStart']}') and date('{dict_data['dateEnd']}')
+            a.start_date between date('{dict_data['dateStart']}')-1 and date('{dict_data['dateEnd']}')+1 and
+            a.end_date between date('{dict_data['dateStart']}')-1 and date('{dict_data['dateEnd']}')+1
     """
     query = text(query)
     attachment_data = session.execute(query).all()
@@ -101,7 +101,8 @@ def get_report(id_user, dict_data):
                     FROM event e
                     INNER JOIN "eventType" et ON et.id = e."idType"
                     WHERE e."idUser" = {id_user}
-                    and date(e."eventTime") between date('{dict_data['dateStart']}') and date('{dict_data['dateEnd']}')
+                    and date(e."eventTime") between date('{dict_data['dateStart']}')-1 
+                    and date('{dict_data['dateEnd']}')+1
                     )
 
                 select 

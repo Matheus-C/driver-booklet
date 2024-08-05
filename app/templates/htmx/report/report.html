@@ -34,8 +34,8 @@
             <td style="text-align: center;">{{ item.dateEnd }}</td>
             <td style="text-align: center;">{{ item.timeSpent }}</td>
             <td style="text-align: center;">{{ item.licensePlate }}</td>
-            <td style="text-align: center;">{{ item.locStart }}</td>
-            <td style="text-align: center;">{{ item.locEnd }}</td>
+            <td style="text-align: center;">{{ geo_to_address(item.locStart) }}</td>
+            <td style="text-align: center;">{{ geo_to_address(item.locEnd) }}</td>
         </tr>
         {% endfor %}
     </tbody>
