@@ -29,12 +29,13 @@ def get_report(id_user, dict_data):
                             END as "dateEnd",
                             e."idVehicle",
                             e."idCompany",
-                            e.geolocation as "locStart",
+                            p.address as "locStart",
                             case when et.name like '%_end' then null
-                            ELSE LEAD(e.geolocation, 1, null) OVER (ORDER BY "eventTime" ASC)
+                            ELSE LEAD(p.address, 1, null) OVER (ORDER BY "eventTime" ASC)
                             END as "locEnd"
                     FROM event e
                     INNER JOIN "eventType" et ON et.id = e."idType"
+                    INNER JOIN positions p ON p.id = e.geolocation
                     WHERE "idUser" = {id_user}
                     and e."idCompany" = {dict_data['idCompany']}
                     and e."eventTime" between (date('{dict_data['dateStart']}') - 1) 
@@ -97,9 +98,10 @@ def get_report(id_user, dict_data):
                             END as "dateEnd",
                             e."idVehicle",
                             e."idCompany",
-                            e.geolocation
+                            p.address
                     FROM event e
                     INNER JOIN "eventType" et ON et.id = e."idType"
+                    join positions p on p.id = e.geolocation
                     WHERE e."idUser" = {id_user}
                     and date(e."eventTime") between date('{dict_data['dateStart']}')-1 
                     and date('{dict_data['dateEnd']}')+1

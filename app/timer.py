@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from datetime import datetime
 from app import app
 from app.models.models import *
+from geopy.geocoders import Nominatim
 
 
 @app.route('/timer')
@@ -20,9 +21,17 @@ def event_data():
     session = Session()
     json_data = request.form.to_dict()
     dt_object = datetime.strptime(json_data["eventTimestamp"], '%m/%d/%Y, %H:%M:%S')
+    position = session.query(Positions).filter(json_data["geolocation"] == Positions.geolocation).first()
+    if position is None:
+        geolocator = Nominatim(user_agent="driver_booklet")
+        loc = geolocator.reverse(json_data["geolocation"])
+        position = Positions(geolocation=json_data["geolocation"], address=loc.address)
+        session.add(position)
+        session.commit()
+
     event = Event(eventTimestamp=dt_object.strftime("%Y-%m-%d %H:%M:%S"), idType=json_data["idType"],
                   idUser=current_user.id, idVehicle=json_data["idVehicle"], idCompany=json_data["idCompany"],
-                  geolocation=json_data["geolocation"])
+                  geolocation=position.id)
     session.add(event)
     session.commit()
     session.close()
@@ -42,9 +51,10 @@ def timer_update(id):
                         END as "dateEnd",
                         e."idVehicle",
                         e."idCompany",
-                        e.geolocation
+                        p.geolocation
                 FROM event e
                 INNER JOIN "eventType" et ON et.id = e."idType"
+                join positions p on p.id = e.geolocation
                 WHERE idUser = {id}
                 )
             
@@ -83,9 +93,10 @@ def timer_progress(id):
                         END as "dateEnd",
                         e."idVehicle",
                         e."idCompany",
-                        e.geolocation
+                        p.geolocation
                 FROM event e
                 INNER JOIN "eventType" et ON et.id = e."idType"
+                join positions p on p.id = e.geolocation
                 WHERE e."idUser" = {id}
                 and date(e."eventTime") between CURRENT_DATE and CURRENT_DATE
                 )

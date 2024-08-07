@@ -79,7 +79,7 @@ def company_info(id):
                 ,e."idUser"
                 ,v.model
                 ,v."licensePlate"
-                ,e.geolocation
+                ,p.geolocation
                 ,u.name
 
             FROM event e
@@ -88,6 +88,7 @@ def company_info(id):
             left join "userCompany" uc on uc."idCompany" = e."idCompany" and uc."validUntil" is null
             inner join vehicle v on v.id = cv."idVehicle"
             inner join users u on u.id = uc."idUser"
+            join positions p on p.id = e.geolocation
             where 1=1
             and uc."idCompany" = {int(id)}
             group by
@@ -95,7 +96,7 @@ def company_info(id):
                 ,e."idUser"
                 ,v.model
                 ,v."licensePlate"
-                ,e.geolocation
+                ,p.geolocation
                 ,u.name;            
             """
             query = text(query)
@@ -176,7 +177,7 @@ def geolocation_list(id):
             ,e."idUser"
             ,v.model
             ,v."licensePlate"
-            ,e.geolocation
+            ,p.geolocation
             ,u.name
 
         FROM event e
@@ -185,6 +186,7 @@ def geolocation_list(id):
         left join "userCompany" uc on uc."idCompany" = e."idCompany" and uc."validUntil" is null
         inner join vehicle v on v.id = cv."idVehicle"
         inner join users u on u.id = uc."idUser"
+        join positions p on p.id = e.geolocation
         where 1=1
         and uc."idCompany" = {int(id)}
         group by 
@@ -192,7 +194,7 @@ def geolocation_list(id):
             ,e."idUser"
             ,v.model
             ,v."licensePlate"
-            ,e.geolocation
+            ,p.geolocation
             ,u.name;            
         """
         query = text(query)
