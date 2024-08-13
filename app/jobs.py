@@ -1,10 +1,13 @@
 import random
-
+from app.models.models import Geolocation
+from app.models.database import *
 from sqlalchemy.sql import text
 
 from app import scheduler
-from app.models.database import *
+
+
 from .pwa import trigger_notifications
+from geopy.geocoders import Nominatim
 
 
 @scheduler.task('interval', id='check_time_10', minutes=60, misfire_grace_time=900)
@@ -108,3 +111,17 @@ select * from max_event_data WHERE "timeSpent" BETWEEN 14400 AND 21600;
     selected = random.choice(messages)
 
     trigger_notifications(data, selected['title'], selected['body'])
+
+
+@scheduler.task('interval', id='add_address', minutes=10, misfire_grace_time=900)
+def add_address():
+    session = Session()
+    locations = session.query(Geolocation).filter(Geolocation.address == None).all()
+    geolocator = Nominatim(user_agent="driver_booklet")
+    for location in locations:
+        loc = geolocator.reverse(location.coordinates)
+        if loc is not None:
+            setattr(location, "address", loc.address)
+            session.add(location)
+            session.commit()
+    session.close()

@@ -7,19 +7,22 @@ from app.models.database import *
 from .email import send_email
 
 
-def render_pdf(html):
+def render_pdf(id_user, dict_data):
     from xhtml2pdf import pisa
     from io import BytesIO
 
+    data = get_data(id_user, dict_data)
+    html = render_template("htmx/report/report_pdf_template.html", event_data=data["event_data"],
+                           attachment_data=data["attachment_data"],
+                           user=data["user"], company=data["company"], time_data=data["time_data"],
+                           date_start=dict_data["dateStart"], date_end=dict_data["dateEnd"])
     pdf = BytesIO()
-
     pisa.CreatePDF(html, pdf)
-
     return pdf.getvalue()
 
 
-def get_report(id_user, dict_data):
-    #event query
+def get_data(id_user, dict_data):
+    # event query
     query = f"""
                     WITH event_query as 
                     (SELECT e."eventTime" "dateStart",
@@ -29,13 +32,13 @@ def get_report(id_user, dict_data):
                             END as "dateEnd",
                             e."idVehicle",
                             e."idCompany",
-                            p.address as "locStart",
+                            g.address as "locStart",
                             case when et.name like '%_end' then null
-                            ELSE LEAD(p.address, 1, null) OVER (ORDER BY "eventTime" ASC)
+                            ELSE LEAD(g.address, 1, null) OVER (ORDER BY "eventTime" ASC)
                             END as "locEnd"
                     FROM event e
                     INNER JOIN "eventType" et ON et.id = e."idType"
-                    INNER JOIN positions p ON p.id = e.geolocation
+                    INNER JOIN geolocation g ON g.id = e."idGeolocation"
                     WHERE "idUser" = {id_user}
                     and e."idCompany" = {dict_data['idCompany']}
                     and e."eventTime" between (date('{dict_data['dateStart']}') - 1) 
@@ -72,7 +75,7 @@ def get_report(id_user, dict_data):
     session = Session()
     event_data = session.execute(query).all()
 
-    #attachment query
+    # attachment query
     query = f"""
         select et.name_pt "categoryName", v."licensePlate",
          a.description, a.start_date, a.end_date
@@ -87,7 +90,7 @@ def get_report(id_user, dict_data):
     query = text(query)
     attachment_data = session.execute(query).all()
 
-    #
+    # timespent query
     query = f"""
                     WITH event_query as 
                     (SELECT e."eventTime" "dateStart",
@@ -98,10 +101,10 @@ def get_report(id_user, dict_data):
                             END as "dateEnd",
                             e."idVehicle",
                             e."idCompany",
-                            p.address
+                            g.address
                     FROM event e
                     INNER JOIN "eventType" et ON et.id = e."idType"
-                    join positions p on p.id = e.geolocation
+                    join geolocation g on g.id = e."idGeolocation"
                     WHERE e."idUser" = {id_user}
                     and date(e."eventTime") between date('{dict_data['dateStart']}')-1 
                     and date('{dict_data['dateEnd']}')+1
@@ -133,9 +136,7 @@ def reports():
             return render_template('reports.html', current_user=current_user)
 
         if request.method == 'POST':
-            # get companies, that you worked for and cars ?
             if request.form:
-                # needs validation before querying
                 dict_data = request.form.to_dict()
                 if dict_data["idCompany"] == "None" or dict_data["dateStart"] == "" or dict_data["dateEnd"] == "":
                     flash("Os campos com * são obrigatórios.", "error")
@@ -151,7 +152,7 @@ def reports():
                         return response
                 else:
                     id_user = current_user.id
-                data = get_report(id_user, dict_data)
+                data = get_data(id_user, dict_data)
                 return render_template('htmx/report/report.html', event_data=data["event_data"],
                                        attachment_data=data["attachment_data"],
                                        user=data["user"], company=data["company"], time_data=data["time_data"],
@@ -166,9 +167,7 @@ def reports():
 @app.route("/reports/pdf", methods=["POST"])
 def pdf_report():
     if request.method == 'POST':
-        # get companies, that you worked for and cars ?
         if request.form:
-            # needs validation before querying
             dict_data = request.form.to_dict()
             if current_user.userTypeId == 1:
                 if "idUser" in dict_data:
@@ -182,12 +181,8 @@ def pdf_report():
                 response = make_response(render_template('base/notifications.html'))
                 response.headers["hx-Retarget"] = "#form-box .containerNotifications"
                 return response
-            data = get_report(id_user, dict_data)
-            html = render_template("htmx/report/report_pdf_template.html", event_data=data["event_data"],
-                                   attachment_data=data["attachment_data"],
-                                   user=data["user"], company=data["company"], time_data=data["time_data"],
-                                   date_start=dict_data["dateStart"], date_end=dict_data["dateEnd"])
-            pdf = render_pdf(html)
+
+            pdf = render_pdf(id_user, dict_data)
             headers = {
                 "Content-Type": "application/pdf",
                 "Content-Disposition": "attachment;filename=report.pdf"
@@ -204,9 +199,7 @@ def pdf_report():
 @app.route("/reports/mail", methods=["POST"])
 def email_report():
     if request.method == 'POST':
-        # get companies, that you worked for and cars ?
         if request.form:
-            # needs validation before querying
             dict_data = request.form.to_dict()
             if current_user.userTypeId == 1:
                 if "idUser" in dict_data:
@@ -215,17 +208,13 @@ def email_report():
                     id_user = "None"
             else:
                 id_user = current_user.id
-            if id_user == "None" or "email" in dict_data:
+            if id_user == "None" or "email" not in dict_data:
                 flash("Os campos com * são obrigatórios.", "error")
                 response = make_response(render_template('base/notifications.html'))
-                response.headers["hx-Retarget"] = "#form-box .containerNotifications"
+                response.headers["hx-Retarget"] = "#email_form .containerNotifications"
                 return response
-            data = get_report(id_user, dict_data)
-            html = render_template("htmx/report/report_pdf_template.html", event_data=data["event_data"],
-                                   attachment_data=data["attachment_data"],
-                                   user=data["user"], company=data["company"], time_data=data["time_data"],
-                                   date_start=dict_data["dateStart"], date_end=dict_data["dateEnd"])
-            pdf = render_pdf(html)
+
+            pdf = render_pdf(id_user, dict_data)
             html = render_template('email/email_template.html', url="",
                                    msg="Segue em anexo o relatório requisitado")
             send_email(dict_data["email"],
@@ -233,7 +222,7 @@ def email_report():
                        html, pdf, "application/pdf", "Relatório.pdf")
             flash("O email foi enviado para o endereço cadastrado.", "success")
             response = make_response(render_template('base/notifications.html'))
-            response.headers["hx-Retarget"] = "#form-box .containerNotifications"
+            response.headers["hx-Retarget"] = "#email_form .containerNotifications"
             return response
         else:
             flash("Ocorreu um erro, tente novamente", "error")

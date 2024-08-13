@@ -1,10 +1,3 @@
-<style>
-    .accordion {
-        display: flex;
-        justify-content: space-between;
-    }
-</style>
-
 <div class="box">
     <h4 class="title is-4">{{user.name}} - {{company.name}} - de {{date_start}} à {{date_end}}</h4>
     <div x-data="{ isExpanded: false }">
@@ -15,14 +8,14 @@
 <table class="table is-striped" style="width: 100%;">
     <thead>
     <tr>
-        <th style="width: 20%; text-align: center;">Empresa</th>
+        <th style="width: 10%; text-align: center;">Empresa</th>
         <th style="width: 10%; text-align: center;">Categoria</th>
         <th style="width: 15%; text-align: center;">Data de início</th>
         <th style="width: 15%; text-align: center;">Data de fim</th>
         <th style="width: 10%; text-align: center;">Tempo despendido</th>
         <th style="width: 10%; text-align: center;">Placa do carro</th>
-        <th style="width: 10%; text-align: center;">Localização início</th>
-        <th style="width: 10%; text-align: center;">Localização fim</th>
+        <th style="width: 15%; text-align: center;">Localização início</th>
+        <th style="width: 15%; text-align: center;">Localização fim</th>
     </tr>
     </thead>
     <tbody>
@@ -34,8 +27,16 @@
             <td style="text-align: center;">{{ item.dateEnd }}</td>
             <td style="text-align: center;">{{ item.timeSpent }}</td>
             <td style="text-align: center;">{{ item.licensePlate }}</td>
+            {% if item.locStart == None %}
+            <td style="text-align: center;">Indisponível</td>
+            {% else %}
             <td style="text-align: center;">{{ item.locStart }}</td>
+            {% endif %}
+            {% if item.locEnd == None %}
+            <td style="text-align: center;">Indisponível</td>
+            {% else %}
             <td style="text-align: center;">{{ item.locEnd }}</td>
+            {% endif %}
         </tr>
         {% endfor %}
     </tbody>

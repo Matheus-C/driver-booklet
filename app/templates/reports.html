@@ -13,72 +13,77 @@
             <button class="fas fa-info-circle" onclick="tutorial('reports');"></button>
         </span>
     </div>
+
     <div x-data="{ emailform: false }">
-    <div class="box" id="form-box">
-        {% include 'base/notifications.html' %}
-        <form action="/reports/pdf" method="post" id="report_form">
-            {% if current_user.userTypeId != 1 %}
-            <label class="label req" for="selectCompany">Empresa: </label>
-            <div hx-target="#selectCompany" class="select" hx-get="/company/list" hx-trigger="load" hx-swap="innerHTML">
-                <select id="selectCompany" name="idCompany" x-model="idCompany" required>
-                </select>
-            </div>
-            {% else %}
-            <div hx-get="/company/list" hx-trigger="load" hx-target="#idCompany" hx-swap="innerHTML"></div>
-            <label class="label req" for="idCompany">Empresa: </label>
-            <div class="select">
-              <select id="idCompany" name="idCompany" x-model="idCompany" hx-target="#selectWorker"
-                hx-post="/worker/select" hx-swap="innerHTML" required>
-              </select>
-            </div>
-            <label class="label req" for="selectWorker">Colaborador: </label>
-            <div class="select">
-              <select id="selectWorker" name="idUser" required></select>
-            </div>
+        <div class="box" id="form-box">
+            {% include 'base/notifications.html' %}
+            <form action="/reports/pdf" method="post" id="report_form">
+                {% if current_user.userTypeId != 1 %}
+                <label class="label req" for="selectCompany">Empresa: </label>
+                <div hx-target="#selectCompany" class="select" hx-get="/company/list" hx-trigger="load"
+                    hx-swap="innerHTML">
+                    <select id="selectCompany" name="idCompany" x-model="idCompany" required>
+                    </select>
+                </div>
+                {% else %}
+                <div hx-get="/company/list" hx-trigger="load" hx-target="#idCompany" hx-swap="innerHTML"></div>
+                <label class="label req" for="idCompany">Empresa: </label>
+                <div class="select">
+                    <select id="idCompany" name="idCompany" x-model="idCompany" hx-target="#selectWorker"
+                        hx-post="/worker/select" hx-swap="innerHTML" required>
+                    </select>
+                </div>
+                <label class="label req" for="selectWorker">Colaborador: </label>
+                <div class="select">
+                    <select id="selectWorker" name="idUser" required></select>
+                </div>
 
-            {% endif %}
-            <label class="label req" for="dateStart">Data início: </label>
-            <input class="input" id="dateStart" name="dateStart" type="date" required>
-            <label class="label req" for="dateEnd">Data fim: </label>
-            <input class="input" id="dateEnd" name="dateEnd" type="date" required>
-            <hr>
+                {% endif %}
+                <label class="label req" for="dateStart">Data início: </label>
+                <input class="input" id="dateStart" name="dateStart" type="date" required>
+                <label class="label req" for="dateEnd">Data fim: </label>
+                <input class="input" id="dateEnd" name="dateEnd" type="date" required>
+                <hr>
 
-            <div class="fixed-grid has-auto-count" align="center">
-                <button id="reportPdf" class="button is-success content-button" data-loading-class="is-loading">
-                    <p><i class="fa-solid fa-file-arrow-down fa-lg"></i> Baixar relatório</p>
-                </button>
-                <a id="reportEmail" class="button is-primary content-button" data-loading-class="is-loading" @click="emailform = ! emailform">
-                    <p><i class="fa-solid fa-envelope fa-lg"></i> Enviar por email</p>
-                </a>
-                <button hx-target="#reportGenerated" hx-post="/reports" hx-include="closest form" id="reportButton" class="button is-info content-button" data-loading-class="is-loading">
-                    <p><i class="fa-solid fa-file-lines fa-lg"></i> Visualizar relatório</p>
-                </button>
-            </div>
-        </form>
+                <div class="fixed-grid has-auto-count" align="center">
+                    <button id="reportPdf" class="button is-success content-button" data-loading-class="is-loading">
+                        <p><i class="fa-solid fa-file-arrow-down fa-lg"></i> Baixar relatório</p>
+                    </button>
+                    <a id="reportEmail" class="button is-primary content-button" data-loading-class="is-loading"
+                        @click="emailform = ! emailform">
+                        <p><i class="fa-solid fa-envelope fa-lg"></i> Enviar por email</p>
+                    </a>
+                    <button hx-target="#reportGenerated" hx-post="/reports" hx-include="closest form" id="reportButton"
+                        class="button is-info content-button" data-loading-class="is-loading">
+                        <p><i class="fa-solid fa-file-lines fa-lg"></i> Visualizar relatório</p>
+                    </button>
+                </div>
+            </form>
 
-    </div>
+        </div>
 
         <div id="email_form" class="box" x-show="emailform">
             <div align="right">
-            <button class="delete" @click="emailform = !emailform"></button>
-        </div>
+                <button class="delete" @click="emailform = !emailform"></button>
+            </div>
+            {% include 'base/notifications.html' %}
             <form>
                 <label class="label req" for="email">Email: </label>
                 <input class="input" id="email" name="email" type="text" required>
                 <hr>
-                <div  align="center">
-                <button id="send" class="button is-primary content-button" data-loading-class="is-loading" hx-post="/reports/mail" hx-include="#report_form">
-                    <p><i class="fa-solid fa-paper-plane fa-lg"></i> Enviar</p>
-                </button>
-                    </div>
+                <div align="center">
+                    <button id="send" class="button is-primary content-button" data-loading-class="is-loading"
+                        hx-post="/reports/mail" hx-include="#report_form">
+                        <p><i class="fa-solid fa-paper-plane fa-lg"></i> Enviar</p>
+                    </button>
+                </div>
             </form>
-
         </div>
+        
     </div>
+
     <div id="reportGenerated">
     </div>
-
-
 
 </div>
 {% endblock %}

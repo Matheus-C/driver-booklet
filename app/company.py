@@ -79,7 +79,7 @@ def company_info(id):
                 ,e."idUser"
                 ,v.model
                 ,v."licensePlate"
-                ,p.geolocation
+                ,g.coordinates
                 ,u.name
 
             FROM event e
@@ -88,7 +88,7 @@ def company_info(id):
             left join "userCompany" uc on uc."idCompany" = e."idCompany" and uc."validUntil" is null
             inner join vehicle v on v.id = cv."idVehicle"
             inner join users u on u.id = uc."idUser"
-            join positions p on p.id = e.geolocation
+            join geolocation g on g.id = e."idGeolocation"
             where 1=1
             and uc."idCompany" = {int(id)}
             group by
@@ -96,7 +96,7 @@ def company_info(id):
                 ,e."idUser"
                 ,v.model
                 ,v."licensePlate"
-                ,p.geolocation
+                ,g.coordinates
                 ,u.name;            
             """
             query = text(query)
@@ -177,7 +177,7 @@ def geolocation_list(id):
             ,e."idUser"
             ,v.model
             ,v."licensePlate"
-            ,p.geolocation
+            ,g.coordinates
             ,u.name
 
         FROM event e
@@ -186,7 +186,7 @@ def geolocation_list(id):
         left join "userCompany" uc on uc."idCompany" = e."idCompany" and uc."validUntil" is null
         inner join vehicle v on v.id = cv."idVehicle"
         inner join users u on u.id = uc."idUser"
-        join positions p on p.id = e.geolocation
+        join geolocation g on g.id = e."idGeolocation"
         where 1=1
         and uc."idCompany" = {int(id)}
         group by 
@@ -194,7 +194,7 @@ def geolocation_list(id):
             ,e."idUser"
             ,v.model
             ,v."licensePlate"
-            ,p.geolocation
+            ,g.coordinates
             ,u.name;            
         """
         query = text(query)
@@ -210,8 +210,8 @@ def geolocation_list(id):
                     'userName': entry.name,
                     'model': entry.model,
                     'licensePlate': entry.licensePlate,
-                    'latitude': entry.geolocation.split(',')[0],
-                    'longitude': entry.geolocation.split(',')[1]
+                    'latitude': entry.coordinates.split(',')[0],
+                    'longitude': entry.coordinates.split(',')[1]
                 })
 
         else:
