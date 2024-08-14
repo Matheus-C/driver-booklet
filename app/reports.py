@@ -7,20 +7,6 @@ from app.models.database import *
 from .email import send_email
 
 
-def render_pdf(id_user, dict_data):
-    from xhtml2pdf import pisa
-    from io import BytesIO
-
-    data = get_data(id_user, dict_data)
-    html = render_template("htmx/report/report_pdf_template.html", event_data=data["event_data"],
-                           attachment_data=data["attachment_data"],
-                           user=data["user"], company=data["company"], time_data=data["time_data"],
-                           date_start=dict_data["dateStart"], date_end=dict_data["dateEnd"])
-    pdf = BytesIO()
-    pisa.CreatePDF(html, pdf)
-    return pdf.getvalue()
-
-
 def get_data(id_user, dict_data):
     # event query
     query = f"""
@@ -128,6 +114,20 @@ def get_data(id_user, dict_data):
             "user": user, "company": company, "time_data": time_data}
 
 
+def render_pdf(id_user, dict_data):
+    from xhtml2pdf import pisa
+    from io import BytesIO
+
+    data = get_data(id_user, dict_data)
+    html = render_template("htmx/report/report_pdf_template.html", event_data=data["event_data"],
+                           attachment_data=data["attachment_data"],
+                           user=data["user"], company=data["company"], time_data=data["time_data"],
+                           date_start=dict_data["dateStart"], date_end=dict_data["dateEnd"])
+    pdf = BytesIO()
+    pisa.CreatePDF(html, pdf)
+    return pdf.getvalue()
+
+
 @app.route("/reports", methods=["GET", "POST"])
 @login_required
 def reports():
@@ -174,13 +174,13 @@ def pdf_report():
                     id_user = dict_data["idUser"]
                 else:
                     id_user = "None"
+                if dict_data["idUser"] == "None":
+                    flash("Os campos com * são obrigatórios.", "error")
+                    response = make_response(render_template('base/notifications.html'))
+                    response.headers["hx-Retarget"] = "#form-box .containerNotifications"
+                    return response
             else:
                 id_user = current_user.id
-            if dict_data["idUser"] == "None":
-                flash("Os campos com * são obrigatórios.", "error")
-                response = make_response(render_template('base/notifications.html'))
-                response.headers["hx-Retarget"] = "#form-box .containerNotifications"
-                return response
 
             pdf = render_pdf(id_user, dict_data)
             headers = {
