@@ -19,34 +19,32 @@ def companies():
 @app.route("/company", methods=["GET", "POST"])
 @login_required
 def company():
-    if current_user:
+    if current_user and request.method == 'GET':
+        return render_template('htmx/company/company_add_form.html', current_user=current_user)
 
-        if request.method == 'GET':
-            return render_template('htmx/company/company_add_form.html', current_user=current_user)
+    elif request.method == 'POST' and request.form and current_user.userTypeId == 1:
+        dict_data = request.form.to_dict()
+        dict_data['idUser'] = current_user.id
 
-        elif request.method == 'POST' and request.form and current_user.userTypeId == 1:
-            dict_data = request.form.to_dict()
-            dict_data['idUser'] = current_user.id
+        session = Session()
+        #checks if exists another company with the same vatcode
+        if session.query(Company).filter(Company.vatcode == dict_data['vatcode']).first() is not None:
+            flash("Vatcode já registrado.", "error")
+            return render_template('base/notifications.html')
+        # Add Company
+        company = Company(**dict_data)
+        session.add(company)
+        session.commit()
 
-            session = Session()
-            #checks if exists another company with the same vatcode
-            if session.query(Company).filter(Company.vatcode == dict_data['vatcode']).first() is not None:
-                flash("Vatcode já registrado.", "error")
-                return render_template('base/notifications.html')
-            # Add Company
-            company = Company(**dict_data)
-            session.add(company)
-            session.commit()
-
-            # Add userCompany
-            user_company = UserCompany(idUser=current_user.id, idCompany=company.id, startWork='1900-01-01')
-            session.add(user_company)
-            session.commit()
-            session.close()
-            flash("Registrado com sucesso.", "success")
-            response = Response()
-            response.headers["hx-redirect"] = "/companies"
-            return response
+        # Add userCompany
+        user_company = UserCompany(idUser=current_user.id, idCompany=company.id, startWork='1900-01-01')
+        session.add(user_company)
+        session.commit()
+        session.close()
+        flash("Registrado com sucesso.", "success")
+        response = Response()
+        response.headers["hx-redirect"] = "/companies"
+        return response
 
 
 @app.route("/company/<id>", methods=["GET", "POST"])

@@ -1,4 +1,8 @@
-<div class="box">
+<div x-data="{ isVisible: true }" id="company_form">
+    <div x-show="isVisible" class="box container">
+        <div align="right">
+            <button class="delete" @click="isVisible = !isVisible"></button>
+        </div>
 <form hx-post="/company" hx-target=".containerNotifications">
     <div class="field">
         <label class="label">Registre sua empresa</label>
@@ -24,4 +28,5 @@
         
     </div>
     </form>
+</div>
 </div>
