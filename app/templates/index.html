@@ -20,8 +20,40 @@
 
 </section>
 
-
+{% if current_user.is_anonymous %}
 <div hx-trigger ='load' hx-get="{{ url_for('login') }}" hx-swap="innerHTML" data-loading-class="is-loading"></div>
+{% else %}
+    <div class="fixed-grid has-3-cols has-2-cols-mobile">
+        <div class="grid" style="margin-left: 10px; margin-right: 10px; ">
+    {% if current_user.userTypeId == 1 %}
+        <a href='/companies' class="button is-expanded is-block has-text-centered is-large menu-buttons ">
+            <i class="fa-solid fa-building fa-lg"></i>
+            <p class="is-size-4">Empresas</p>
+        </a>
+        {% endif %}
+        <a href='/timer' class="button is-expanded is-block has-text-centered is-large menu-buttons ">
+            <i class="fa-solid fa-clock fa-lg"></i>
+          <p class="is-size-4">Timer</p>
+        </a>
+        <a href='/reports' class="button is-expanded is-block has-text-centered is-large menu-buttons ">
+            <i class="fa-solid fa-file-excel fa-lg"></i>
+            <p class="is-size-4">Relatórios</p>
+        </a>
+        <a href='/attachment' class="button is-expanded is-block has-text-centered is-large menu-buttons ">
+            <i class="fa-solid fa-note-sticky fa-lg"></i>
+            <p class="is-size-4">Incidentes</p>
+        </a>
+        <a href='/profile' class="button is-expanded is-block has-text-centered is-large menu-buttons ">
+            <i class="fa-solid fa-user fa-lg"></i>
+            <p class="is-size-4">Perfil</p>
+        </a>
+          <a class="button is-expanded is-block has-text-centered is-large menu-buttons" href='/logout'>
+            <i class="fa-solid fa-right-from-bracket fa-lg"></i>
+            <p class="is-size-4">Logout</p>
+          </a>
+        </div>
+    </div>
+        {% endif %}
 </div>
 
 {% endblock %}

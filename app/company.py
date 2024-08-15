@@ -19,34 +19,32 @@ def companies():
 @app.route("/company", methods=["GET", "POST"])
 @login_required
 def company():
-    if current_user:
+    if current_user and request.method == 'GET':
+        return render_template('htmx/company/company_add_form.html', current_user=current_user)
 
-        if request.method == 'GET':
-            return render_template('htmx/company/company_add_form.html', current_user=current_user)
+    elif request.method == 'POST' and request.form and current_user.userTypeId == 1:
+        dict_data = request.form.to_dict()
+        dict_data['idUser'] = current_user.id
 
-        elif request.method == 'POST' and request.form and current_user.userTypeId == 1:
-            dict_data = request.form.to_dict()
-            dict_data['idUser'] = current_user.id
+        session = Session()
+        #checks if exists another company with the same vatcode
+        if session.query(Company).filter(Company.vatcode == dict_data['vatcode']).first() is not None:
+            flash("Vatcode já registrado.", "error")
+            return render_template('base/notifications.html')
+        # Add Company
+        company = Company(**dict_data)
+        session.add(company)
+        session.commit()
 
-            session = Session()
-            #checks if exists another company with the same vatcode
-            if session.query(Company).filter(Company.vatcode == dict_data['vatcode']).first() is not None:
-                flash("Vatcode já registrado.", "error")
-                return render_template('base/notifications.html')
-            # Add Company
-            company = Company(**dict_data)
-            session.add(company)
-            session.commit()
-
-            # Add userCompany
-            user_company = UserCompany(idUser=current_user.id, idCompany=company.id, startWork='1900-01-01')
-            session.add(user_company)
-            session.commit()
-            session.close()
-            flash("Registrado com sucesso.", "success")
-            response = Response()
-            response.headers["hx-redirect"] = "/companies"
-            return response
+        # Add userCompany
+        user_company = UserCompany(idUser=current_user.id, idCompany=company.id, startWork='1900-01-01')
+        session.add(user_company)
+        session.commit()
+        session.close()
+        flash("Registrado com sucesso.", "success")
+        response = Response()
+        response.headers["hx-redirect"] = "/companies"
+        return response
 
 
 @app.route("/company/<id>", methods=["GET", "POST"])
@@ -79,7 +77,7 @@ def company_info(id):
                 ,e."idUser"
                 ,v.model
                 ,v."licensePlate"
-                ,e.geolocation
+                ,g.coordinates
                 ,u.name
 
             FROM event e
@@ -88,6 +86,7 @@ def company_info(id):
             left join "userCompany" uc on uc."idCompany" = e."idCompany" and uc."validUntil" is null
             inner join vehicle v on v.id = cv."idVehicle"
             inner join users u on u.id = uc."idUser"
+            join geolocation g on g.id = e."idGeolocation"
             where 1=1
             and uc."idCompany" = {int(id)}
             group by
@@ -95,7 +94,7 @@ def company_info(id):
                 ,e."idUser"
                 ,v.model
                 ,v."licensePlate"
-                ,e.geolocation
+                ,g.coordinates
                 ,u.name;            
             """
             query = text(query)
@@ -176,7 +175,7 @@ def geolocation_list(id):
             ,e."idUser"
             ,v.model
             ,v."licensePlate"
-            ,e.geolocation
+            ,g.coordinates
             ,u.name
 
         FROM event e
@@ -185,6 +184,7 @@ def geolocation_list(id):
         left join "userCompany" uc on uc."idCompany" = e."idCompany" and uc."validUntil" is null
         inner join vehicle v on v.id = cv."idVehicle"
         inner join users u on u.id = uc."idUser"
+        join geolocation g on g.id = e."idGeolocation"
         where 1=1
         and uc."idCompany" = {int(id)}
         group by 
@@ -192,7 +192,7 @@ def geolocation_list(id):
             ,e."idUser"
             ,v.model
             ,v."licensePlate"
-            ,e.geolocation
+            ,g.coordinates
             ,u.name;            
         """
         query = text(query)
@@ -208,8 +208,8 @@ def geolocation_list(id):
                     'userName': entry.name,
                     'model': entry.model,
                     'licensePlate': entry.licensePlate,
-                    'latitude': entry.geolocation.split(',')[0],
-                    'longitude': entry.geolocation.split(',')[1]
+                    'latitude': entry.coordinates.split(',')[0],
+                    'longitude': entry.coordinates.split(',')[1]
                 })
 
         else:

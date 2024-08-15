@@ -47,14 +47,14 @@
 <table style="width: 100%;">
     <thead>
     <tr>
-        <th style="width: 20%;">Empresa</th>
+        <th style="width: 10%;">Empresa</th>
         <th style="width: 10%;">Categoria</th>
         <th style="width: 15%;">Data de início</th>
         <th style="width: 15%;">Data de fim</th>
         <th style="width: 10%;">Tempo despendido</th>
         <th style="width: 10%;">Placa do carro</th>
-        <th style="width: 10%;">Localização início</th>
-        <th style="width: 10%;">Localização fim</th>
+        <th style="width: 15%;">Localização início</th>
+        <th style="width: 15%;">Localização fim</th>
     </tr>
     </thead>
     <tbody>
@@ -66,8 +66,16 @@
             <td>{{ item.dateEnd }}</td>
             <td>{{ item.timeSpent }}</td>
             <td>{{ item.licensePlate }}</td>
+            {% if item.locStart == None %}
+            <td>Indisponível</td>
+            {% else %}
             <td>{{ item.locStart }}</td>
+            {% endif %}
+            {% if item.locEnd == None %}
+            <td>Indisponível</td>
+            {% else %}
             <td>{{ item.locEnd }}</td>
+            {% endif %}
         </tr>
         {% endfor %}
     </tbody>

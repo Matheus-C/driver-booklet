@@ -16,17 +16,11 @@ def load_user(id):
 @app.route('/')
 def index():
     if current_user.is_authenticated:
-        if current_user.userTypeId == 1:  # Company Owner
-            if current_user._mail_verified:
-                return redirect('/companies')
-            else:
-                return render_template('email/not_verified.html', current_user=current_user, mail_verified="false")
-        elif current_user.userTypeId == 2:  #worker
-            return redirect('/timer')
+        if current_user.userTypeId == 1 and not current_user._mail_verified:  # Company Owner
+            return render_template('email/not_verified.html', current_user=current_user, mail_verified="false")
         elif current_user.userTypeId == 3:  #admin
             return redirect('/admin')
-    else:
-        return render_template('index.html')
+    return render_template('index.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])

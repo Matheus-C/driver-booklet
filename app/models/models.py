@@ -96,7 +96,7 @@ class Event(Base):
     idUser = Column(Integer, ForeignKey('users.id'))
     idVehicle = Column(Integer, ForeignKey('vehicle.id'))
     idCompany = Column(Integer, ForeignKey('company.id'))
-    geolocation = Column('geolocation', String(512))
+    idGeolocation = Column(Integer, ForeignKey('geolocation.id'))
     createdAt = Column(TIMESTAMP, server_default=text('CURRENT_TIMESTAMP'))
 
 
@@ -175,6 +175,13 @@ class VehicleEvent(Base):
     idVehicle = Column(Integer, ForeignKey('vehicle.id'))
     idCompany = Column(Integer, ForeignKey('company.id'))
     mileage = Column('mileage', Float)
+
+
+class Geolocation(Base):
+    __tablename__ = 'geolocation'
+    id = Column('id', Integer, primary_key=True)
+    coordinates = Column('coordinates', String(512))
+    address = Column('address', String(512))
 
 
 Base.metadata.create_all(engine)

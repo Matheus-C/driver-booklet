@@ -20,9 +20,14 @@ def event_data():
     session = Session()
     json_data = request.form.to_dict()
     dt_object = datetime.strptime(json_data["eventTimestamp"], '%m/%d/%Y, %H:%M:%S')
+
+    geolocation = Geolocation(coordinates=json_data["geolocation"], address=None)
+    session.add(geolocation)
+    session.commit()
+
     event = Event(eventTimestamp=dt_object.strftime("%Y-%m-%d %H:%M:%S"), idType=json_data["idType"],
                   idUser=current_user.id, idVehicle=json_data["idVehicle"], idCompany=json_data["idCompany"],
-                  geolocation=json_data["geolocation"])
+                  idGeolocation=geolocation.id)
     session.add(event)
     session.commit()
     session.close()
@@ -42,9 +47,10 @@ def timer_update(id):
                         END as "dateEnd",
                         e."idVehicle",
                         e."idCompany",
-                        e.geolocation
+                        g.coordinates
                 FROM event e
                 INNER JOIN "eventType" et ON et.id = e."idType"
+                join geolocation g on g.id = e."idGeolocation"
                 WHERE idUser = {id}
                 )
             
@@ -83,9 +89,10 @@ def timer_progress(id):
                         END as "dateEnd",
                         e."idVehicle",
                         e."idCompany",
-                        e.geolocation
+                        g.coordinates
                 FROM event e
                 INNER JOIN "eventType" et ON et.id = e."idType"
+                join geolocation g on g.id = e."idGeolocation"
                 WHERE e."idUser" = {id}
                 and date(e."eventTime") between CURRENT_DATE and CURRENT_DATE
                 )
