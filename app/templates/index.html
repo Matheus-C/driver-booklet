@@ -19,6 +19,7 @@
     </div>
 
 </section>
+        {% include 'base/notifications.html' %}
 
 {% if current_user.is_anonymous %}
 <div hx-trigger ='load' hx-get="{{ url_for('login') }}" hx-swap="innerHTML" data-loading-class="is-loading"></div>
