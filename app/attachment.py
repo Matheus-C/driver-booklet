@@ -69,10 +69,10 @@ def new_attachment(page):
 @login_required
 def attachments_list():
     if current_user and request.method == 'GET':
-        query = f""" SELECT attachment.id, attachment."createdAt", "eventType".name_pt 
+        query = f""" SELECT attachment.id, timezone('wet', attachment."createdAt") as "createdAt", "eventType".name_pt 
                     FROM attachment join "eventType" ON "eventType".id = attachment."idType"
                     WHERE attachment."idUser" = {int(current_user.id)} 
-                    ORDER BY attachment."createdAt" DESC
+                    ORDER BY "createdAt" DESC
                 """
         query = text(query)
         session = Session()
@@ -85,7 +85,7 @@ def attachments_list():
 @login_required
 def attachment_detail(id):
     if current_user and request.method == 'GET':
-        query = f""" SELECT attachment.id, attachment."createdAt",
+        query = f""" SELECT attachment.id, timezone('wet', attachment."createdAt") as "createdAt",
                      "eventType".name_pt, attachment.start_date, attachment.end_date, attachment.description
                     FROM attachment join "eventType" ON "eventType".id = attachment."idType"
                     WHERE attachment.id = {int(id)} 

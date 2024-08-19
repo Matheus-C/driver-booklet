@@ -15,16 +15,16 @@
         <br>
         <div class="container">
             <div class="cell"><span class="tag is-medium">
-                    <p><b>Criado em:</b> {{ attachment.createdAt }}</p>
+                    <p><b>Criado em:</b> {{ attachment.createdAt | datetimeformat('dd/MM/yyyy hh:mm:ss') }}</p>
                 </span></div>
             <div class="cell"><span class="tag is-medium">
                     <p><b>Tipo de incidente:</b> {{ attachment.name_pt }}</p>
                 </span></div>
             <div class="cell"><span class="tag is-medium">
-                    <p><b>Data início do incidente:</b> {{ attachment.start_date }}</p>
+                    <p><b>Data início do incidente:</b> {{ attachment.start_date | dateformat('dd/MM/yyyy') }}</p>
                 </span></div>
             <div class="cell"><span class="tag is-medium">
-                    <p><b>Data fim do incidente:</b> {{ attachment.end_date }}</p>
+                    <p><b>Data fim do incidente:</b> {{ attachment.end_date | dateformat('dd/MM/yyyy') }}</p>
                 </span></div>
             <div class="cell"><span class="tag is-medium">
                     <p><b>Descrição:</b> {{ attachment.description }}</p>

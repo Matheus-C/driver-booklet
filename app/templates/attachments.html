@@ -32,7 +32,7 @@
                     class="cell button tag is-medium has-text-dark has-background-success-95"
                     style="display: flex; justify-content: space-between;"><i class="fa-solid fa-paperclip"></i>
                     <p>{{attachment.name_pt}}</p>
-                    <p></p>
+                    <p>{{attachment.createdAt | dateformat('dd/MM/yyyy')}}</p>
                 </span>
                 {% endfor %}
             </div>
