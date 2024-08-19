@@ -5,6 +5,7 @@ from sqlalchemy.sql import text
 from app import app
 from app.models.database import *
 from .email import send_email
+from datetime import datetime
 
 
 def get_data(id_user, dict_data):
@@ -119,6 +120,8 @@ def render_pdf(id_user, dict_data):
     from io import BytesIO
 
     data = get_data(id_user, dict_data)
+    dict_data["dateStart"] = datetime.strptime(dict_data["dateStart"], "%Y-%m-%d")
+    dict_data["dateEnd"] = datetime.strptime(dict_data["dateEnd"], "%Y-%m-%d")
     html = render_template("htmx/report/report_pdf_template.html", event_data=data["event_data"],
                            attachment_data=data["attachment_data"], user=data["user"], company=data["company"],
                            time_data=data["time_data"], date_start=dict_data["dateStart"],

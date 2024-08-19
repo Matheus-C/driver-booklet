@@ -23,8 +23,8 @@
         <tr>
             <td style="text-align: center;">{{ item.companyName }}</td>
             <td style="text-align: center;">{{ item.categoryName }}</td>
-            <td style="text-align: center;">{{ item.dateStart }}</td>
-            <td style="text-align: center;">{{ item.dateEnd }}</td>
+            <td style="text-align: center;">{{ item.dateStart | datetimeformat('dd/MM/yyyy hh:mm:ss') }}</td>
+            <td style="text-align: center;">{{ item.dateEnd | datetimeformat('dd/MM/yyyy hh:mm:ss') }}</td>
             <td style="text-align: center;">{{ item.timeSpent }}</td>
             <td style="text-align: center;">{{ item.licensePlate }}</td>
             {% if item.locStart == None %}
@@ -89,8 +89,8 @@
         <tr>
             <td style="text-align: center;">{{ item.categoryName }}</td>
             <td style="text-align: center;">{{ item.description }}</td>
-            <td style="text-align: center;">{{ item.start_date }}</td>
-            <td style="text-align: center;">{{ item.end_date }}</td>
+            <td style="text-align: center;">{{ item.start_date | dateformat('dd/MM/yyyy') }}</td>
+            <td style="text-align: center;">{{ item.end_date | dateformat('dd/MM/yyyy') }}</td>
             <td style="text-align: center;">{{ item.licensePlate }}</td>
         </tr>
         {% endfor %}

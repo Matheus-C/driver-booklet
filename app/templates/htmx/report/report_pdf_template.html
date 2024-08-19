@@ -42,7 +42,7 @@
 <div>
 <div>
 <h2>Relatório de atividades</h2>
-    <h3>{{user.name}} - {{company.name}} - de {{date_start}} à {{date_end}}</h3>
+    <h3>{{user.name}} - {{company.name}} - de {{date_start | dateformat('dd/MM/yyyy')}} à {{date_end | dateformat('dd/MM/yyyy')}}</h3>
 </div>
 <table style="width: 100%;">
     <thead>
@@ -62,8 +62,8 @@
         <tr>
             <td>{{ item.companyName }}</td>
             <td>{{ item.categoryName }}</td>
-            <td>{{ item.dateStart }}</td>
-            <td>{{ item.dateEnd }}</td>
+            <td>{{ item.dateStart | datetimeformat('dd/MM/yyyy hh:mm:ss') }}</td>
+            <td>{{ item.dateEnd | datetimeformat('dd/MM/yyyy hh:mm:ss') }}</td>
             <td>{{ item.timeSpent }}</td>
             <td>{{ item.licensePlate }}</td>
             {% if item.locStart == None %}
@@ -83,7 +83,7 @@
     <br>
     <div>
 <h2>Resumo de horas:</h2>
-        <h3>{{user.name}} - {{company.name}} - de {{date_start}} à {{date_end}}</h3>
+        <h3>{{user.name}} - {{company.name}} - de {{date_start | dateformat('dd/MM/yyyy')}} à {{date_end | dateformat('dd/MM/yyyy')}}</h3>
 </div>
     <table>
     <thead>
@@ -103,7 +103,7 @@
 </table>
 <br>
 <h2>Relatório de incidentes registrados</h2>
-    <h3>{{user.name}} - {{company.name}} - de {{date_start}} à {{date_end}}</h3>
+    <h3>{{user.name}} - {{company.name}} - de {{date_start | dateformat('dd/MM/yyyy')}} à {{date_end | dateformat('dd/MM/yyyy')}}</h3>
 <div>
 <table style="width: 100%;">
     <thead>
@@ -120,8 +120,8 @@
         <tr>
             <td>{{ item.categoryName }}</td>
             <td>{{ item.description }}</td>
-            <td>{{ item.start_date }}</td>
-            <td>{{ item.end_date }}</td>
+            <td>{{ item.start_date | dateformat('dd/MM/yyyy') }}</td>
+            <td>{{ item.end_date | dateformat('dd/MM/yyyy') }}</td>
             <td>{{ item.licensePlate }}</td>
         </tr>
         {% endfor %}
