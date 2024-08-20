@@ -5,7 +5,7 @@
         
         {% for attachment in attachments %}
             <span hx-get="/attachment/detail/{{attachment.id}}" hx-target="#attachmentDetails"
-                    class="cell button tag is-medium has-text-dark has-background-success-95"
+                    class="cell button tag is-medium"
                     style="display: flex; justify-content: space-between;"><i class="fa-solid fa-paperclip"></i>
                     <p>{{attachment.name_pt}}</p>
                     <p>{{attachment.createdAt | dateformat('dd/MM/yyyy')}}</p>
@@ -18,11 +18,11 @@
         {% else %}
         <button class="button " disabled><i class="fa-solid fa-chevron-left"></i></button>
         {% endif %}
-    {% for i in range(0, page.pages, 1) %}
-        {% if page.page == i+1 %}
-        <button class="button " disabled><p style="font-size: 0.7em;">{{i+1}}</p></button>
+    {% for i in range(1, page.pages+1, 1) %}
+        {% if page.page == i %}
+        <button class="button " disabled><p style="font-size: 0.7em;">{{i}}</p></button>
         {% else %}
-        <button class="button " hx-get="/attachment/list/{{i+1}}"><p style="font-size: 0.7em;">{{i+1}}</p></button>
+        <button class="button " hx-get="/attachment/list/{{i}}"><p style="font-size: 0.7em;">{{i}}</p></button>
         {% endif %}
     {% endfor %}
         {% if page.has_next %}

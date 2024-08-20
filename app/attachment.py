@@ -98,7 +98,7 @@ def new_attachment(page):
             response.headers["hx-Retarget"] = "#timer .containerNotifications"
             return response
 
-        return redirect("/attachment/list")
+        return redirect("/attachment/list/1")
 
 
 @app.route("/attachment/list/<n>", methods=['GET'])
