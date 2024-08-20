@@ -12,4 +12,23 @@
                 </span>
         {% endfor %}
     </div>
+    <div align="center">
+        {% if page.has_previous %}
+        <button class="button " hx-get="/attachment/list/{{page.previous_page}}"><i class="fa-solid fa-chevron-left"></i></button>
+        {% else %}
+        <button class="button " disabled><i class="fa-solid fa-chevron-left"></i></button>
+        {% endif %}
+    {% for i in range(1, page.pages, 1) %}
+        {% if page.page == i %}
+        <button class="button " disabled><p style="font-size: 0.7em;">{{i}}</p></button>
+        {% else %}
+        <button class="button " hx-get="/attachment/list/{{i}}"><p style="font-size: 0.7em;">{{i}}</p></button>
+        {% endif %}
+    {% endfor %}
+        {% if page.has_next %}
+        <button class="button " hx-get="/attachment/list/{{page.next_page}}"><i class="fa-solid fa-chevron-right"></i></button>
+        {% else %}
+        <button class="button" disabled><i class="fa-solid fa-chevron-right"></i></button>
+        {% endif %}
+    </div>
 </div>
