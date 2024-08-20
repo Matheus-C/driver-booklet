@@ -30,7 +30,8 @@ def paginate(id, page, page_size):
         raise AttributeError('page needs to be >= 1')
     if page_size <= 0:
         raise AttributeError('page_size needs to be >= 1')
-    query = f""" SELECT attachment.id, timezone('wet', attachment."createdAt") as "createdAt", "eventType".name_pt
+    query = f""" SELECT attachment.id, timezone('wet', attachment."createdAt") as "createdAt", "eventType".name_pt, 
+    (select count(*) FROM attachment WHERE attachment."idUser" = {int(id)}) as total
                         FROM attachment join "eventType" ON "eventType".id = attachment."idType"
                         WHERE attachment."idUser" = {int(id)}
                         ORDER BY "createdAt" DESC
@@ -43,7 +44,7 @@ def paginate(id, page, page_size):
     session = Session()
     attachments = session.execute(query).all()
 
-    total = session.query(Attachment).filter(Attachment.idUser == int(id)).count()
+    total = attachments[0].total
     session.close()
     return Page(attachments, page, page_size, total)
 
