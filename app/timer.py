@@ -23,7 +23,7 @@ def event_data():
 
     geolocation = Geolocation(coordinates=json_data["geolocation"], address=None)
     session.add(geolocation)
-    session.commit()
+    session.flush()
 
     event = Event(eventTimestamp=dt_object.strftime("%Y-%m-%d %H:%M:%S"), idType=json_data["idType"],
                   idUser=current_user.id, idVehicle=json_data["idVehicle"], idCompany=json_data["idCompany"],

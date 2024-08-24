@@ -34,7 +34,7 @@ def company():
         # Add Company
         company = Company(**dict_data)
         session.add(company)
-        session.commit()
+        session.flush()
 
         # Add userCompany
         user_company = UserCompany(idUser=current_user.id, idCompany=company.id, startWork='1900-01-01')
@@ -142,7 +142,7 @@ def signup_worker(id_company=None):
         user = User(**dict_data)
         user._mail_verified = True
         session.add(user)
-        session.commit()
+        session.flush()
         usercompany = UserCompany(idUser=user.id, idCompany=id_company, startWork=start_work)
         session.add(usercompany)
         session.commit()
