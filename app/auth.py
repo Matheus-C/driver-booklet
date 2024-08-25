@@ -63,11 +63,11 @@ def signup():
         dict_data['userTypeId'] = "1"  #Owner
         # noinspection PyArgumentList
         user = User(**dict_data)
+        send_confirmation(dict_data['email'])
 
         session.add(user)
         session.commit()
         session.close()
-        send_confirmation(dict_data['email'])
         flash('Uma confirmação foi enviada para o seu email.', 'success')
         return render_template('email/notice_email.html', current_user=current_user)
 
