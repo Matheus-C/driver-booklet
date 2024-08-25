@@ -84,6 +84,7 @@ def timer_progress(id):
                 WITH event_query as 
                 (SELECT e."eventTime" "dateStart",
                         et.category,
+                        et.name_pt,
                         case when et.name like '%_end' then null
                         ELSE LEAD(e."eventTime", 1, null) OVER (ORDER BY e."eventTime" ASC)
                         END as "dateEnd",
@@ -98,7 +99,7 @@ def timer_progress(id):
                 )
             
             select 
-                e.category "categoryName"
+                e.category, e.name_pt "categoryName"
                 ,sec_to_time(SUM(EXTRACT(EPOCH FROM ("dateEnd" -"dateStart")))) AS "timeSpent"
                 ,CASE
                     WHEN e.category = 'availability' THEN SUM(EXTRACT(EPOCH FROM ("dateEnd" -"dateStart"))) / 50400
@@ -107,7 +108,7 @@ def timer_progress(id):
                     END as percentage_total
             from event_query e
             where "dateEnd" is not null
-            group by e.category
+            group by e.category, "categoryName"
             order by e.category desc
             """
     if current_user:
