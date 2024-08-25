@@ -1,6 +1,6 @@
 
 <div x-data="{ isVisible: true }" id="signup_form">
-    <div x-show="isVisible" class="box container">
+    <div x-show="isVisible" class="box">
         <div align="right">
             {% if current_user.is_anonymous == False%}
             <button class="delete" @click="isVisible = !isVisible"></button>

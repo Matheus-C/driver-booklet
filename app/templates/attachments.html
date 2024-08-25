@@ -24,20 +24,7 @@
         </span>
     </div>
 
-    <div id="attachments" class="container box">
-        <div class="fixed-grid has-1-cols-mobile">
-            <div class="grid">
-                {% for attachment in attachments %}
-                <span hx-get="/attachment/detail/{{attachment.id}}" hx-target="#attachmentDetails"
-                    class="cell button tag is-medium has-text-dark has-background-success-95"
-                    style="display: flex; justify-content: space-between;"><i class="fa-solid fa-paperclip"></i>
-                    <p>{{attachment.name_pt}}</p>
-                    <p></p>
-                </span>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
+    <div id="attachments" class="box" hx-get="/attachment/list/1" hx-trigger="load" hx-target="this"></div>
 
     <div id="attachmentDetails"></div>
     <div class="modal is-active" x-show="isModalVisible" id="modalAttachment"></div>

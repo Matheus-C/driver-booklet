@@ -6,35 +6,40 @@ from app.models import *  # importing db + models
 from flask_apscheduler import APScheduler
 import flask_admin
 from flask_babel import Babel  # necessary to flask_admin
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 
 babel = Babel(app)  # necessary to flask_admin
-app.secret_key = 'ousadiaealegria'
+
+load_dotenv()
+
+
+app.secret_key = os.environ.get('secret_key')
 
 app.config[
-    'VAPID_PUBLIC_KEY'] = "BIQgErEfMAg3DSMCy85_kHVgE9uS3NSb5Rl4pmXPknmbrd4CvdvTMUwZ8K2RUxE2_6KkKh3VYG1tLaFRXiGURxA"
+    'VAPID_PUBLIC_KEY'] = os.environ.get('vapid_public_key')
 
-app.config['VAPID_PRIVATE_KEY'] = "LXemf14HHkxNVXhsZOnn1nCcCUpI68pFSjtNRPKUIc4"
+app.config['VAPID_PRIVATE_KEY'] = os.environ.get('vapid_private_key')
 
 app.config['VAPID_CLAIM_EMAIL'] = "a@a.com"
 
 app.config['TRAP_HTTP_EXCEPTIONS'] = True
 
-app.config['SECURITY_PASSWORD_SALT'] = "temperro"
+app.config['SECURITY_PASSWORD_SALT'] = os.environ.get('security_password_salt')
 
 # mail settings
-app.config["MAIL_SERVER"] = 'smtp.mailersend.net'
-app.config["MAIL_PORT"] = 587
+app.config["MAIL_SERVER"] = os.environ.get('mail_server')
+app.config["MAIL_PORT"] = os.environ.get('mail_port')
 app.config["MAIL_USE_TLS"] = True
 app.config["MAIL_USE_SSL"] = False
 
-# gmail authentication
-app.config["MAIL_USERNAME"] = "MS_aQ1BS4@trial-yzkq340o0yk4d796.mlsender.net"
-app.config["MAIL_PASSWORD"] = "esrTpO2Zum9e6aYp"
+# mail authentication
+app.config["MAIL_USERNAME"] = os.environ.get('mail_username')
+app.config["MAIL_PASSWORD"] = os.environ.get('mail_password')
 
 # mail accounts
-app.config["MAIL_DEFAULT_SENDER"] = 'MS_aQ1BS4@trial-yzkq340o0yk4d796.mlsender.net'
+app.config["MAIL_DEFAULT_SENDER"] = os.environ.get('mail_username')
 
 login_manager = LoginManager()
 login_manager.init_app(app)

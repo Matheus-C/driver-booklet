@@ -1,0 +1,37 @@
+<div x-data="{ isVisible: true }" id="signup_form">
+    <div x-show="isVisible" class="box container">
+        <div align="right">
+            <button class="delete" @click="isVisible = !isVisible"></button>
+        </div>
+        <h3 class="title is-4">Editar dados</h3>
+        <hr>
+        {% include 'base/notifications.html' %}
+        <form hx-post="/profile/edit" hx-target="#user_info" hx-swap="outerHTML" @htmx:after-request.camel="isVisible = !isVisible">
+            <div class="control">
+                <label class="label req">Nome:</label>
+                <input class="input" type="text" name='name' placeholder="Digite seu nome" value="{{current_user.name}}" required>
+            </div>
+
+            <div class="control">
+                <label class="label req">Telefone:</label><input class="input" type="tel" name='phone'
+                    placeholder="Digite seu telefone" required value="{{current_user.phone}}">
+            </div>
+            <div class="control">
+                <label class="label">Endereço:</label><input class="input" type="text" name='address'
+                    placeholder="Digite seu endereço" value="{{current_user.address}}">
+            </div>
+
+            <div class="control">
+                <label class="label req">Data de nascimento:</label><input class="input" type="date" name='birthDate'
+                    placeholder="Digite sua data de nascimento" value="{{current_user.birthDate}}" required>
+            </div>
+            <hr>
+            <div align="right">
+                <button id="a" class="button is-primary" data-loading-class="is-loading">
+                    <p><i class="fa-solid fa-floppy-disk fa-lg"></i> Salvar</p>
+                </button>
+            </div>
+        </form>
+    </div>
+    <br>
+</div>

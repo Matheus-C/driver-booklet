@@ -1,3 +1,5 @@
+from math import ceil
+
 from flask import render_template, request, flash, make_response, redirect
 from flask_login import login_required, current_user
 from datetime import datetime
@@ -5,19 +7,53 @@ from app import app
 from app.models.models import *
 
 
+class Page(object):
+
+    def __init__(self, items, page, page_size, total):
+        self.items = items
+        self.previous_page = None
+        self.next_page = None
+        self.has_previous = page > 1
+        if self.has_previous:
+            self.previous_page = page - 1
+        previous_items = (page - 1) * page_size
+        self.has_next = previous_items + len(items) < total
+        if self.has_next:
+            self.next_page = page + 1
+        self.total = total
+        self.pages = int(ceil(total / float(page_size)))
+        self.page = page
+
+
+def paginate(id, page, page_size):
+    if page <= 0:
+        raise AttributeError('page needs to be >= 1')
+    if page_size <= 0:
+        raise AttributeError('page_size needs to be >= 1')
+    query = f""" SELECT attachment.id, timezone('wet', attachment."createdAt") as "createdAt", "eventType".name_pt, 
+    (select count(*) FROM attachment WHERE attachment."idUser" = {int(id)}) as total
+                        FROM attachment join "eventType" ON "eventType".id = attachment."idType"
+                        WHERE attachment."idUser" = {int(id)}
+                        ORDER BY "createdAt" DESC
+                        
+                        limit {page_size}
+                        offset ({page} - 1) * {page_size}
+                        
+                    """
+    query = text(query)
+    session = Session()
+    attachments = session.execute(query).all()
+
+    total = attachments[0].total
+    session.close()
+    return Page(attachments, page, page_size, total)
+
+
 @app.route("/attachment", methods=['GET'])
 @login_required
 def attachments():
     if current_user and request.method == 'GET':
-        query = f""" SELECT attachment.id, attachment."idUser", attachment."createdAt", "eventType".name_pt 
-                    FROM attachment join "eventType" ON "eventType".id = attachment."idType"
-                    WHERE attachment."idUser" = {int(current_user.id)} 
-                    ORDER BY attachment."createdAt" DESC
-                """
-        query = text(query)
-        session = Session()
-        attachments = session.execute(query).all()
-        return render_template("attachments.html", attachments=attachments, current_user=current_user)
+        return render_template("attachments.html", current_user=current_user)
 
 
 @app.route("/attachment/add/<page>", methods=['GET', 'POST'])
@@ -62,30 +98,23 @@ def new_attachment(page):
             response.headers["hx-Retarget"] = "#timer .containerNotifications"
             return response
 
-        return redirect("/attachment/list")
+        return redirect("/attachment/list/1")
 
 
-@app.route("/attachment/list", methods=['GET'])
+@app.route("/attachment/list/<n>", methods=['GET'])
 @login_required
-def attachments_list():
+def attachments_list(n):
     if current_user and request.method == 'GET':
-        query = f""" SELECT attachment.id, attachment."createdAt", "eventType".name_pt 
-                    FROM attachment join "eventType" ON "eventType".id = attachment."idType"
-                    WHERE attachment."idUser" = {int(current_user.id)} 
-                    ORDER BY attachment."createdAt" DESC
-                """
-        query = text(query)
-        session = Session()
-        attachments = session.execute(query).all()
+        page = paginate(current_user.id, int(n), 10)
         return render_template("htmx/attachment/attachments_list.html",
-                               attachments=attachments, current_user=current_user)
+                               attachments=page.items, page=page, current_user=current_user)
 
 
 @app.route("/attachment/detail/<id>", methods=['GET'])
 @login_required
 def attachment_detail(id):
     if current_user and request.method == 'GET':
-        query = f""" SELECT attachment.id, attachment."createdAt",
+        query = f""" SELECT attachment.id, timezone('wet', attachment."createdAt") as "createdAt",
                      "eventType".name_pt, attachment.start_date, attachment.end_date, attachment.description
                     FROM attachment join "eventType" ON "eventType".id = attachment."idType"
                     WHERE attachment.id = {int(id)} 

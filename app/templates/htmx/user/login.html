@@ -1,38 +1,31 @@
-<script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
-<div x-data="{ isVisible: true }" id="login_form">
-    
-    <div x-show="isVisible" class="box container">
-        <!-- <div align="right">
-            <button class="delete" @click="isVisible = !isVisible"></button>
-        </div> -->
+<div id="login_form">
+    <div class="box">
         {% include 'base/notifications.html' %}
         <p>
-            Se você ainda não possui um cadastro  <a hx-get="{{ url_for('signup') }}" hx-target="#login_form" hx-swap="innerHTML" data-loading-class="is-loading" class="tag is-dark is-small">Cadastre-se aqui!</a>
+            Se você ainda não possui um cadastro <a hx-get="{{ url_for('signup') }}" hx-target="#login_form"
+                hx-swap="innerHTML" data-loading-class="is-loading" class="tag is-dark is-small">Cadastre-se aqui!</a>
         </p>
-        
+
         <hr>
-        
+
         <form hx-post="{{data.return}}" hx-target=".containerNotifications" hx-swap="outerHTML">
             <div class="field">
                 <div class="control">
                     <label class="label">Email:</label>
-
                     <input class="input" type="email" name='email' placeholder="Digite seu email">
                 </div>
                 <div class="control">
                     <label class="label">Senha:</label>
-
                     <input class="input" type="password" name='password' placeholder="Digite sua senha">
                 </div>
-                
                 <hr>
                 <p>
-                    Esqueceu a senha?  <a hx-get="{{ url_for('forgot_password') }}" hx-target="#login_form" hx-swap="innerHTML" data-loading-class="is-loading" class="tag is-dark is-small">Clique aqui!</a>
+                    Esqueceu a senha? <a hx-get="{{ url_for('forgot_password') }}" hx-target="#login_form"
+                        hx-swap="innerHTML" data-loading-class="is-loading" class="tag is-dark is-small">Clique aqui!</a>
                 </p>
                 <div align="right">
                     <button class="button is-primary" data-loading-class="is-loading">Login</button>
                 </div>
-                
             </div>
         </form>
     </div>

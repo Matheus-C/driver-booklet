@@ -34,7 +34,7 @@ def vehicle_add(id_company=None):
         vehicle = Vehicle(**dict_data)
 
         session.add(vehicle)
-        session.commit()
+        session.flush()
         dt_object = datetime.now()
         company_vehicle = CompanyVehicle(idCompany=id_company,
                                          idVehicle=vehicle.id,
