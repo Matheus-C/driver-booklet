@@ -24,12 +24,26 @@ def vehicle_add(id_company=None):
 
     elif request.method == 'POST' and request.form and current_user.userTypeId == 1:
         dict_data = request.form.to_dict()
+
+        if dict_data.get('model') == "" or dict_data.get('manufacturer') == "" or dict_data.get('color') == "":
+            flash("Os campos com * são obrigatórios.", "error")
+            response = make_response(render_template('base/notifications.html'))
+            response.headers["hx-Retarget"] = "#vehicle_form .containerNotifications"
+            return response
+
+        if len(dict_data.get('licensePlate')) < 8:
+            flash("Preencha a placa corretamente.", "error")
+            response = make_response(render_template('base/notifications.html'))
+            response.headers["hx-Retarget"] = "#vehicle_form .containerNotifications"
+            return response
+
         session = Session()
         if session.query(Vehicle).filter(Vehicle.licensePlate == dict_data['licensePlate']).first() is not None:
             flash("Placa já registrada.", "error")
             response = make_response(render_template('base/notifications.html'))
             response.headers["hx-Retarget"] = "#vehicle_form .containerNotifications"
             return response
+
 
         vehicle = Vehicle(**dict_data)
 

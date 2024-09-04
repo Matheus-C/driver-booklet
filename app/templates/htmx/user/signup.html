@@ -11,7 +11,7 @@
         <hr>
         {% endif %}
         {% include 'base/notifications.html' %}
-        <form hx-post="{{data.return}}" hx-target="{{data.target}}" hx-swap="outerHTML">
+        <form hx-post="{{data.return}}" hx-target="{{data.target}}" hx-swap="outerHTML" hx-on::after-request="this.reset()">
             <div class="control">
                 <label class="label req">Nome:</label>
                 <input class="input" type="text" name='name' placeholder="Digite seu nome" required>
@@ -43,8 +43,8 @@
                     placeholder="Digite sua data de nascimento" required>
             </div>
             {% if current_user.is_anonymous is false %}
-            <div class="control req">
-                <label class="label">Trabalha desde:</label><input class="input" type="date" name='startWorkDate'
+            <div class="control">
+                <label class="label req">Trabalha desde:</label><input class="input" type="date" name='startWorkDate'
                     placeholder="Digite desde quando esta pessoa trabalha nesta empresa" required>
             </div>
             {% endif %}

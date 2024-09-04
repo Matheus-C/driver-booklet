@@ -8,24 +8,24 @@
         <div>
             <h3 class="title is-4">Adicionar veículo</h3>
             <hr>
-            <form hx-post="{{data.return}}" hx-target="#vehicles" hx-swap="innerHTML">
+            <form hx-post="{{data.return}}" hx-target="#vehicles" hx-swap="innerHTML" hx-on::after-request="this.reset()">
                 <div class="field">
                     <div class="control">
                         <label class="label req" for="model">Modelo: </label><input class="input" id="model" type="text"
-                            name='model' placeholder="Digite o modelo do veículo">
+                            name='model' placeholder="Digite o modelo do veículo" required>
                     </div>
                     <div class="control">
                         <label class="label req" for="manufacturer">Fabricante: </label> <input class="input" type="text"
-                            id="manufacturer" name='manufacturer' placeholder="Digite o fabricante do veículo">
+                            id="manufacturer" name='manufacturer' placeholder="Digite o fabricante do veículo" required>
                     </div>
                     <div class="control">
                         <label class="label req" for="color">Cor: </label><input class="input" type="text" name='color'
-                            id="color" placeholder="Digite a cor do carro">
+                            id="color" placeholder="Digite a cor do carro" required>
                     </div>
                     <div class="control">
                         <label class="label req" for="licensePlate">Placa: </label><input class="input" type="text"
                             id="licensePlate" name='licensePlate' placeholder="XX-XX-XX" x-mask="**-**-**"
-                            oninput="this.value = this.value.toUpperCase()">
+                            oninput="this.value = this.value.toUpperCase()" required>
                     </div>
                     <hr>
                     <div align="right">
