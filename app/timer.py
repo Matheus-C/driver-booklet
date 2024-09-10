@@ -80,40 +80,41 @@ def timer_update(id):
 @app.route('/timer/progress/<id>')
 @login_required
 def timer_progress(id):
-    query = f"""
-                WITH event_query as 
-                (SELECT e."eventTime" "dateStart",
-                        et.category,
-                        et.name_pt,
-                        case when et.name like '%_end' then null
-                        ELSE LEAD(e."eventTime", 1, null) OVER (ORDER BY e."eventTime" ASC)
-                        END as "dateEnd",
-                        e."idVehicle",
-                        e."idCompany",
-                        g.coordinates
-                FROM event e
-                INNER JOIN "eventType" et ON et.id = e."idType"
-                join geolocation g on g.id = e."idGeolocation"
-                WHERE e."idUser" = {id}
-                and date(e."eventTime") between CURRENT_DATE and CURRENT_DATE
-                )
-            
-            select 
-                e.category, e.name_pt "categoryName"
-                ,sec_to_time(SUM(EXTRACT(EPOCH FROM ("dateEnd" -"dateStart")))) AS "timeSpent"
-                ,CASE
-                    WHEN e.category = 'availability' THEN SUM(EXTRACT(EPOCH FROM ("dateEnd" -"dateStart"))) / 50400
-                    WHEN e.category = 'work' THEN SUM(EXTRACT(EPOCH FROM ("dateEnd" -"dateStart"))) / 36000
-                    WHEN e.category = 'rest' THEN SUM(EXTRACT(EPOCH FROM ("dateEnd" -"dateStart"))) / 50400
-                    END as percentage_total
-            from event_query e
-            where "dateEnd" is not null
-            group by e.category, "categoryName"
-            order by e.category desc
-            """
     if current_user:
-        query = text(query)
         session = Session()
+        query = f"""
+                    WITH event_query as 
+                    (SELECT e."createdAt" "dateStart",
+                            et.category,
+                            et.name_pt,
+                            case when et.name like '%_end' then null
+                            ELSE LEAD(e."createdAt", 1, NOW()) OVER (ORDER BY e."createdAt" ASC)
+                            END as "dateEnd",
+                            e."idVehicle",
+                            e."idCompany",
+                            g.coordinates
+                    FROM event e
+                    INNER JOIN "eventType" et ON et.id = e."idType"
+                    join geolocation g on g.id = e."idGeolocation"
+                    WHERE e."idUser" = {id}
+                    and date(e."createdAt") between CURRENT_DATE and CURRENT_DATE
+                    )
+                
+                select 
+                    e.category, e.name_pt "categoryName"
+                    ,sec_to_time(SUM(EXTRACT(EPOCH FROM ("dateEnd" -"dateStart")))) AS "timeSpent"
+                    ,CASE
+                        WHEN e.category = 'availability' THEN SUM(EXTRACT(EPOCH FROM ("dateEnd" -"dateStart"))) / 50400
+                        WHEN e.category = 'work' THEN SUM(EXTRACT(EPOCH FROM ("dateEnd" -"dateStart"))) / 36000
+                        WHEN e.category = 'rest' THEN SUM(EXTRACT(EPOCH FROM ("dateEnd" -"dateStart"))) / 50400
+                        END as percentage_total
+                from event_query e
+                where "dateEnd" is not null
+                group by e.category, "categoryName"
+                order by e.category desc
+                """
+
+        query = text(query)
         data = session.execute(query).all()
         session.close()
 
