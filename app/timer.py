@@ -82,6 +82,7 @@ def timer_update(id):
 def timer_progress(id):
     if current_user:
         session = Session()
+        last_event = session.query(VehicleEvent).filter(VehicleEvent.idUser == id).order_by(VehicleEvent.eventTime.desc()).first()
         query = f"""
                     WITH event_query as 
                     (SELECT e."createdAt" "dateStart",
@@ -97,6 +98,8 @@ def timer_progress(id):
                     INNER JOIN "eventType" et ON et.id = e."idType"
                     join geolocation g on g.id = e."idGeolocation"
                     WHERE e."idUser" = {id}
+                    and e."idCompany" = {int(last_event.idCompany)}
+                    and e."idVehicle" = {int(last_event.idVehicle)}
                     and date(e."createdAt") between CURRENT_DATE and CURRENT_DATE
                     )
                 
@@ -115,6 +118,7 @@ def timer_progress(id):
                 """
 
         query = text(query)
+
         data = session.execute(query).all()
         session.close()
 
