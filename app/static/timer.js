@@ -1,4 +1,4 @@
-//window.app = 
+//window.app =
 function stopwatch() {
   return {
     // States Functionality
@@ -23,20 +23,24 @@ function stopwatch() {
     isResting: false,
     isEnd: false,
 
-    getUpdatesFromDB() {
-      fetch('/vehicle/last_state/' + this.idVehicle, {
-        method: 'GET',
-        headers: {
-          "Content-type": "application/json; charset=UTF-8"
-        }
-      }).then(response => response.json()).then(
-        data => {
-          if (data.eventName != 'day_end') {
-            this.updateTimer(data.eventName, data.eventTime);
-          }
 
+
+    getUpdatesFromDB() {
+        if (this.idVehicle !== null){
+          fetch('/vehicle/last_state/' + this.idVehicle, {
+            method: 'GET',
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+          }).then(response => response.json()).then(
+            data => {
+              if (data.eventName != 'day_end') {
+                this.updateTimer(data.eventName, data.eventTime);
+              }
+
+            }
+          );
         }
-      );
     },
 
     checkVisibilityPage() {
@@ -137,6 +141,7 @@ function stopwatch() {
     openModal() {
       this.isEnd = false;
       this.currentActivityName = 'Atividade Atual';
+      this.loadLastData();
       this.isModalVisible = true;
     },
 
@@ -187,6 +192,27 @@ function stopwatch() {
       let d = Math.sqrt(pow_lat + pow_lon)
       return d
     },
+    loadLastData(){
+            fetch('/timer/last_data', {
+            method: 'GET',
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+          }).then(response => response.json()).then(
+            data => {
+                if (data === {}){
+                    this.idVehicle = "None";
+                    this.idCompany = "None";
+                }
+                else{
+                    this.idVehicle = data.idVehicle;
+                    this.idCompany = data.idCompany;
+                }
 
+                window.dispatchEvent(new CustomEvent("loadLast",
+                {detail: {idVehicle: this.idVehicle, idCompany: this.idCompany}}));
+            }
+          );
+        },
   }
 }

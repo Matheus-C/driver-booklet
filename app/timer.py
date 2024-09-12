@@ -34,49 +34,6 @@ def event_data():
     return jsonify({"status": "success"})
 
 
-@app.route('/timer/update/<id>')
-@login_required
-def timer_update(id):
-    # needs validation before querying
-    query = f"""
-    WITH event_query as 
-                (SELECT e."eventTime" "dateStart",
-                        et.category,
-                        case when et.name like '%_end' then null
-                        ELSE LEAD("eventTime", 1, null) OVER (ORDER BY "eventTime" ASC)
-                        END as "dateEnd",
-                        e."idVehicle",
-                        e."idCompany",
-                        g.coordinates
-                FROM event e
-                INNER JOIN "eventType" et ON et.id = e."idType"
-                join geolocation g on g.id = e."idGeolocation"
-                WHERE idUser = {id}
-                )
-            
-            select 
-                e."dateStart"
-                ,e."dateEnd"      
-                ,e.category "categoryName"
-                ,sec_to_time(SUM(EXTRACT(EPOCH FROM ("dateEnd" -"dateStart")))) AS "timeSpent"
-            from event_query e
-            where "dateEnd" is not null
-            group by e."dateStart"
-                ,e."dateEnd"      
-                ,e.category "categoryName"
-            order by "dateStart" desc
-    """
-    if current_user:
-        query = text(query)
-        session = Session()
-        data = session.execute(query).fetchmany(5)
-        session.close()
-
-        return render_template('htmx/timer/timer_updates.html', data=data)
-    else:
-        return redirect('/')
-
-
 @app.route('/timer/progress/<id>')
 @login_required
 def timer_progress(id):
@@ -125,3 +82,17 @@ def timer_progress(id):
         return render_template('htmx/timer/timer_progress.html', data=data)
     else:
         return redirect('/')
+
+@app.route("/timer/last_data")
+def get_last_data():
+    session = Session()
+    last_data = (session.query(VehicleEvent).filter(VehicleEvent.idUser == current_user.id)
+                 .order_by(VehicleEvent.eventTime.desc()).first())
+    if last_data is not None:
+        data = {
+            'idVehicle': last_data.idVehicle,
+            'idCompany': last_data.idCompany
+        }
+    else:
+        data = {}
+    return jsonify(data)
