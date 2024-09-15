@@ -139,6 +139,7 @@ def signup_worker(id_company=None):
         # dict_data['is_active'] = 0 #Has to be enabled manually
 
         # noinspection PyArgumentList
+        dict_data['email'] = dict_data['email'].lower()
         user = User(**dict_data)
         user._mail_verified = True
         session.add(user)

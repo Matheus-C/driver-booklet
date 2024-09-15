@@ -29,7 +29,7 @@ def login():
         return render_template('htmx/user/login.html', data={'return': '/login'})
     elif request.method == 'POST' and request.form:
         session = Session()
-        email = request.form.get('email')
+        email = request.form.get('email').lower()
         password = request.form.get('password')
         user = session.query(User).filter_by(email=email).first()
         session.close()
@@ -39,7 +39,7 @@ def login():
             response.headers["hx-redirect"] = "/"
             return response
         else:
-            flash("Wrong email or password.", "error")
+            flash("Email ou senha incorretos.", "error")
             return render_template('base/notifications.html')
 
 
@@ -63,7 +63,14 @@ def signup():
         dict_data['userTypeId'] = "1"  #Owner
         # noinspection PyArgumentList
         user = User(**dict_data)
-        send_confirmation(dict_data['email'])
+        try:
+            send_confirmation(dict_data['email'])
+        except:
+            flash("Insira um email válido", "error")
+            response = make_response(render_template('base/notifications.html'))
+            response.headers["hx-Retarget"] = "#signup_form .containerNotifications"
+            return response
+        dict_data['email'] = dict_data['email'].lower()
 
         session.add(user)
         session.commit()
