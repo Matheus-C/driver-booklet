@@ -64,9 +64,11 @@ def vehicle_add(id_company=None):
 def mileage_add():
     session = Session()
     json_data = request.form.to_dict()
+
     last_event = session.query(VehicleEvent).filter(VehicleEvent.idUser == current_user.id).order_by(VehicleEvent.id.desc()).first()
-    if json_data["idType"] != "8" and last_event.idType == 7:
-        return jsonify({"status": "success"})
+    if last_event is not None:
+        if json_data["idType"] != "8" and last_event.idType == 7:
+            return jsonify({"status": "success"})
     dt_object = datetime.strptime(json_data["eventTimestamp"], '%m/%d/%Y, %H:%M:%S')
     vehicleEvent = VehicleEvent(eventTime=dt_object, mileage=json_data["mileage"],
                                 idVehicle=json_data["idVehicle"], idCompany=json_data["idCompany"],
@@ -115,17 +117,18 @@ def current_mileage():
     if current_user:
         # rework with more joins to be safer
         idVehicle = request.form.get('idVehicle')
-        if idVehicle == '':
+        if len(idVehicle) == 0 or idVehicle is None or idVehicle == 'None':
             return f"""<input min="" value="" id="mileage" name='mileage' class='input' 
         type="number" step="0.01">"""
-        session = Session()
-        result = session.query(func.max(VehicleEvent.mileage)).filter(VehicleEvent.idVehicle == idVehicle).scalar()
-        session.close()
+        else:
+            session = Session()
+            result = session.query(func.max(VehicleEvent.mileage)).filter(VehicleEvent.idVehicle == idVehicle).scalar()
+            session.close()
 
-        if result is None:
-            result = 0
-        return f"""<input min="{str(result)}" value="{str(result)}" id="mileage" name='mileage' class='input' 
-        type="number" step="0.01">"""
+            if result is None:
+                result = 0
+            return f"""<input min="{str(result)}" value="{str(result)}" id="mileage" name='mileage' class='input' 
+            type="number" step="0.01">"""
 
 
 @app.route('/vehicle/last_state/<id>', methods=['GET'])
@@ -140,7 +143,7 @@ def last_state_vehicle(id):
             ),
             start_time as (
             select "eventTime"
-            from vehicleEvent
+            from "vehicleEvent"
             where "idVehicle" = {int(id)} 
             order by "eventTime" desc)
             SELECT e."eventTime",e."idVehicle",et.name 

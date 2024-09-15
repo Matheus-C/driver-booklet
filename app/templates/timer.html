@@ -120,7 +120,7 @@
       </div>
       <div class="box block">
         <div align="right">
-          <button class="button is-light is-small" hx-trigger="load, click, click from:#control-panel"
+          <button class="button is-light is-small" hx-trigger="click, click from:#control-panel"
             hx-target="#progress-bar" hx-get="/timer/progress/{{ current_user.id }}"
             hx-swap="innerHTML transition:true">
             <span class="icon">
