@@ -175,6 +175,7 @@ class VehicleEvent(Base):
     idVehicle = Column(Integer, ForeignKey('vehicle.id'))
     idCompany = Column(Integer, ForeignKey('company.id'))
     mileage = Column('mileage', Float)
+    createdAt = Column(TIMESTAMP, server_default=text('CURRENT_TIMESTAMP'))
 
 
 class Geolocation(Base):

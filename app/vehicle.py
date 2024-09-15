@@ -64,6 +64,9 @@ def vehicle_add(id_company=None):
 def mileage_add():
     session = Session()
     json_data = request.form.to_dict()
+    last_event = session.query(VehicleEvent).filter(VehicleEvent.idUser == current_user.id).order_by(VehicleEvent.id.desc()).first()
+    if json_data["idType"] != "8" and last_event.idType == 7:
+        return jsonify({"status": "success"})
     dt_object = datetime.strptime(json_data["eventTimestamp"], '%m/%d/%Y, %H:%M:%S')
     vehicleEvent = VehicleEvent(eventTime=dt_object, mileage=json_data["mileage"],
                                 idVehicle=json_data["idVehicle"], idCompany=json_data["idCompany"],
@@ -129,7 +132,12 @@ def last_state_vehicle(id):
                 select max(id) as id 
                 from event 
                 where "idVehicle" = {int(id)}
-            )
+            ),
+            start_time as (
+            select "eventTime"
+            from vehicleEvent
+            where "idVehicle" = {int(id)} 
+            order by "eventTime" desc)
             SELECT e."eventTime",e."idVehicle",et.name 
             FROM event e
             INNER join "eventType" et on et.id = e."idType"
@@ -139,13 +147,13 @@ def last_state_vehicle(id):
         session = Session()
         result = session.execute(query).fetchone()
         session.close()
-
         if result is not None:
             formatted_time_string = result.eventTime.strftime("%Y-%m-%dT%H:%M:%S")
             data = {
                 'eventTime': formatted_time_string,
                 'idVehicle': result.idVehicle,
-                'eventName': result.name}
+                'eventName': result.name
+            }
 
         else:
             data = {}
@@ -166,3 +174,35 @@ def delete_vehicle(id):
                     CompanyVehicle.validUntil == None).all()
         session.close()
         return render_template("htmx/vehicle/vehicle_list.html", vehicles_company=vehicles_company)
+
+
+@app.route('/vehicle/rest/<id>', methods=['GET'])
+def get_rest_time(id):
+    session = Session()
+    last_start = session.query(VehicleEvent).filter(VehicleEvent.idVehicle == int(id)).order_by(VehicleEvent.id.desc()).first()
+    query = f"""with rest as (select 
+                case when et.name like '%_end' or et.name not like 'rest%' then null
+                    ELSE extract(EPOCH FROM(LEAD(e."createdAt", 1, null) OVER (ORDER BY e."createdAt" asc) - e."createdAt"))
+                    END as "restTime"
+                FROM event e
+                INNER JOIN "eventType" et ON et.id = e."idType"
+                where e."idVehicle" = {int(id)}
+                and e."createdAt" between '{last_start.createdAt}' and Now()),
+                
+                last_event as (select e."eventTime"
+                            from event e
+                            order by e."eventTime" desc
+                            limit 1)
+                            
+        select sum(rest."restTime") as "restTime", e."eventTime"
+        from rest, last_event e
+        group by e."eventTime"
+            """
+    total_rest_time = session.execute(text(query)).fetchone()
+    print(total_rest_time)
+    session.close()
+    data = {
+        'total_rest_time': total_rest_time.restTime,
+        'eventTime': total_rest_time.eventTime
+    }
+    return jsonify(data)

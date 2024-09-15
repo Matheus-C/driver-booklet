@@ -38,8 +38,7 @@ function stopwatch() {
                 this.updateTimer(data.eventName, data.eventTime);
               }
 
-            }
-          );
+            });
         }
     },
 
@@ -55,7 +54,7 @@ function stopwatch() {
     },
 
     Timer() {
-      if (!this.timerRunning) {
+      if (!this.timerRunning && !this.isResting && !this.isEnd) {
         this.timerRunning = true;
         this.timer = setInterval(() => {
           this.seconds++;
@@ -68,9 +67,8 @@ function stopwatch() {
             this.hours++;
           }
         }, 1000);
-      }
-      else {
-        if (this.isEnd) {
+      }else{
+        if (this.isEnd || this.isResting) {
           clearInterval(this.timer);
           this.timerRunning = false;
         }
@@ -87,16 +85,41 @@ function stopwatch() {
     },
 
     setdiffBetweenTimestamps(timestamp) {
-      const givenTime = new Date(Date.parse(timestamp));
-      const currentTime = new Date();
-      const timeDifference = currentTime - givenTime;
-      const hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60));
-      const minutesDifference = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-      const secondsDifference = Math.floor((timeDifference % (1000 * 60)) / 1000);
-      this.hours = hoursDifference;
-      this.minutes = minutesDifference;
-      this.seconds = secondsDifference;
-      this.Timer();
+      if (this.idVehicle !== null){
+          fetch('/vehicle/rest/' + this.idVehicle, {
+            method: 'GET',
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+          }).then(response => response.json()).then(
+              data => {
+              let rest_time;
+                if (data === {}){
+                    const rest_time = 0;
+                }else{
+                    rest_time = data.total_rest_time*1000;
+                    if(this.isResting){
+                        if (rest_time === null){
+                            rest_time = 0;
+                        }
+                        rest_time = rest_time + new Date() - new Date(Date.parse(data.eventTime));
+
+                    }
+                }
+              const givenTime = new Date(Date.parse(timestamp));
+              const currentTime = new Date();
+              console.log(currentTime - givenTime);
+              console.log(rest_time);
+              const timeDifference = Math.abs(currentTime - givenTime) - rest_time;
+              const hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60));
+              const minutesDifference = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+              const secondsDifference = Math.floor((timeDifference % (1000 * 60)) / 1000);
+              this.hours = hoursDifference;
+              this.minutes = minutesDifference;
+              this.seconds = secondsDifference;
+              this.Timer();
+          });
+      }
     },
 
     updateTimer(mode, event_time) {
@@ -114,15 +137,18 @@ function stopwatch() {
         if (mode === 'availability_start') {
           this.Timer();
         }
+        else if (mode === 'rest_start'){
+            this.Timer();
+        }
         else if (mode === 'day_end') {
+          window.dispatchEvent(new CustomEvent("end"));
           this.Timer();
           this.isModalVisible = true;
           this.seconds = 0;
           this.minutes = 0;
           this.hours = 0;
         }
-      }
-      else {
+      }else {
         this.setdiffBetweenTimestamps(event_time)
       }
       this.setActivityName(mode)
