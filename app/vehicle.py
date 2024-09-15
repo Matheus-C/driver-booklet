@@ -80,7 +80,9 @@ def mileage_add():
 @app.route('/vehicle/select/', methods=['POST'])
 def vehicle_select():
     if current_user:
-        id_company = int(request.form.get("idCompany"))
+        id_company = request.form.get("idCompany")
+        if id_company == '':
+            return ''
         query = f"""with event_vehicle_ranked as (
                     select e.*,et.name,
                             LAST_VALUE(et.name) OVER (
@@ -113,6 +115,9 @@ def current_mileage():
     if current_user:
         # rework with more joins to be safer
         idVehicle = request.form.get('idVehicle')
+        if idVehicle == '':
+            return f"""<input min="" value="" id="mileage" name='mileage' class='input' 
+        type="number" step="0.01">"""
         session = Session()
         result = session.query(func.max(VehicleEvent.mileage)).filter(VehicleEvent.idVehicle == idVehicle).scalar()
         session.close()

@@ -34,13 +34,13 @@
             <label class="label" for="idCompany">Empresa: </label>
             <div class="select">
               <select id="idCompany" name="idCompany" x-model="idCompany" hx-target="#selectCar"
-                hx-post="/vehicle/select/" hx-swap="innerHTML" hx-trigger="companySelected from:body">
+                hx-post="/vehicle/select/" hx-swap="innerHTML" hx-trigger="click, companySelected from:body">
               </select>
             </div>
             <label class="label" for="selectCar">Veículo: </label>
             <div class="select">
               <select id="selectCar" name="idVehicle" x-model="idVehicle" hx-target="#mileage"
-                hx-post="/vehicle/current_mileage" hx-swap="outerHTML" hx-trigger="vehicleSelected from:body">
+                hx-post="/vehicle/current_mileage" hx-swap="outerHTML" hx-trigger="click, vehicleSelected from:body">
               </select>
             </div>
             <label class="label" for="mileage">Quilômetros: </label>
