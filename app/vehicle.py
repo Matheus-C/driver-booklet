@@ -140,12 +140,7 @@ def last_state_vehicle(id):
                 select max(id) as id 
                 from event 
                 where "idVehicle" = {int(id)}
-            ),
-            start_time as (
-            select "eventTime"
-            from "vehicleEvent"
-            where "idVehicle" = {int(id)} 
-            order by "eventTime" desc)
+            )
             SELECT e."eventTime",e."idVehicle",et.name 
             FROM event e
             INNER join "eventType" et on et.id = e."idType"
@@ -153,7 +148,7 @@ def last_state_vehicle(id):
 
         query = text(query)
         session = Session()
-        result = session.execute(query).fetchone()
+        result = session.execute(query).first()
         session.close()
         if result is not None:
             formatted_time_string = result.eventTime.strftime("%Y-%m-%dT%H:%M:%S")
@@ -187,7 +182,8 @@ def delete_vehicle(id):
 @app.route('/vehicle/rest/<id>', methods=['GET'])
 def get_rest_time(id):
     session = Session()
-    last_start = session.query(VehicleEvent).filter(VehicleEvent.idVehicle == int(id)).order_by(VehicleEvent.id.desc()).first()
+    last_start = (session.query(VehicleEvent).filter(VehicleEvent.idVehicle == int(id), VehicleEvent.idType == 7)
+                  .order_by(VehicleEvent.id.desc()).first())
     query = f"""with rest as (select 
                 case when et.name like '%_end' or et.name not like 'rest%' then null
                     ELSE extract(EPOCH FROM(LEAD(e."createdAt", 1, null) OVER (ORDER BY e."createdAt" asc) - e."createdAt"))
@@ -197,20 +193,26 @@ def get_rest_time(id):
                 where e."idVehicle" = {int(id)}
                 and e."createdAt" between '{last_start.createdAt}' and Now()),
                 
-                last_event as (select e."eventTime"
-                            from event e
-                            order by e."eventTime" desc
-                            limit 1)
+                last_event as (
+                        select "createdAt"
+                        from event
+                        where "idVehicle" = {int(id)}
+                        order by id desc
+                        limit 1)
                             
-        select sum(rest."restTime") as "restTime", e."eventTime"
-        from rest, last_event e
-        group by e."eventTime"
+                select sum(rest."restTime") as "restTime", last_event."createdAt"
+                from rest, last_event
+                group by last_event."createdAt"
             """
-    total_rest_time = session.execute(text(query)).fetchone()
-    print(total_rest_time)
+    total_rest_time = session.execute(text(query)).first()
+    if total_rest_time.restTime is None:
+        rest_time = 0
+    else:
+        rest_time = total_rest_time.restTime
     session.close()
     data = {
-        'total_rest_time': total_rest_time.restTime,
-        'eventTime': total_rest_time.eventTime
+        'eventTime': total_rest_time.createdAt,
+        'total_rest_time': rest_time,
+        'last_start': last_start.createdAt
     }
     return jsonify(data)
