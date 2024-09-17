@@ -11,3 +11,4 @@ flask-admin
 flask-babel
 xhtml2pdf
 geopy
+gunicorn
