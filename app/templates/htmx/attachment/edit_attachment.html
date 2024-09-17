@@ -13,7 +13,7 @@
     </header>
     <section class="modal-card-body" id="modalSection">
         {% include 'base/notifications.html' %}
-        <form hx-post="{{data.return}}" hx-target="#attachments" @close.window="closeModal()">
+        <form hx-post="{{data.return}}" hx-target="#attachmentDetails" @close.window="closeModal()">
             <div hx-get="/company/list" hx-trigger="load" hx-target="#idCompany" hx-swap="innerHTML"></div>
             <label class="label req" for="idCompany">Empresa: </label>
             <div class="select">
@@ -81,15 +81,16 @@
 </div>
 <script>
     let executed = false;
-    document.getElementById("{{attachment.idType}}").checked = true;
     document.body.addEventListener('htmx:afterSwap', function (evt) {
         if (evt.detail.elt.getAttribute("id") === "idCompany") {
             document.getElementById("idCompany").value = '{{attachment.idCompany}}';
             htmx.trigger("#selectCar", 'companySelected');
+            executed = false;
         }
         if(!executed){
             if (evt.detail.elt.getAttribute("id") === "selectCar") {
                 document.getElementById("selectCar").value = '{{attachment.idVehicle}}';
+                document.getElementById("{{attachment.idType}}").checked = true;
                 executed = true;
             }
         }

@@ -62,8 +62,8 @@
         <tr>
             <td>{{ item.companyName }}</td>
             <td>{{ item.categoryName }}</td>
-            <td>{{ item.dateStart | datetimeformat('dd/MM/yyyy hh:mm:ss') }}</td>
-            <td>{{ item.dateEnd | datetimeformat('dd/MM/yyyy hh:mm:ss') }}</td>
+            <td>{{ item.dateStart | datetimeformat('dd/MM/yyyy HH:mm:ss') }}</td>
+            <td>{{ item.dateEnd | datetimeformat('dd/MM/yyyy HH:mm:ss') }}</td>
             <td>{{ item.timeSpent }}</td>
             <td>{{ item.licensePlate }}</td>
             {% if item.locStart == None %}

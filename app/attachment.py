@@ -146,4 +146,4 @@ def attachment_edit(id):
              'end_date': json_data["end_date"]})
         session.commit()
         session.close()
-        return redirect("/attachment/list")
+        return redirect(f"/attachment/detail/{id}")

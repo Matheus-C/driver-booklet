@@ -42,7 +42,7 @@
         }
     }
     document.body.addEventListener('htmx:afterSwap', function (evt) {
-        if (evt.detail.elt.getAttribute("id") === "attachments") {
+        if (evt.detail.elt.getAttribute("id") === "attachmentDetails") {
             window.dispatchEvent(new Event('close'));
         }
     });

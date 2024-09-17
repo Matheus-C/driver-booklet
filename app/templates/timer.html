@@ -1,11 +1,11 @@
 {% extends 'base/base.html' %}
 
 {% block header %}
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="static/timer.js" type="text/javascript"></script>
 {% endblock %}
 
 {% block content %}
-<script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
-<script src="static/timer.js" type="text/javascript"></script>
 <div x-data="stopwatch()">
   <div id="timer" class="container">
     <div class="stopwatch">
@@ -17,7 +17,7 @@
       {% include 'base/notifications.html' %}
       <br>
       <div class="modal is-active" x-show="isModalAttachmentVisible" id="modalAttachment"></div>
-      <div class="modal is-active" x-show="isModalVisible" id="modal">
+      <div class="modal is-active" x-show="isModalVisible" id="modal" x-init="$nextTick(() => {loadLastData();}) ">
         <div class="modal-background"></div>
         <div id="modalCard" class="modal-card">
           <header class="modal-card-head">
@@ -30,17 +30,17 @@
             </div>
           </header>
           <section class="modal-card-body">
-            <div hx-get="/company/list" hx-trigger="load" hx-target="#idCompany" hx-swap="innerHTML"></div>
+            <div hx-get="/company/list" hx-trigger="loadCompanies from:body" hx-target="#idCompany" hx-swap="innerHTML"></div>
             <label class="label" for="idCompany">Empresa: </label>
             <div class="select">
               <select id="idCompany" name="idCompany" x-model="idCompany" hx-target="#selectCar"
-                hx-post="/vehicle/select/" hx-swap="innerHTML">
+                hx-post="/vehicle/select/" hx-swap="innerHTML" hx-trigger="change, companySelected from:body">
               </select>
             </div>
             <label class="label" for="selectCar">Veículo: </label>
             <div class="select">
               <select id="selectCar" name="idVehicle" x-model="idVehicle" hx-target="#mileage"
-                hx-post="/vehicle/current_mileage" hx-swap="outerHTML">
+                hx-post="/vehicle/current_mileage" hx-swap="outerHTML" hx-trigger="change, vehicleSelected from:body">
               </select>
             </div>
             <label class="label" for="mileage">Quilômetros: </label>
@@ -49,9 +49,9 @@
           <input type="hidden" name="geolocation" x-model="stringCoords">
           <footer class="modal-card-foot is-justify-content-right">
             <div class="buttons">
-              <button hx-post='/vehicle/mileage' hx-swap="none" hx-include="select,[name='mileage']"
+              <button id="confirm_mileage" hx-post='/vehicle/mileage' hx-swap="none" hx-include="select,[name='mileage']"
                 hx-vals="js:{eventTimestamp: new Date().toLocaleString('en-US', {hour12: false}),idType:7}"
-                @htmx:after-request="closeModal()" class="button is-success" x-show="idCompany && idVehicle"
+                @htmx:after-request="closeModal(); window.dispatchEvent(new CustomEvent('start'));" class="button is-success" x-show="idCompany && idVehicle"
                 data-loading-class="is-loading">
                 <p><i class="fa-solid fa-floppy-disk fa-lg"></i> Salvar</p>
               </button>
@@ -120,7 +120,7 @@
       </div>
       <div class="box block">
         <div align="right">
-          <button class="button is-light is-small" hx-trigger="load, click, click from:#control-panel"
+          <button class="button is-light is-small" hx-trigger="click, click from:#control-panel"
             hx-target="#progress-bar" hx-get="/timer/progress/{{ current_user.id }}"
             hx-swap="innerHTML transition:true">
             <span class="icon">
@@ -137,9 +137,11 @@
 </div>
 
 <script>
+  let idVehicle = null;
+  let idCompany = null;
   htmx.onLoad(function (target) {
     let app = document.querySelector('[x-data]');
-    app.__x.$data.enableLocation();
+    Alpine.$data(app).enableLocation();
     if (Notification.permission !== 'granted') {
       Notification.requestPermission()
     }
@@ -150,5 +152,36 @@
       window.dispatchEvent(new Event('close'));
     }
   });
+  window.addEventListener('loadLast', function (evt) {
+
+    idVehicle = evt.detail.idVehicle;
+    idCompany = evt.detail.idCompany;
+    document.body.dispatchEvent(new Event("loadCompanies"));
+  });
+  let executed = false;
+  document.body.addEventListener('htmx:afterSwap', function (evt) {
+      if (evt.detail.elt.getAttribute("id") === "idCompany") {
+          document.getElementById("idCompany").value = idCompany;
+          htmx.trigger("#selectCar", 'companySelected');
+          executed = false;
+      }
+      if(!executed){
+          if (evt.detail.elt.getAttribute("id") === "selectCar") {
+              document.getElementById("selectCar").value = idVehicle;
+              htmx.trigger("#mileage", 'vehicleSelected');
+              executed = true;
+          }
+      }
+
+  });
+
+  window.addEventListener('end', function (evt) {
+    document.getElementById("confirm_mileage").setAttribute("hx-vals", "js:{eventTimestamp: new Date().toLocaleString('en-US', {hour12: false}),idType:8}")
+  });
+
+  window.addEventListener('start', function (evt) {
+    document.getElementById("confirm_mileage").setAttribute("hx-vals", "js:{eventTimestamp: new Date().toLocaleString('en-US', {hour12: false}),idType:7}")
+  });
+</script>
 </script>
 {% endblock %}
