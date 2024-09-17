@@ -159,7 +159,7 @@ def company_list():
     if current_user:
         session = Session()
         results = session.query(Company) \
-            .join(UserCompany, UserCompany.idCompany == Company.id, isouter=True) \
+            .join(UserCompany, UserCompany.idCompany == Company.id) \
             .filter(UserCompany.idUser == current_user.id, UserCompany.validUntil == None).all()
         session.close()
         return render_template('htmx/company/company_list.html', company_list=results)
@@ -224,7 +224,7 @@ def worker_list(id):
     if current_user:
         session = Session()
         results = session.query(User) \
-            .join(UserCompany, UserCompany.idUser == User.id, isouter=True) \
+            .join(UserCompany, UserCompany.idUser == User.id) \
             .filter(UserCompany.idCompany == id,
                     UserCompany.validUntil == None).all()
         company = session.query(Company).filter(Company.id == id).first()
