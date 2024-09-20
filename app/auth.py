@@ -12,7 +12,7 @@ def load_user(id):
     session.close()
     return user
 
-
+#a
 @app.route('/')
 def index():
     if current_user.is_authenticated:
