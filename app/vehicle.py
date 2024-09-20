@@ -83,7 +83,7 @@ def mileage_add():
 def vehicle_select():
     if current_user:
         id_company = request.form.get("idCompany")
-        if id_company == '':
+        if id_company == '' or id_company == 'None':
             return ''
         query = f"""with event_vehicle_ranked as (
                     select e.*,et.name,

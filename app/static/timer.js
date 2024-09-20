@@ -226,7 +226,7 @@ function stopwatch() {
             }
           }).then(response => response.json()).then(
             data => {
-                if (data === {}){
+                if (Object.keys(data).length === 0){
                     this.idVehicle = "None";
                     this.idCompany = "None";
                 }
