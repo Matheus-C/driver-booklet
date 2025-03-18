@@ -26,7 +26,7 @@ class User(Base, UserMixin):
     address = Column('address', String(255))
     email = Column('email', String(255))
     birthDate = Column('birthDate', Date)
-    _password = Column('password', TEXT(255))
+    _password = Column('password', String(255))
     _mail_verified = Column('mail_verified', Boolean, default=False)
     is_active = Column(Boolean, default=False)
     valid_until = Column('valid_until', Date)
