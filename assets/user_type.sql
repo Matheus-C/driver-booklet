@@ -1,1 +1,1 @@
-INSERT INTO userType (id, name, description) VALUES (NULL, 'owner', NULL), (NULL, 'worker', NULL);
+INSERT INTO "userType" (id, name, description) VALUES (1, 'owner', NULL), (2, 'worker', NULL), (3, 'admin', NULL);
