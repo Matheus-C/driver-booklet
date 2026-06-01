@@ -6,3 +6,4 @@ None*
 sql
 venv/
 .idea/
+.venv/

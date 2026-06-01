@@ -1,5 +1,6 @@
 from flask import render_template, request, make_response, flash, Response
 from flask_login import current_user, login_required
+from weasyprint import HTML
 from .models.models import *
 from sqlalchemy.sql import text
 from app import app
@@ -109,26 +110,24 @@ def get_data(id_user, dict_data):
     query = text(query)
     time_data = session.execute(query).all()
     user = session.query(User).filter(User.id == id_user).first()
-    company = session.query(Company).filter(Company.id == dict_data["idCompany"]).first()
+    company = session.query(Company).filter(
+        Company.id == dict_data["idCompany"]).first()
     session.close()
     return {"event_data": event_data, "attachment_data": attachment_data,
             "user": user, "company": company, "time_data": time_data}
 
 
 def render_pdf(id_user, dict_data):
-    from xhtml2pdf import pisa
-    from io import BytesIO
-
     data = get_data(id_user, dict_data)
-    dict_data["dateStart"] = datetime.strptime(dict_data["dateStart"], "%Y-%m-%d")
+    dict_data["dateStart"] = datetime.strptime(
+        dict_data["dateStart"], "%Y-%m-%d")
     dict_data["dateEnd"] = datetime.strptime(dict_data["dateEnd"], "%Y-%m-%d")
     html = render_template("htmx/report/report_pdf_template.html", event_data=data["event_data"],
                            attachment_data=data["attachment_data"], user=data["user"], company=data["company"],
                            time_data=data["time_data"], date_start=dict_data["dateStart"],
                            date_end=dict_data["dateEnd"])
-    pdf = BytesIO()
-    pisa.CreatePDF(html, pdf)
-    return pdf.getvalue()
+    pdf = HTML(string=html).write_pdf()
+    return pdf
 
 
 @app.route("/reports", methods=["GET", "POST"])
@@ -141,14 +140,16 @@ def reports():
         dict_data = request.form.to_dict()
         if dict_data["idCompany"] == "None" or dict_data["dateStart"] == "" or dict_data["dateEnd"] == "":
             flash("Os campos com * são obrigatórios.", "error")
-            response = make_response(render_template('base/notifications.html'))
+            response = make_response(
+                render_template('base/notifications.html'))
             response.headers["hx-Retarget"] = "#form-box .containerNotifications"
             return response
         if current_user.userTypeId == 1:
             id_user = dict_data["idUser"]
             if id_user == "None":
                 flash("Os campos com * são obrigatórios.", "error")
-                response = make_response(render_template('base/notifications.html'))
+                response = make_response(
+                    render_template('base/notifications.html'))
                 response.headers["hx-Retarget"] = "#form-box .containerNotifications"
                 return response
         else:
@@ -176,7 +177,8 @@ def pdf_report():
                 id_user = "None"
             if dict_data["idUser"] == "None":
                 flash("Os campos com * são obrigatórios.", "error")
-                response = make_response(render_template('base/notifications.html'))
+                response = make_response(
+                    render_template('base/notifications.html'))
                 response.headers["hx-Retarget"] = "#form-box .containerNotifications"
                 return response
         else:
@@ -209,7 +211,8 @@ def email_report():
             id_user = current_user.id
         if id_user == "None" or "email" not in dict_data:
             flash("Os campos com * são obrigatórios.", "error")
-            response = make_response(render_template('base/notifications.html'))
+            response = make_response(
+                render_template('base/notifications.html'))
             response.headers["hx-Retarget"] = "#email_form .containerNotifications"
             return response
 

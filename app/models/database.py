@@ -9,7 +9,7 @@ pass_db = os.environ.get('pass_db')
 host_db = os.environ.get('host_db')
 
 engine = create_engine(f"postgresql+psycopg2://{user_db}:{pass_db}@{host_db}",
-                       pool_recycle=100, pool_pre_ping=True, pool__size=10, max_overflow=5)
+                       pool_recycle=100, pool_pre_ping=True, pool_size=10, max_overflow=5)
 Session = sessionmaker(bind=engine)
 session = Session()
 
