@@ -1,0 +1,5 @@
+# Forçar Vercel a usar requirements.txt em vez de pyproject.toml
+pyproject.toml
+poetry.lock
+Pipfile
+Pipfile.lock
