@@ -9,5 +9,5 @@ psycopg2-binary
 Flask-Mail
 flask-admin
 flask-babel
-xhtml2pdf
+xhtml2pdf[renderpm]
 geopy
