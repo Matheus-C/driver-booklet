@@ -1,7 +1,13 @@
 {
   "version": 2,
   "builds": [
-      {"src": "run.py", "use": "@vercel/python"}
+    {
+      "src": "run.py",
+      "use": "@vercel/python",
+      "config": {
+        "installCommand": "pip install -r requirements.txt --no-deps && pip install . --no-cache-dir"
+      }
+    }
   ],
-  "routes": [{"src": "/(.*)", "dest": "run.py"}]
+  "routes": [{ "src": "/(.*)", "dest": "run.py" }]
 }
